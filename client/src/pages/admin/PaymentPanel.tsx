@@ -34,7 +34,7 @@ function PayOrders() {
       </div>
       <div className="ui-card" style={{ padding: 0, overflow: 'hidden' }}>
         <ListHead title="充值订单" count={data.orders.length} action={
-          <Button size="sm" variant="flat" className="haha-btn-app" isDisabled={!data.orders.length} onClick={() => downloadCSV('充值订单.csv', [
+          <Button size="sm" variant="flat" className="banana-btn-app" isDisabled={!data.orders.length} onClick={() => downloadCSV('充值订单.csv', [
             { label: '订单号', get: (o) => o.outTradeNo }, { label: '用户', get: (o) => o.user?.nickname || '' }, { label: '渠道', get: (o) => o.channel },
             { label: '金额', get: (o) => o.amount }, { label: '积分', get: (o) => o.points }, { label: '状态', get: (o) => o.status }, { label: '时间', get: (o) => o.createdAt },
           ], data.orders)}>导出 CSV</Button>
@@ -84,8 +84,8 @@ export default function PaymentPanel() {
       <label className="sec-field" style={area ? { gridColumn: '1 / -1' } : undefined}>
         <span className="sec-label">{label}{secret ? <Icon name="shield" size={12} style={{ color: 'var(--ink-4)', verticalAlign: '-1px', marginLeft: 4 }} /> : null}</span>
         {area
-          ? <Textarea className="haha-inp" minRows={2} value={cfg[k] ?? ''} onChange={(e: any) => setK(k, e.target.value)} placeholder={placeholder} />
-          : <Input className="haha-inp" value={cfg[k] ?? ''} onChange={(e: any) => setK(k, e.target.value)} placeholder={placeholder} />}
+          ? <Textarea className="banana-inp" minRows={2} value={cfg[k] ?? ''} onChange={(e: any) => setK(k, e.target.value)} placeholder={placeholder} />
+          : <Input className="banana-inp" value={cfg[k] ?? ''} onChange={(e: any) => setK(k, e.target.value)} placeholder={placeholder} />}
       </label>
     );
   };
@@ -136,7 +136,7 @@ export default function PaymentPanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>充值档位</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>会员中心充值页展示的金额按钮（单位：分，逗号分隔，最多 8 档；留空用内置默认 1000,3000,6800,19800）。例如 1000 显示为 ¥10。</div>
-        <Input className="haha-inp" value={cfg.recharge_tiers ?? ''} onChange={(e: any) => setK('recharge_tiers', e.target.value)} placeholder="1000,3000,6800,19800" maxLength={200} style={{ marginTop: 10 }} />
+        <Input className="banana-inp" value={cfg.recharge_tiers ?? ''} onChange={(e: any) => setK('recharge_tiers', e.target.value)} placeholder="1000,3000,6800,19800" maxLength={200} style={{ marginTop: 10 }} />
         <div style={{ fontWeight: 700, fontSize: 14.5, marginTop: 16 }}>付费内容价格上限</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>用户发「付费解锁」动态时允许的最高积分价格（留空用默认 100000）。</div>
         <label className="sec-field" style={{ marginTop: 10 }}><span className="sec-num"><input type="number" min={1} value={cfg.paid_price_max ?? ''} placeholder="100000" onChange={(e) => setK('paid_price_max', e.target.value)} /><i>积分</i></span></label>
@@ -156,7 +156,7 @@ export default function PaymentPanel() {
           {([['vip1_name', 'VIP1 名称', '青铜会员'], ['vip1_tagline', 'VIP1 标语', '入门尊享，畅快互动'], ['vip2_name', 'VIP2 名称', '黄金会员'], ['vip2_tagline', 'VIP2 标语', '高频活跃用户之选'], ['vip3_name', 'VIP3 名称', '黑钻会员'], ['vip3_tagline', 'VIP3 标语', '至尊体验，全部解锁']] as [string, string, string][]).map(([k, label, ph]) => (
             <label className="sec-field" key={k}>
               <span className="sec-label">{label}</span>
-              <Input className="haha-inp" value={cfg[k] ?? ''} placeholder={ph} onChange={(e: any) => setK(k, e.target.value)} maxLength={k.includes('tagline') ? 60 : 40} />
+              <Input className="banana-inp" value={cfg[k] ?? ''} placeholder={ph} onChange={(e: any) => setK(k, e.target.value)} maxLength={k.includes('tagline') ? 60 : 40} />
             </label>
           ))}
         </div>
@@ -166,13 +166,13 @@ export default function PaymentPanel() {
           {([['vip1_perks', '青铜 VIP1 权益'], ['vip2_perks', '黄金 VIP2 权益'], ['vip3_perks', '黑钻 VIP3 权益']] as [string, string][]).map(([k, label]) => (
             <label className="sec-field" key={k}>
               <span className="sec-label">{label}</span>
-              <Textarea className="haha-inp" minRows={4} value={cfg[k] ?? ''} maxLength={600} onChange={(e: any) => setK(k, e.target.value)} placeholder="每行一条权益" style={{ lineHeight: 1.6 }} />
+              <Textarea className="banana-inp" minRows={4} value={cfg[k] ?? ''} maxLength={600} onChange={(e: any) => setK(k, e.target.value)} placeholder="每行一条权益" style={{ lineHeight: 1.6 }} />
             </label>
           ))}
         </div>
       </div>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" className="haha-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存支付配置'}</Button>
+        <Button color="primary" className="banana-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存支付配置'}</Button>
       </div>
       <div className="sec-head" style={{ marginTop: 6 }}>充值订单</div>
       <PayOrders />

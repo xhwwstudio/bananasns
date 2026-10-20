@@ -378,7 +378,7 @@ export class StorageService implements OnModuleInit {
         new PutObjectCommand({
           Bucket: cfg.bucket,
           Key: key,
-          Body: Buffer.from('hahasns-probe'),
+          Body: Buffer.from('bananasns-probe'),
           ContentType: 'text/plain',
         }),
       );

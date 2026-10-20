@@ -43,7 +43,7 @@ export function SaveBtn({ onSave, label = '保存' }: { onSave: () => Promise<an
   const mounted = useRef(true);
   useEffect(() => () => { mounted.current = false; }, []);
   return (
-    <Button size="sm" color="primary" className="haha-btn-app" isDisabled={busy} onClick={async () => {
+    <Button size="sm" color="primary" className="banana-btn-app" isDisabled={busy} onClick={async () => {
       if (busy) return;
       setBusy(true);
       try { await onSave(); } finally { if (mounted.current) setBusy(false); }
@@ -58,9 +58,9 @@ export function AdminSearch({ value, onChange, onSearch, placeholder }: { value:
     <>
       <div className="admin-search">
         <Icon name="search" size={15} />
-        <Input className="haha-inp" value={value} onChange={(e: any) => onChange(e.target.value)} onKeyDown={(e: any) => e.key === 'Enter' && onSearch()} placeholder={placeholder} />
+        <Input className="banana-inp" value={value} onChange={(e: any) => onChange(e.target.value)} onKeyDown={(e: any) => e.key === 'Enter' && onSearch()} placeholder={placeholder} />
       </div>
-      <Button variant="flat" className="haha-btn-app" onClick={onSearch}>搜索</Button>
+      <Button variant="flat" className="banana-btn-app" onClick={onSearch}>搜索</Button>
     </>
   );
 }

@@ -1,7 +1,8 @@
-# HahaSNS 迭代交接手册（2026-07-26 · v5.79）
+# BananaSNS 迭代交接手册（2026-10-20 · v0.1.1）
 
 > 写给下一位接手迭代的人（人类或 agent）。本手册只含可操作事实；凭据一律不在册，
 > 部署脚本（`deploy-nest.sh` / `deploy-sns.sh`，均 gitignored、内含 SSH 凭据）在仓库根。
+> **版本说明**：项目已由 HahaSNS 更名为 BananaSNS，版本号重置为 0.1.1；下文出现的 v5.x 均为改名前的历史版本号。
 
 ---
 
@@ -9,11 +10,11 @@
 
 | 项 | 值 |
 |---|---|
-| 线上版本 | **v5.79**（唯一版本源：`client/src/version.ts`） |
-| 环境 | env1 = systemd 直部（`./deploy-nest.sh`）；env2 = docker compose（`./deploy-sns.sh`，sns.hahaha.chat） |
-| 环境变量在哪 | env1：`/home/tt/hahasns/.nest-env` + unit 内 `Environment=`（`systemctl --user cat hahasns`）；env2：`/opt/haha-apps/hahasns-nest/.nest-prod.env`（`docker-compose.prod.yml` 的 `env_file`，**不是仓库里的 `docker-compose.yml`**） |
+| 线上版本 | **v0.1.1**（唯一版本源：`client/src/version.ts`；后续按 0.0.1 递增） |
+| 环境 | 以实际部署环境为准（Docker Compose / systemd，见 `docs/DEPLOY.md`） |
+| 环境变量在哪 | 按部署方式写入 `server-nest/.env` / systemd `EnvironmentFile` / compose `env_file` |
 | 代码形态 | React 19 + HeroUI v3 前端；NestJS + MariaDB + Redis 后端（`server-nest/`） |
-| 测试基线 | `cd server-nest && npx vitest run` → **31 文件 / 289 用例全绿**（只增不减） |
+| 测试基线 | `cd server-nest && npx vitest run` → **31 文件 / 291 用例全绿**（只增不减） |
 | 主分支 | `main`，两环境部署均以其为准；env2 靠 `git pull` 取码 |
 
 **健康自查**：`curl --noproxy '*' -fsS <环境>/api/health` 应返回 `{"ok":true}`；
@@ -83,8 +84,8 @@
 - **上线第一天就抓到两处线上真问题**（说明这类问题确实只靠日志抓不住）：
   env2 挂在 Cloudflare Tunnel 后面但从未设 `TRUST_PROXY`，按 IP 的限流静默失效了三周多；
   env1 的 systemd unit 里没有 `NODE_ENV`。两处已在各自 env 文件补齐并重启，
-  改前都留了 `.bak-20260726` 备份（env2: `/opt/haha-apps/hahasns-nest/.nest-prod.env`，
-  env1: `/home/tt/hahasns/.nest-env`）。**两环境的环境变量不同源，改配置要分别改，别以为一处覆盖两处。**
+  改前都留了 `.bak-20260726` 备份（env2: `/opt/banana-apps/bananasns-nest/.nest-prod.env`，
+  env1: `/home/tt/bananasns/.nest-env`）。**两环境的环境变量不同源，改配置要分别改，别以为一处覆盖两处。**
 - **「存量文件没迁走」这条曾经偏保守，v5.77 已修**：它原先数的是 uploads 目录里的文件数，
   不看有没有 DB 行引用它。env2 报「还剩 2 个」，跑 dry-run 一看「待重写路径 0」——是早期测试残留的孤儿。
   迁移脚本从不删本地文件，硬迁只会往桶里再加两个孤儿，所以那次**有意不迁**；
@@ -133,7 +134,7 @@
 四条自研轨道全部收敛 HeroUI 单轨（经 `client/src/components/heroui.jsx` shim）：
 Spinner / Tabs / Modal / 输入框 124 处 / 按钮 194 处；`.ui-spinner`、`.feed-tab`、`.inp`、`.btn`
 自研 CSS 已全删（grep 0 命中）。**抹平层即单一事实来源**：
-- `components.css` 的 `.haha-feed-tabs`（Tabs 视觉）、`.haha-inp` 系（输入框，`.admin-shell` 内有 36px 紧凑变体）、`.haha-btn-app` 系（按钮，含 `--primary/--ghost/--outline/--sm/--lg/--block` Link 修饰类）。
+- `components.css` 的 `.banana-feed-tabs`（Tabs 视觉）、`.banana-inp` 系（输入框，`.admin-shell` 内有 36px 紧凑变体）、`.banana-btn-app` 系（按钮，含 `--primary/--ghost/--outline/--sm/--lg/--block` Link 修饰类）。
 - 新增表单控件一律走 shim + 这些类，**禁止再生第二套自研样式**（红线）。
 - 已知注意：HeroUI v3 会强制按钮内 svg 尺寸（≥768px 16px / <768px 20px）——shim Button 内
   一切 Icon 必须 `style={{width,height}}` 钉住原尺寸；`Link` 不是 Button，用修饰类形态保链接语义。
@@ -158,7 +159,7 @@ Spinner / Tabs / Modal / 输入框 124 处 / 按钮 194 处；`.ui-spinner`、`.
      Vite 只监听 IPv6，用 `http://localhost:5173` 而非 `127.0.0.1`），
      playwright-core 无头（`channel:'chrome'`）截改动页 390/1280 × 亮/暗，
      页面级无横向溢出（`scrollWidth === clientWidth`）；**主题用 URL 参数 `?theme=dark` 切**
-     （`ThemeContext.initMode()` 认它；只写 `localStorage.haha_theme` 在无头里不稳）。
+     （`ThemeContext.initMode()` 认它；只写 `localStorage.banana_theme` 在无头里不稳）。
      后台页深链是**路径** `/admin/<tab>`，不是 `?tab=`（写错会静默落在「概览」上，白截一轮）。
    - 一次性账号：注册 → 用完先 `SELECT` 确认唯一 → `DELETE ... LIMIT 1`；
      需管理员就本地库 `UPDATE users SET role='admin'`；**bash 变量名禁用 `UID`**（只读内建）。
@@ -175,7 +176,7 @@ Spinner / Tabs / Modal / 输入框 124 处 / 按钮 194 处；`.ui-spinner`、`.
 
 - `spec/LOOP-PROMPT.md` = 执行 agent 的完整工作指令（8 步流程 + 6 道质量门 + 红线 + 停止条件），
   直接投喂即可开循环；`spec/README.md` 优先级表是唯一选项来源（spec/ 本身 gitignored）。
-- 硬红线速记：仓库公开（github.com/maobase/hahasns）；HeroUI 单轨；颜色一律语义 token
+- 硬红线速记：仓库公开（github.com/xhwwstudio/bananasecret）；HeroUI 单轨；颜色一律语义 token
   （`client/src/styles/tokens.css`，6 皮肤 + 暗色）；文案规范见 `spec/02-copy-guide.md`；
   线上 `DB_SYNCHRONIZE=false`，**改表结构必须先停下向人类说明方案**（见 §5 迁移遗留）。
 - **`.admin-shell` 是固定浅色的 B 端主题**（`client/src/styles/pages.css`），刻意不随前台明暗。
@@ -189,7 +190,7 @@ Spinner / Tabs / Modal / 输入框 124 处 / 按钮 194 处；`.ui-spinner`、`.
    （`DB_MIGRATIONS_RUN` 未设、`typeorm_migrations` 表不存在）。打通方案与风险详见
    `spec/README.md`「改表两项(C/D)的前置」一节——碰它之前必须先备份 + 用户 sign-off。
 2. **auth 合并（AuthPanel）**：用户拍板缓做（AuthLanding 与 AuthModal 仍两套，spec01 §1.2）。
-3. **HeroUI Select 收敛**：Mall 等原生 `<select>` 现以 `select.haha-inp` 过渡，
+3. **HeroUI Select 收敛**：Mall 等原生 `<select>` 现以 `select.banana-inp` 过渡，
    换 HeroUI Select 会改下拉外观，需专项评估。
 4. **对象删除不清理存储对象**：`StorageService.delete` 目前无调用方（预留），
    删帖/删用户时桶内对象会累积；接入时注意幂等与本地/S3 双驱动。**已挂四轮**——
@@ -243,14 +244,14 @@ Spinner / Tabs / Modal / 输入框 124 处 / 按钮 194 处；`.ui-spinner`、`.
 `server-nest/.env`（gitignored）指向一个**独立的开发库容器**，不碰 3306 上别人的 mysql：
 
 ```bash
-docker run -d --name hahasns-dev-db -p 3310:3306 \
-  -e MARIADB_ROOT_PASSWORD=devroot -e MARIADB_DATABASE=hahasns \
-  -e MARIADB_USER=hahasns -e MARIADB_PASSWORD=devpass mariadb:10.11
+docker run -d --name bananasns-dev-db -p 3310:3306 \
+  -e MARIADB_ROOT_PASSWORD=devroot -e MARIADB_DATABASE=bananasns \
+  -e MARIADB_USER=bananasns -e MARIADB_PASSWORD=devpass mariadb:10.11
 npm --prefix server-nest run start:dev   # :4000，DB_SYNCHRONIZE=true 自动建表 + 播种管理员
 npm --prefix client run dev              # :5173
 ```
 
 `.env` 里 `SEED_ADMIN_USER` / `SEED_ADMIN_PASSWORD` 是首次启动播种的管理员，登录拿 token 供
-无头截图注入（`localStorage.haha_token`）。**这份 .env 里的 S3_\* 是故意只给环境变量、后台不填的**，
+无头截图注入（`localStorage.banana_token`）。**这份 .env 里的 S3_\* 是故意只给环境变量、后台不填的**，
 用来验证「当前生效」卡片的来源标注；它指向的 127.0.0.1:9000 本地并没有 MinIO，
 所以「测试连接」会失败——这是预期，不是 bug。

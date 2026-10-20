@@ -35,7 +35,7 @@ function LotteryDraws() {
       </div>
       <div className="ui-card" style={{ padding: 0, overflow: 'hidden' }}>
         <ListHead title="中奖记录" count={data.draws.length} action={
-          <Button size="sm" variant="flat" className="haha-btn-app" isDisabled={!data.draws.length} onClick={() => downloadCSV('抽奖记录.csv', [
+          <Button size="sm" variant="flat" className="banana-btn-app" isDisabled={!data.draws.length} onClick={() => downloadCSV('抽奖记录.csv', [
             { label: '用户', get: (d) => d.user?.nickname || '' }, { label: '奖品', get: (d) => d.prizeName }, { label: '类型', get: (d) => d.prizeType }, { label: '时间', get: (d) => d.createdAt },
           ], data.draws)}>导出 CSV</Button>
         } />
@@ -96,26 +96,26 @@ export default function LotteryPanel() {
             <label className="sec-field"><span className="sec-label">每日免费次数</span><span className="sec-num"><input type="number" min={0} value={cfg.lottery_free_daily ?? ''} placeholder="1" onChange={(e) => setKcfg('lottery_free_daily', e.target.value)} /><i>次</i></span></label>
           </div>
           <div className="row" style={{ justifyContent: 'flex-end', marginTop: 12 }}>
-            <Button size="sm" color="primary" className="haha-btn-app" onClick={saveCfg} isDisabled={savingCfg}>{savingCfg ? '保存中…' : '保存规则'}</Button>
+            <Button size="sm" color="primary" className="banana-btn-app" onClick={saveCfg} isDisabled={savingCfg}>{savingCfg ? '保存中…' : '保存规则'}</Button>
           </div>
         </div>
       )}
       {list.map((p, i) => (
         <div className="ui-card" style={{ padding: 14 }} key={p.id ?? 'new' + i}>
           <div className="sec-grid">
-            <label className="sec-field"><span className="sec-label">奖品名 <i className="sec-req">*</i></span><Input className="haha-inp" value={p.name} onChange={(e: any) => setField(i, 'name', e.target.value)} placeholder="如 100 积分" /></label>
-            <label className="sec-field"><span className="sec-label">类型</span><select className="haha-inp" value={p.type} onChange={(e) => setField(i, 'type', e.target.value)}>{LOT_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></label>
-            <label className="sec-field"><span className="sec-label">奖品值（积分数 / 物品标识）</span><Input className="haha-inp" value={p.value} onChange={(e: any) => setField(i, 'value', e.target.value)} placeholder="积分填数字，如 100" /></label>
-            <label className="sec-field"><span className="sec-label">权重</span><Input className="haha-inp" type="number" min={0} value={p.weight} onChange={(e: any) => setField(i, 'weight', e.target.value)} /></label>
+            <label className="sec-field"><span className="sec-label">奖品名 <i className="sec-req">*</i></span><Input className="banana-inp" value={p.name} onChange={(e: any) => setField(i, 'name', e.target.value)} placeholder="如 100 积分" /></label>
+            <label className="sec-field"><span className="sec-label">类型</span><select className="banana-inp" value={p.type} onChange={(e) => setField(i, 'type', e.target.value)}>{LOT_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></label>
+            <label className="sec-field"><span className="sec-label">奖品值（积分数 / 物品标识）</span><Input className="banana-inp" value={p.value} onChange={(e: any) => setField(i, 'value', e.target.value)} placeholder="积分填数字，如 100" /></label>
+            <label className="sec-field"><span className="sec-label">权重</span><Input className="banana-inp" type="number" min={0} value={p.weight} onChange={(e: any) => setField(i, 'weight', e.target.value)} /></label>
           </div>
           <div className="row" style={{ justifyContent: 'flex-end', gap: 8, marginTop: 10, alignItems: 'center' }}>
             <span className="faint" style={{ marginRight: 'auto', fontSize: 12.5 }}>中奖概率 <b className="num" style={{ color: 'var(--brand)' }}>{totalW > 0 ? ((Math.max(0, Number(p.weight) || 0) / totalW) * 100).toFixed(1) : '0.0'}%</b></span>
-            <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(p, i)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+            <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(p, i)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
             <SaveBtn onSave={() => save(p)} />
           </div>
         </div>
       ))}
-      <Button variant="flat" fullWidth className="haha-btn-app" onClick={add}><Icon name="plus" size={15} style={{ width: 15, height: 15 }} /> 新增奖品</Button>
+      <Button variant="flat" fullWidth className="banana-btn-app" onClick={add}><Icon name="plus" size={15} style={{ width: 15, height: 15 }} /> 新增奖品</Button>
       <div className="sec-head" style={{ marginTop: 6 }}>抽奖记录</div>
       <LotteryDraws />
     </div>

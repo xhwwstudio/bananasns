@@ -94,7 +94,7 @@ export default function Member() {
             <div className="row gap-6" style={{ fontSize: 19, fontWeight: 800, flexWrap: 'wrap' }}>{user.nickname} <Badges user={user} /></div>
             <div className="nowrap" style={{ opacity: .85, fontSize: 13, marginTop: 2 }}>@{user.username} · {myTier ? myTier.name : '普通会员'}</div>
           </div>
-          <Button variant="ghost" className="haha-btn-app" style={{ background: 'rgba(255,255,255,.16)', color: '#fff', flex: 'none' }} onClick={() => setRechargeOpen(true)}>
+          <Button variant="ghost" className="banana-btn-app" style={{ background: 'rgba(255,255,255,.16)', color: '#fff', flex: 'none' }} onClick={() => setRechargeOpen(true)}>
             <Icon name="coin" size={16} style={{ width: 16, height: 16 }} /> 充值
           </Button>
         </div>
@@ -129,7 +129,7 @@ export default function Member() {
                 <ul className="vip-tier-perks">
                   {perksOf(t).map((p) => <li key={p}><Icon name="check" size={13} /> <span>{p}</span></li>)}
                 </ul>
-                <Button fullWidth color="primary" variant={owned ? 'flat' : 'solid'} className="haha-btn-app" isDisabled={owned} onClick={() => buyVip(t)}>
+                <Button fullWidth color="primary" variant={owned ? 'flat' : 'solid'} className="banana-btn-app" isDisabled={owned} onClick={() => buyVip(t)}>
                   {owned ? '已开通' : upgrade ? '升级' : '开通'}
                 </Button>
               </div>
@@ -167,8 +167,8 @@ export default function Member() {
         </div>
         <p className="mc-invite-sub">好友用你的邀请链接注册，<b>你 +{invites?.rewardPerInvite ?? 50} 积分</b>、好友得 +30 积分见面礼。</p>
         <div className="mc-invite-row">
-          <Input className="haha-inp" readOnly value={inviteLink} onFocus={(e: any) => e.currentTarget.select()} aria-label="邀请链接" />
-          <Button type="button" color="primary" className="haha-btn-app" onClick={copyInvite} style={{ flex: 'none' }}><Icon name="copy" size={15} style={{ width: 15, height: 15 }} /> 复制</Button>
+          <Input className="banana-inp" readOnly value={inviteLink} onFocus={(e: any) => e.currentTarget.select()} aria-label="邀请链接" />
+          <Button type="button" color="primary" className="banana-btn-app" onClick={copyInvite} style={{ flex: 'none' }}><Icon name="copy" size={15} style={{ width: 15, height: 15 }} /> 复制</Button>
         </div>
         {invites?.invitees?.length > 0 && (
           <div className="mc-invite-avatars">
@@ -186,7 +186,7 @@ export default function Member() {
             <div key={d} className={`checkin-day${i < (streak % 7 || (streak ? 7 : 0)) ? ' done' : ''}`}>{i < (streak % 7 || (streak ? 7 : 0)) ? <Icon name="check" size={15} /> : d}</div>
           ))}
         </div>
-        <Button size="lg" color="primary" variant={checkedToday ? 'flat' : 'solid'} className="haha-btn-app" onClick={checkin} isDisabled={checkedToday} style={{ minWidth: 160 }}>
+        <Button size="lg" color="primary" variant={checkedToday ? 'flat' : 'solid'} className="banana-btn-app" onClick={checkin} isDisabled={checkedToday} style={{ minWidth: 160 }}>
           {checkedToday ? '今日已签到' : '立即签到 +积分'}
         </Button>
         <div className="muted" style={{ fontSize: 12, marginTop: 10 }}>连续签到积分更多，断签重新计算哦</div>
@@ -210,11 +210,11 @@ export default function Member() {
             <label>选择充值金额</label>
             <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
               {tiers.map((a) => (
-                <Button key={a} size="sm" color="primary" variant={amount === a ? 'solid' : 'bordered'} className="haha-btn-app" onClick={() => setAmount(a)}>¥{(a/100).toFixed(0)}</Button>
+                <Button key={a} size="sm" color="primary" variant={amount === a ? 'solid' : 'bordered'} className="banana-btn-app" onClick={() => setAmount(a)}>¥{(a/100).toFixed(0)}</Button>
               ))}
             </div>
           </div>
-          <Button size="lg" color="primary" fullWidth className="haha-btn-app" onClick={recharge}>确认充值 ¥{(amount/100).toFixed(2)}</Button>
+          <Button size="lg" color="primary" fullWidth className="banana-btn-app" onClick={recharge}>确认充值 ¥{(amount/100).toFixed(2)}</Button>
           <div className="muted" style={{ fontSize: 12, textAlign: 'center', marginTop: 10 }}>演示环境，充值为模拟操作，不会产生真实扣费</div>
         </div>
       </Modal>

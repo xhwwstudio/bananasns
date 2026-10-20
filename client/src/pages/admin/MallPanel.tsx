@@ -27,19 +27,19 @@ function ProductEditForm({ product, onSaved, onCancel }: { product: any; onSaved
   return (
     <div style={{ padding: '0 16px 16px', background: 'var(--surface-2)' }}>
       <div className="row gap-8" style={{ flexWrap: 'wrap', paddingTop: 14 }}>
-        <Input className="haha-inp" value={f.icon} onChange={(e: any) => setF((s) => ({ ...s, icon: e.target.value }))} style={{ width: 56, textAlign: 'center' }} />
-        <Input className="haha-inp" value={f.name} onChange={(e: any) => setF((s) => ({ ...s, name: e.target.value }))} placeholder="商品名（必填）" style={{ flex: 1, minWidth: 120 }} />
-        <select className="haha-inp" value={f.category} onChange={(e) => setF((s) => ({ ...s, category: e.target.value }))} style={{ width: 'auto' }}>
+        <Input className="banana-inp" value={f.icon} onChange={(e: any) => setF((s) => ({ ...s, icon: e.target.value }))} style={{ width: 56, textAlign: 'center' }} />
+        <Input className="banana-inp" value={f.name} onChange={(e: any) => setF((s) => ({ ...s, name: e.target.value }))} placeholder="商品名（必填）" style={{ flex: 1, minWidth: 120 }} />
+        <select className="banana-inp" value={f.category} onChange={(e) => setF((s) => ({ ...s, category: e.target.value }))} style={{ width: 'auto' }}>
           {PRODUCT_CATS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
         </select>
       </div>
       <div className="row gap-8" style={{ flexWrap: 'wrap', marginTop: 8 }}>
-        <label className="sec-field" style={{ width: 130 }}><span className="sec-label">价格（积分）</span><Input className="haha-inp" type="number" min={0} value={f.price} onChange={(e: any) => setF((s) => ({ ...s, price: e.target.value }))} /></label>
-        <label className="sec-field" style={{ width: 150 }}><span className="sec-label">库存（-1 不限）</span><Input className="haha-inp" type="number" min={-1} value={f.stock} onChange={(e: any) => setF((s) => ({ ...s, stock: e.target.value }))} /></label>
+        <label className="sec-field" style={{ width: 130 }}><span className="sec-label">价格（积分）</span><Input className="banana-inp" type="number" min={0} value={f.price} onChange={(e: any) => setF((s) => ({ ...s, price: e.target.value }))} /></label>
+        <label className="sec-field" style={{ width: 150 }}><span className="sec-label">库存（-1 不限）</span><Input className="banana-inp" type="number" min={-1} value={f.stock} onChange={(e: any) => setF((s) => ({ ...s, stock: e.target.value }))} /></label>
       </div>
-      <Input className="haha-inp" value={f.description} onChange={(e: any) => setF((s) => ({ ...s, description: e.target.value }))} placeholder="商品说明（可选）" style={{ width: '100%', marginTop: 8 }} />
+      <Input className="banana-inp" value={f.description} onChange={(e: any) => setF((s) => ({ ...s, description: e.target.value }))} placeholder="商品说明（可选）" style={{ width: '100%', marginTop: 8 }} />
       <div className="row gap-4" style={{ justifyContent: 'flex-end', marginTop: 10 }}>
-        <Button size="sm" variant="flat" className="haha-btn-app" onClick={onCancel}>取消</Button>
+        <Button size="sm" variant="flat" className="banana-btn-app" onClick={onCancel}>取消</Button>
         <SaveBtn onSave={save} />
       </div>
     </div>
@@ -66,7 +66,7 @@ function MallOrders() {
       </div>
       <div className="ui-card" style={{ padding: 0, overflow: 'hidden' }}>
         <ListHead title="兑换记录" count={data.orders.length} action={
-          <Button size="sm" variant="flat" className="haha-btn-app" isDisabled={!data.orders.length} onClick={() => downloadCSV('兑换记录.csv', [
+          <Button size="sm" variant="flat" className="banana-btn-app" isDisabled={!data.orders.length} onClick={() => downloadCSV('兑换记录.csv', [
             { label: '用户', get: (o) => o.user?.nickname || '' }, { label: '商品', get: (o) => o.product?.name || '' }, { label: '分类', get: (o) => MALL_CAT[o.product?.category] || o.product?.category || '' }, { label: '积分', get: (o) => o.price }, { label: '时间', get: (o) => o.createdAt },
           ], data.orders)}>导出 CSV</Button>
         } />
@@ -110,13 +110,13 @@ export default function MallPanel() {
       <div className="ui-card" style={{ padding: 16, marginBottom: 'var(--gap)' }}>
         <div style={{ fontWeight: 700, marginBottom: 12 }}>上架商品</div>
         <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-          <Input className="haha-inp" value={form.icon} onChange={(e: any) => setForm((f: any) => ({ ...f, icon: e.target.value }))} style={{ width: 56, textAlign: 'center' }} />
-          <Input className="haha-inp" value={form.name} onChange={(e: any) => setForm((f: any) => ({ ...f, name: e.target.value }))} placeholder="商品名（必填）" style={{ flex: 1, minWidth: 120 }} />
-          <select className="haha-inp" value={form.category} onChange={(e) => setForm((f: any) => ({ ...f, category: e.target.value }))} style={{ width: 'auto' }}>
+          <Input className="banana-inp" value={form.icon} onChange={(e: any) => setForm((f: any) => ({ ...f, icon: e.target.value }))} style={{ width: 56, textAlign: 'center' }} />
+          <Input className="banana-inp" value={form.name} onChange={(e: any) => setForm((f: any) => ({ ...f, name: e.target.value }))} placeholder="商品名（必填）" style={{ flex: 1, minWidth: 120 }} />
+          <select className="banana-inp" value={form.category} onChange={(e) => setForm((f: any) => ({ ...f, category: e.target.value }))} style={{ width: 'auto' }}>
             {PRODUCT_CATS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
-          <Input className="haha-inp" type="number" value={form.price} onChange={(e: any) => setForm((f: any) => ({ ...f, price: e.target.value }))} placeholder="积分" style={{ width: 100 }} />
-          <Button color="primary" className="haha-btn-app" onClick={create} isDisabled={!form.name.trim() || !form.price}>上架</Button>
+          <Input className="banana-inp" type="number" value={form.price} onChange={(e: any) => setForm((f: any) => ({ ...f, price: e.target.value }))} placeholder="积分" style={{ width: 100 }} />
+          <Button color="primary" className="banana-btn-app" onClick={create} isDisabled={!form.name.trim() || !form.price}>上架</Button>
         </div>
       </div>
       <div className="ui-card" style={{ overflow: 'hidden' }}>
@@ -128,8 +128,8 @@ export default function MallPanel() {
             <div className="row gap-12" style={{ padding: '12px 16px' }}>
               <span style={{ fontSize: 22 }}>{p.icon}</span>
               <div className="grow" style={{ minWidth: 0 }}><b>{p.name}</b> <span className="faint" style={{ fontSize: 12 }}>{p.price}积分 · 已售{p.sold}{p.stock >= 0 ? ` · 余${Math.max(0, p.stock - p.sold)}` : ''}</span></div>
-              <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setEditId(editId === p.id ? null : p.id)}>{editId === p.id ? '收起' : '编辑'}</Button>
-              <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(p)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 下架</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setEditId(editId === p.id ? null : p.id)}>{editId === p.id ? '收起' : '编辑'}</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(p)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 下架</Button>
             </div>
             {editId === p.id && <ProductEditForm product={p} onSaved={() => { setEditId(null); load(); }} onCancel={() => setEditId(null)} />}
           </div>

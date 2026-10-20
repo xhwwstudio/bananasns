@@ -18,7 +18,7 @@ export default function EditModal({ open, onClose, value, onChange, onSave }: Ed
       <div className="modal-body">
         <textarea className="field" style={{ width: '100%', minHeight: 110, padding: 12, border: '1.5px solid var(--line-2)', borderRadius: 10, background: 'var(--surface)', color: 'var(--ink)' }}
           value={value} onChange={(e) => onChange(e.target.value)} autoFocus />
-        <Button size="lg" color="primary" fullWidth className="haha-btn-app" onClick={onSave} isDisabled={!value.trim()}>保存修改</Button>
+        <Button size="lg" color="primary" fullWidth className="banana-btn-app" onClick={onSave} isDisabled={!value.trim()}>保存修改</Button>
       </div>
     </Modal>
   );

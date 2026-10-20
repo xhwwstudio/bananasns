@@ -1,8 +1,8 @@
 {
-  "name": "hahasns",
-  "version": "1.0.0",
+  "name": "bananasns",
+  "version": "0.1.1",
   "private": true,
-  "description": "HahaSNS — 轻社交 · 轻论坛 · 轻社区, an original lightweight social-community platform (NestJS + React)",
+  "description": "BananaSNS — 轻社交 · 轻论坛 · 轻社区, an original lightweight social-community platform (NestJS + React)",
   "engines": {
     "node": ">=20"
   },

@@ -54,10 +54,10 @@ export default function ReportsPanel() {
               <div className="row gap-8" style={{ marginTop: 10 }}>
                 <span className="faint" style={{ fontSize: 12 }}>举报人 {r.reporter?.nickname}</span>
                 <span className="spacer" />
-                {link(r) && <Link to={link(r)!} className="haha-btn-app haha-btn-app--ghost haha-btn-app--sm">查看</Link>}
-                {!resolved && r.target?.exists && r.targetType !== 'user' && <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => delContent(r)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除内容</Button>}
+                {link(r) && <Link to={link(r)!} className="banana-btn-app banana-btn-app--ghost banana-btn-app--sm">查看</Link>}
+                {!resolved && r.target?.exists && r.targetType !== 'user' && <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => delContent(r)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除内容</Button>}
                 {!resolved
-                  ? <Button size="sm" variant="bordered" className="haha-btn-app" onClick={() => resolve(r)}>忽略</Button>
+                  ? <Button size="sm" variant="bordered" className="banana-btn-app" onClick={() => resolve(r)}>忽略</Button>
                   : <span className="faint" style={{ fontSize: 12, color: 'var(--good)' }}>已处理</span>}
               </div>
             </div>

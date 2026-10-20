@@ -4,21 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232b54f0'/%3E%3Cpath d='M10 9v14M10 16h12M22 9v14' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="description" content="HahaSNS — 轻社交 · 轻论坛 · 轻社区,连接有趣的人与内容" />
+    <meta name="description" content="BananaSNS — 轻社交 · 轻论坛 · 轻社区,连接有趣的人与内容" />
     <!-- 社交分享预览（Open Graph / Twitter Card）。静态站点级，适用所有页面；
          不写死 og:url（让抓取器用实际链接，避免所有分享都指向首页）。
          按页动态 og:image/标题需服务端注入（post-demo）。 -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="HahaSNS" />
-    <meta property="og:title" content="HahaSNS · 轻社交社区" />
-    <meta property="og:description" content="HahaSNS — 轻社交 · 轻论坛 · 轻社区,连接有趣的人与内容" />
+    <meta property="og:site_name" content="BananaSNS" />
+    <meta property="og:title" content="BananaSNS · 轻社交社区" />
+    <meta property="og:description" content="BananaSNS — 轻社交 · 轻论坛 · 轻社区,连接有趣的人与内容" />
     <meta property="og:locale" content="zh_CN" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="HahaSNS · 轻社交社区" />
-    <meta name="twitter:description" content="HahaSNS — 轻社交 · 轻论坛 · 轻社区,连接有趣的人与内容" />
+    <meta name="twitter:title" content="BananaSNS · 轻社交社区" />
+    <meta name="twitter:description" content="BananaSNS — 轻社交 · 轻论坛 · 轻社区,连接有趣的人与内容" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0d0f14" media="(prefers-color-scheme: dark)" />
-    <title>HahaSNS · 轻社交社区</title>
+    <title>BananaSNS · 轻社交社区</title>
     <!-- 自托管字体：取代 Google Fonts，面向中国大陆免被墙/加速，且与站点同源走长缓存 -->
     <link rel="preload" href="/fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/fonts/fonts.css" />
@@ -27,13 +27,13 @@
       (function () {
         try {
           var q = new URLSearchParams(location.search).get('theme');
-          var t = q === 'dark' || q === 'light' ? q : localStorage.getItem('haha_theme');
+          var t = q === 'dark' || q === 'light' ? q : localStorage.getItem('banana_theme');
           if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          if (q) localStorage.setItem('haha_theme', t);
+          if (q) localStorage.setItem('banana_theme', t);
           var root = document.documentElement;
           root.dataset.theme = t;
           var SK = ['default', 'violet', 'emerald', 'sunset', 'rose', 'cyan'];
-          var skin = localStorage.getItem('haha_skin');
+          var skin = localStorage.getItem('banana_skin');
           if (SK.indexOf(skin) < 0) skin = 'default';
           root.dataset.skin = skin;
           root.classList.add(t === 'dark' ? skin + '-dark' : skin);

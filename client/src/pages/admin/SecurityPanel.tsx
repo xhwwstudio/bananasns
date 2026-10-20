@@ -117,7 +117,7 @@ export default function SecurityPanel() {
         {isOn('sensitive_enabled') && (
           <label className="field" style={{ marginTop: 14, display: 'block' }}>
             <span className="sec-label">自定义敏感词（追加在内置词库之外）</span>
-            <Textarea className="haha-inp" value={cfg.sensitive_words ?? ''} onChange={(e: any) => setK('sensitive_words', e.target.value)} minRows={5}
+            <Textarea className="banana-inp" value={cfg.sensitive_words ?? ''} onChange={(e: any) => setK('sensitive_words', e.target.value)} minRows={5}
               placeholder="每行一个，或用逗号 / 顿号分隔，例如：&#10;违禁词1，违禁词2&#10;违禁词3"
               style={{ width: '100%', marginTop: 8, lineHeight: 1.6 }} maxLength={8000} />
             <span className="faint" style={{ fontSize: 12, marginTop: 4, display: 'block' }}>{(cfg.sensitive_words || '').length}/8000 字符 · 匹配会忽略大小写与词内空格/符号</span>
@@ -138,18 +138,18 @@ export default function SecurityPanel() {
         </label>
         <label className="sec-field" style={{ marginTop: 14, display: 'block' }}>
           <span className="sec-label">用户名规则（正则，留空用默认 2-20 位字母/数字/下划线/中文）</span>
-          <Input className="haha-inp" maxLength={200} value={cfg.username_pattern ?? ''} onChange={(e: any) => setK('username_pattern', e.target.value)} placeholder="^[A-Za-z0-9_一-龥]{2,20}$" style={{ marginTop: 6, width: '100%' }} />
+          <Input className="banana-inp" maxLength={200} value={cfg.username_pattern ?? ''} onChange={(e: any) => setK('username_pattern', e.target.value)} placeholder="^[A-Za-z0-9_一-龥]{2,20}$" style={{ marginTop: 6, width: '100%' }} />
         </label>
         <label className="sec-field" style={{ marginTop: 10, display: 'block' }}>
           <span className="sec-label">用户名不符合时的提示文案</span>
-          <Input className="haha-inp" maxLength={100} value={cfg.username_hint ?? ''} onChange={(e: any) => setK('username_hint', e.target.value)} placeholder="用户名需为 2-20 位字母、数字、下划线或中文" style={{ marginTop: 6, width: '100%' }} />
+          <Input className="banana-inp" maxLength={100} value={cfg.username_hint ?? ''} onChange={(e: any) => setK('username_hint', e.target.value)} placeholder="用户名需为 2-20 位字母、数字、下划线或中文" style={{ marginTop: 6, width: '100%' }} />
         </label>
       </div>
 
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>举报理由</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>用户举报内容时可选的理由列表（每行一个，留空用内置默认）。含「其他」项时允许填写补充说明。</div>
-        <Textarea className="haha-inp" value={cfg.report_reasons ?? ''} onChange={(e: any) => setK('report_reasons', e.target.value)} minRows={5}
+        <Textarea className="banana-inp" value={cfg.report_reasons ?? ''} onChange={(e: any) => setK('report_reasons', e.target.value)} minRows={5}
           placeholder="每行一个，例如：&#10;垃圾广告或营销&#10;色情低俗内容&#10;其他" style={{ width: '100%', marginTop: 10, lineHeight: 1.6 }} maxLength={500} />
       </div>
 
@@ -163,7 +163,7 @@ export default function SecurityPanel() {
       </div>
 
       <div className="row" style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" className="haha-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存设置'}</Button>
+        <Button color="primary" className="banana-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存设置'}</Button>
       </div>
     </div>
   );

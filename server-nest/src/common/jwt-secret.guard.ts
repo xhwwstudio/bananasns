@@ -6,7 +6,7 @@
  * 故：启动时若解析出的密钥仍是该占位串，且未显式设 ALLOW_INSECURE_JWT_SECRET=true（仅供本地
  * 开发的逃生阀），则拒绝启动（fail-fast），避免任何部署「静默」以不安全密钥运行。
  */
-export const DEV_JWT_PLACEHOLDER = 'hahasns-dev-secret-change-me';
+export const DEV_JWT_PLACEHOLDER = 'bananasns-dev-secret-change-me';
 
 /**
  * 所有「公开可见」的占位密钥：内部开发占位串 + 两份 .env.example 里发货的示例值。

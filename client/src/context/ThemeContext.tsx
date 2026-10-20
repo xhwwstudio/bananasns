@@ -33,7 +33,7 @@ function initMode(): Mode {
   try {
     const q = new URLSearchParams(location.search).get('theme');
     if (q === 'dark' || q === 'light') return q;
-    const saved = localStorage.getItem('haha_theme');
+    const saved = localStorage.getItem('banana_theme');
     if (saved === 'dark' || saved === 'light') return saved;
     return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   } catch { return 'light'; }
@@ -42,13 +42,13 @@ function initSkin(): string {
   try {
     // 自定义主题 id 在挂载时（site 未加载）还无法校验，故这里信任已保存的合法格式值，
     // 由 site.loaded 后的校验 effect 兜底把真正非法的皮肤回退到 default。
-    const saved = localStorage.getItem('haha_skin');
+    const saved = localStorage.getItem('banana_skin');
     return saved && /^[a-z][a-z0-9_-]{0,31}$/.test(saved) ? saved : 'default';
   } catch { return 'default'; }
 }
 function initStyle(): string {
   try {
-    const saved = localStorage.getItem('haha_style');
+    const saved = localStorage.getItem('banana_style');
     return saved && STYLE_KEYS.includes(saved) ? saved : 'modern';
   } catch { return 'modern'; }
 }
@@ -56,9 +56,9 @@ function initStyle(): string {
 const HAD_SAVED = (() => {
   try {
     return {
-      skin: !!localStorage.getItem('haha_skin'),
-      mode: !!localStorage.getItem('haha_theme'),
-      style: !!localStorage.getItem('haha_style'),
+      skin: !!localStorage.getItem('banana_skin'),
+      mode: !!localStorage.getItem('banana_theme'),
+      style: !!localStorage.getItem('banana_style'),
     };
   } catch { return { skin: true, mode: true, style: true }; }
 })();
@@ -146,10 +146,10 @@ export function ThemeProvider({ children }: { children?: ReactNode }) {
     }
 
     try {
-      localStorage.setItem('haha_theme', theme);
+      localStorage.setItem('banana_theme', theme);
       // skin 仅在 site 加载后才落盘：避免挂载瞬间用回退值覆写掉尚未恢复的自定义皮肤 id。
-      if (site.loaded) localStorage.setItem('haha_skin', skin);
-      localStorage.setItem('haha_style', style);
+      if (site.loaded) localStorage.setItem('banana_skin', skin);
+      localStorage.setItem('banana_style', style);
     } catch { /* storage may be unavailable */ }
     const meta = document.querySelector('meta[name="theme-color"]:not([media])')
       || document.querySelector('meta[name="theme-color"]');

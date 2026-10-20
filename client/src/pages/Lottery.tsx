@@ -133,8 +133,8 @@ export default function Lottery() {
             {result.prize.type !== 'thanks' && <div className="lr-prize">{result.prize.name}</div>}
             <div className="lr-sub faint">{result.prize.type === 'thanks' ? '别灰心，再抽一次说不定就中了～' : '奖励已发放到你的账户'}</div>
             <div className="row gap-8" style={{ justifyContent: 'center', marginTop: 14 }}>
-              <Button variant="flat" className="haha-btn-app" onClick={() => setResult(null)}>知道了</Button>
-              <Button color="primary" className="haha-btn-app" onClick={() => { setResult(null); setTimeout(draw, 60); }} isDisabled={!data.freeLeft && (data.points || 0) < data.cost}>再抽一次</Button>
+              <Button variant="flat" className="banana-btn-app" onClick={() => setResult(null)}>知道了</Button>
+              <Button color="primary" className="banana-btn-app" onClick={() => { setResult(null); setTimeout(draw, 60); }} isDisabled={!data.freeLeft && (data.points || 0) < data.cost}>再抽一次</Button>
             </div>
           </div>
         )}

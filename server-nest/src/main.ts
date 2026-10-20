@@ -119,7 +119,7 @@ async function bootstrap() {
 
   // ── 单进程同时伺服 /uploads(历史本地图) + 内置 SPA，与 Express 一致 ──
   // 切换 systemd 到 server-nest 后整站靠这一个进程，故必须接管这两类静态资源。
-  // 路径用 env 覆盖(切换时指向线上 ~/hahasns/server/uploads 与 ~/hahasns/client/dist)。
+  // 路径用 env 覆盖(切换时指向线上 ~/bananasns/server/uploads 与 ~/bananasns/client/dist)。
   const uploadsDir =
     process.env.UPLOADS_DIR || join(__dirname, '..', 'uploads');
   if (fs.existsSync(uploadsDir)) {
@@ -170,7 +170,7 @@ async function bootstrap() {
   const port = config.get<number>('port') || 4000;
   await app.listen(port);
   // eslint-disable-next-line no-console
-  console.log(`HahaSNS (NestJS) API running on http://localhost:${port}`);
+  console.log(`BananaSNS (NestJS) API running on http://localhost:${port}`);
 }
 
 bootstrap();

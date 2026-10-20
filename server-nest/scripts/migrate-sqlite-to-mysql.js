@@ -11,9 +11,9 @@
  *  - 表/列自适应：只迁“两边都存在”的表与列；缺失的安全跳过并在报告里说明（不静默）。
  *
  * 用法（在服务器上跑，需能同时 require better-sqlite3 与 mysql2）：
- *   NODE_PATH=/home/tt/hahasns/server/node_modules:/home/tt/hahasns-nest/node_modules \
- *   SQLITE_PATH=/home/tt/hahasns/server/data/hahasns.db \
- *   DB_HOST=127.0.0.1 DB_PORT=3307 DB_USER=hahasns DB_PASSWORD=*** DB_NAME=hahasns \
+ *   NODE_PATH=/home/tt/bananasns/server/node_modules:/home/tt/bananasns-nest/node_modules \
+ *   SQLITE_PATH=/home/tt/bananasns/server/data/bananasns.db \
+ *   DB_HOST=127.0.0.1 DB_PORT=3307 DB_USER=bananasns DB_PASSWORD=*** DB_NAME=bananasns \
  *   node migrate-sqlite-to-mysql.js [--dry]
  *
  * --dry：只统计每表将迁移的行数，不写库。
@@ -24,8 +24,8 @@ const mysql = require('mysql2/promise');
 
 const DRY = process.argv.includes('--dry');
 const SQLITE_PATH =
-  process.env.SQLITE_PATH || path.resolve(__dirname, '../../server/data/hahasns.db');
-const DB_NAME = process.env.DB_NAME || 'hahasns';
+  process.env.SQLITE_PATH || path.resolve(__dirname, '../../server/data/bananasns.db');
+const DB_NAME = process.env.DB_NAME || 'bananasns';
 const BATCH = 200;
 
 function colName(r) {
@@ -43,7 +43,7 @@ async function main() {
   const my = await mysql.createConnection({
     host: process.env.DB_HOST || '127.0.0.1',
     port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USER || 'hahasns',
+    user: process.env.DB_USER || 'bananasns',
     password: process.env.DB_PASSWORD || '',
     database: DB_NAME,
     multipleStatements: false,

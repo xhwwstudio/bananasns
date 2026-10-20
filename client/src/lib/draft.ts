@@ -2,8 +2,8 @@
 // visibility + location) survives navigation / reload / accidental close. Older drafts were a plain
 // text string — loadDraft() still reads those for backward compatibility.
 //
-// 支持多个发布器：无 key = 动态 Composer 的默认草稿（键 haha_draft，向后兼容）；传 key（如 'thread'）
-// = 各自独立的草稿槽（键 haha_draft_<key>）。
+// 支持多个发布器：无 key = 动态 Composer 的默认草稿（键 banana_draft，向后兼容）；传 key（如 'thread'）
+// = 各自独立的草稿槽（键 banana_draft_<key>）。
 
 export interface Draft {
   content?: string;
@@ -14,7 +14,7 @@ export interface Draft {
   location?: string;
 }
 
-const BASE_KEY = 'haha_draft';
+const BASE_KEY = 'banana_draft';
 const keyOf = (key?: string) => (key ? `${BASE_KEY}_${key}` : BASE_KEY);
 
 function nonEmpty(d: Draft | null): boolean {

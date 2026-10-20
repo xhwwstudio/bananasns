@@ -56,7 +56,7 @@ export default function EventsPanel() {
               </div>
               <div className="faint" style={{ fontSize: 12, marginTop: 3 }}>{e.organizer?.nickname} · {(e.startAt || '').slice(0, 16)} · 报名 {e.signupCount}{e.capacity > 0 ? `/${e.capacity}` : ''}</div>
             </div>
-            <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(e)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+            <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(e)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
           </div>
         </div>
       ))}

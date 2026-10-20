@@ -78,14 +78,14 @@ export default function ThreadRow({ thread: initial, showBoard = true, defaultOp
               <div className="thread-content">{full?.content || t.content}</div>
               {full?.media?.length > 0 && <MediaGrid media={full.media} />}
               <div className="row gap-8" style={{ marginTop: 14 }}>
-                <Button size="sm" color="primary" variant={t.liked ? 'solid' : 'bordered'} className="haha-btn-app" onClick={like}>
+                <Button size="sm" color="primary" variant={t.liked ? 'solid' : 'bordered'} className="banana-btn-app" onClick={like}>
                   {/* 内联尺寸：v3 .button 会强制内部 svg 16px，基线此图标为 14px，钉住保持像素一致 */}
                   <Icon name="heart" size={14} style={{ width: 14, height: 14 }} fill={t.liked} /> 赞 {t.likeCount > 0 ? fmtNum(t.likeCount) : ''}
                 </Button>
-                {/* 导航链接保留 <Link>（RAC Button 只渲染 <button>），挂 haha-btn-app 修饰类共享同一按钮外观 */}
-                <Link to={`/thread/${t.id}`} className="haha-btn-app haha-btn-app--ghost haha-btn-app--sm" onClick={(e) => e.stopPropagation()}><Icon name="forum" size={14} /> 查看完整帖子</Link>
+                {/* 导航链接保留 <Link>（RAC Button 只渲染 <button>），挂 banana-btn-app 修饰类共享同一按钮外观 */}
+                <Link to={`/thread/${t.id}`} className="banana-btn-app banana-btn-app--ghost banana-btn-app--sm" onClick={(e) => e.stopPropagation()}><Icon name="forum" size={14} /> 查看完整帖子</Link>
                 <span className="spacer" />
-                <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setOpen(false)}>收起</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setOpen(false)}>收起</Button>
               </div>
               <div style={{ borderTop: '1px solid var(--line)', marginTop: 8 }}>
                 <Comments threadId={t.id} onCountChange={() => setReplyCount((c: number) => c + 1)} />

@@ -1,6 +1,6 @@
-# Contributing to HahaSNS
+# Contributing to BananaSNS
 
-Thanks for your interest in HahaSNS — a lightweight social network + forum + community app built on Express / better-sqlite3 (server) and React / Vite (client). Contributions of all sizes are welcome, from typo fixes to new features.
+Thanks for your interest in BananaSNS — a lightweight social network + forum + community app built on Express / better-sqlite3 (server) and React / Vite (client). Contributions of all sizes are welcome, from typo fixes to new features.
 
 ## Local development setup
 

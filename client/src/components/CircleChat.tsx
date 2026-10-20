@@ -92,7 +92,7 @@ export default function CircleChat({ slug, joined, onJoin }: { slug: string; joi
         <div className="cchat-locked">
           <Icon name="lock" size={26} />
           <div>加入圈子后即可参与群聊</div>
-          <Button size="sm" color="primary" className="haha-btn-app" onClick={() => (user ? onJoin() : setAuthOpen(true))}>加入圈子</Button>
+          <Button size="sm" color="primary" className="banana-btn-app" onClick={() => (user ? onJoin() : setAuthOpen(true))}>加入圈子</Button>
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ export default function CircleChat({ slug, joined, onJoin }: { slug: string; joi
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
           onFocus={() => setShowEmoji(false)}
           placeholder="说点什么…（Enter 发送，Shift+Enter 换行）" />
-        <Button color="primary" className="haha-btn-app" onClick={send} isDisabled={sending || !text.trim()} aria-label="发送"><Icon name="send" size={16} style={{ width: 16, height: 16 }} /></Button>
+        <Button color="primary" className="banana-btn-app" onClick={send} isDisabled={sending || !text.trim()} aria-label="发送"><Icon name="send" size={16} style={{ width: 16, height: 16 }} /></Button>
       </div>
     </div>
   );

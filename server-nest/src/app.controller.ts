@@ -5,6 +5,6 @@ import { Controller, Get } from '@nestjs/common';
 export class AppController {
   @Get('health')
   health() {
-    return { ok: true, app: 'HahaSNS' };
+    return { ok: true, app: 'BananaSNS' };
   }
 }

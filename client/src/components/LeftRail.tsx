@@ -109,7 +109,7 @@ export default function LeftRail({ onCompose }: LeftRailProps) {
         ))}
       </nav>
 
-      <Button size="lg" color="primary" fullWidth className="haha-btn-app" style={{ marginTop: 14 }} onClick={openCompose}>
+      <Button size="lg" color="primary" fullWidth className="banana-btn-app" style={{ marginTop: 14 }} onClick={openCompose}>
         {/* 内联尺寸：v3 .button 会强制内部 svg 16px，基线此图标为 17px，钉住保持像素一致 */}
         <Icon name="edit" size={17} style={{ width: 17, height: 17 }} /> 发布动态
       </Button>

@@ -1,4 +1,4 @@
-# HahaSNS 生产镜像：server-nest(NestJS) 单进程，伺服 client/dist + /api + /uploads(:4000)
+# BananaSNS 生产镜像：server-nest(NestJS) 单进程，伺服 client/dist + /api + /uploads(:4000)
 # 后端为 NestJS + TypeORM(MySQL/MariaDB) + Redis；配套 docker-compose 起 mariadb + redis。
 # 纯 JS 依赖(mysql2/ioredis/bcryptjs/aws-sdk)，无需原生编译。
 # npm 镜像源：默认官方；大陆构建可传 --build-arg NPM_REGISTRY=https://registry.npmmirror.com 加速

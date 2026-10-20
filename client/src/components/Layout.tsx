@@ -43,7 +43,7 @@ function ModuleClosed() {
       <div className="ui-card" style={{ padding: 8 }}>
         <Empty icon="🚧" text="该功能暂未开放" />
         <div className="center" style={{ paddingBottom: 18 }}>
-          <Link to="/" className="haha-btn-app haha-btn-app--primary haha-btn-app--sm">返回首页</Link>
+          <Link to="/" className="banana-btn-app banana-btn-app--primary banana-btn-app--sm">返回首页</Link>
         </div>
       </div>
     </Shell>
@@ -99,7 +99,9 @@ function titleFor(path: string): string | null {
 export default function Layout() {
   const loc = useLocation();
   const site = useSite();
-  const { isGuest, setAuthOpen } = useAuth();
+  const { isGuest, setAuthOpen, user } = useAuth();
+  // 关闭欢迎登录页时，访客在 effect 生效前也算游客，顶部引导条即时出现
+  const guestViewing = isGuest || (!site.showLanding && !user);
   useEffect(() => {
     window.scrollTo(0, 0);
     const t = titleFor(loc.pathname);
@@ -114,10 +116,10 @@ export default function Layout() {
   return (
     <>
       <Navbar />
-      {isGuest && (
+      {guestViewing && (
         <div className="guest-strip">
-          <span>你正在游客浏览 · 登录后可发帖、评论、私信</span>
-          <Button size="sm" color="primary" className="haha-btn-app" onClick={() => setAuthOpen(true)}>登录 / 注册</Button>
+          <span>你正在以游客身份浏览 · 注册或登录后可发帖、评论、私信</span>
+          <Button size="sm" color="primary" className="banana-btn-app" onClick={() => setAuthOpen(true)}>注册 / 登录</Button>
         </div>
       )}
       {/* 单一 Suspense 边界兜住所有路由级懒加载的二级页；ErrorBoundary(key=路由)兜住页面组件崩溃，

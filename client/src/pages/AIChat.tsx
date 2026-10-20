@@ -166,7 +166,7 @@ export default function AIChat() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('haha_token')}`,
+          Authorization: `Bearer ${localStorage.getItem('banana_token')}`,
         },
         body: JSON.stringify({ content, model }),
         signal: controller.signal,
@@ -247,7 +247,7 @@ export default function AIChat() {
         {/* ── Left: conversation list ── */}
         <div className="chat-list ai-list">
           <div className="ai-list-top">
-            <Button color="primary" fullWidth className="haha-btn-app ai-newchat" onClick={newChat} isDisabled={streaming}>
+            <Button color="primary" fullWidth className="banana-btn-app ai-newchat" onClick={newChat} isDisabled={streaming}>
               {/* 内联尺寸：v3 .button 移动端(<768px)强制内部 svg 20px，钉住保持基线 16px */}
               <Icon name="plus" size={16} style={{ width: 16, height: 16 }} /> 新对话
             </Button>
@@ -293,7 +293,7 @@ export default function AIChat() {
             <button className="back-btn chat-back" onClick={() => setMobileList(true)} aria-label="返回对话列表"><Icon name="back" size={19} /></button>
             <AiAvatar size={30} />
             <div className="ai-header-txt">
-              <b>HahaSNS 智能助手</b>
+              <b>BananaSNS 智能助手</b>
               {status && (
                 <span className={`ai-status-dot${status.configured ? ' on' : ''}`}>
                   {status.configured ? '在线' : '演示模式'}
@@ -306,7 +306,7 @@ export default function AIChat() {
             {!showThread ? (
               <div className="ai-empty">
                 <span className="ai-empty-ico"><Icon name="spark" size={30} fill /></span>
-                <h2 className="ai-empty-title">嗨，我是 HahaSNS 智能助手</h2>
+                <h2 className="ai-empty-title">嗨，我是 BananaSNS 智能助手</h2>
                 <p className="ai-empty-sub">帮你润色动态、找话题灵感、解答社区玩法。试试下面这些，或直接开始打字。</p>
                 <div className="ai-suggest-grid">
                   {SUGGESTIONS.map((s) => (
@@ -390,7 +390,7 @@ export default function AIChat() {
             <div className="ai-composer-row">
               <Textarea
                 ref={taRef}
-                className="haha-inp ai-textarea"
+                className="banana-inp ai-textarea"
                 value={text}
                 onChange={(e: any) => setText(e.target.value)}
                 onKeyDown={onKeyDown}

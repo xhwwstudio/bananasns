@@ -123,7 +123,7 @@ export default function Events() {
         <li>报名需消耗的积分会在取消时自动退还。</li>
         <li>报名成功后，发起人会收到通知。</li>
       </ul>
-      <Button color="primary" fullWidth className="haha-btn-app" style={{ marginTop: 12 }} onClick={() => (user ? setCreating(true) : setAuthOpen(true))}>
+      <Button color="primary" fullWidth className="banana-btn-app" style={{ marginTop: 12 }} onClick={() => (user ? setCreating(true) : setAuthOpen(true))}>
         <Icon name="plus" size={15} style={{ width: 15, height: 15 }} /> 发起活动
       </Button>
     </div>
@@ -136,7 +136,7 @@ export default function Events() {
           <h1 className="text-xl font-extrabold flex items-center gap-2"><Icon name="calendar" size={20} /> 社区活动</h1>
           <p className="art-head-sub">线上线下一起玩，报名参加感兴趣的活动。</p>
         </div>
-        <Button color="primary" className="haha-btn-app" onClick={() => (user ? setCreating(true) : setAuthOpen(true))}><Icon name="plus" size={16} style={{ width: 16, height: 16 }} /> 发起活动</Button>
+        <Button color="primary" className="banana-btn-app" onClick={() => (user ? setCreating(true) : setAuthOpen(true))}><Icon name="plus" size={16} style={{ width: 16, height: 16 }} /> 发起活动</Button>
       </div>
 
       <div className="art-filterbar">
@@ -157,7 +157,7 @@ export default function Events() {
         <div className="ui-card"><LoadError onRetry={load} /></div>
       ) : data.events.length === 0 ? (
         <div className="ui-card"><Empty icon="📅" text={filter === 'mine' ? '你还没有参加任何活动' : '这里还没有活动'}>
-          {user && <Button size="sm" color="primary" className="haha-btn-app" style={{ marginTop: 10 }} onClick={() => setCreating(true)}><Icon name="plus" size={14} style={{ width: 14, height: 14 }} /> 发起一个</Button>}
+          {user && <Button size="sm" color="primary" className="banana-btn-app" style={{ marginTop: 10 }} onClick={() => setCreating(true)}><Icon name="plus" size={14} style={{ width: 14, height: 14 }} /> 发起一个</Button>}
         </Empty></div>
       ) : (
         <div className="ev-list">
@@ -194,7 +194,7 @@ function CreateEvent({ open, onClose, onCreated }: { open: boolean; onClose: () 
     <Modal open={open} onClose={onClose} large>
       <div className="modal-head"><div className="modal-title">发起活动</div></div>
       <div className="modal-body ev-form">
-        <Input className="haha-inp" placeholder="活动标题" value={f.title} maxLength={50} onChange={(e: any) => set('title', e.target.value)} />
+        <Input className="banana-inp" placeholder="活动标题" value={f.title} maxLength={50} onChange={(e: any) => set('title', e.target.value)} />
         <div className="ev-form-cats">
           {CATS.map((c) => (
             <button key={c} type="button" className={`ev-cat-pill${f.category === c ? ' on' : ''}`} onClick={() => set('category', c)} style={{ '--cc': evColor(c) } as React.CSSProperties}>
@@ -203,20 +203,20 @@ function CreateEvent({ open, onClose, onCreated }: { open: boolean; onClose: () 
           ))}
         </div>
         <div className="ev-form-row">
-          <label className="ev-field"><span>开始时间</span><Input className="haha-inp" type="datetime-local" value={f.startAt} onChange={(e: any) => set('startAt', e.target.value)} /></label>
-          <label className="ev-field"><span>结束时间（选填）</span><Input className="haha-inp" type="datetime-local" value={f.endAt} onChange={(e: any) => set('endAt', e.target.value)} /></label>
+          <label className="ev-field"><span>开始时间</span><Input className="banana-inp" type="datetime-local" value={f.startAt} onChange={(e: any) => set('startAt', e.target.value)} /></label>
+          <label className="ev-field"><span>结束时间（选填）</span><Input className="banana-inp" type="datetime-local" value={f.endAt} onChange={(e: any) => set('endAt', e.target.value)} /></label>
         </div>
         <label className="ev-checkbox"><input type="checkbox" checked={f.online} onChange={(e) => set('online', e.target.checked)} /> 线上活动</label>
-        <Input className="haha-inp" placeholder={f.online ? '会议链接 / 平台' : '活动地点'} value={f.location} onChange={(e: any) => set('location', e.target.value)} />
+        <Input className="banana-inp" placeholder={f.online ? '会议链接 / 平台' : '活动地点'} value={f.location} onChange={(e: any) => set('location', e.target.value)} />
         <div className="ev-form-row">
-          <label className="ev-field"><span>名额上限（0 不限）</span><Input className="haha-inp" type="number" min={0} value={f.capacity} onChange={(e: any) => set('capacity', e.target.value)} /></label>
-          <label className="ev-field"><span>报名积分（0 免费）</span><Input className="haha-inp" type="number" min={0} value={f.fee} onChange={(e: any) => set('fee', e.target.value)} /></label>
+          <label className="ev-field"><span>名额上限（0 不限）</span><Input className="banana-inp" type="number" min={0} value={f.capacity} onChange={(e: any) => set('capacity', e.target.value)} /></label>
+          <label className="ev-field"><span>报名积分（0 免费）</span><Input className="banana-inp" type="number" min={0} value={f.fee} onChange={(e: any) => set('fee', e.target.value)} /></label>
         </div>
-        <Input className="haha-inp" placeholder="封面图链接（选填）" value={f.cover} onChange={(e: any) => set('cover', e.target.value)} />
+        <Input className="banana-inp" placeholder="封面图链接（选填）" value={f.cover} onChange={(e: any) => set('cover', e.target.value)} />
         <textarea className="art-ed-body" style={{ minHeight: 120 }} placeholder="活动介绍：流程、注意事项、报名要求…" value={f.description} onChange={(e) => set('description', e.target.value)} />
         <div className="row gap-8" style={{ justifyContent: 'flex-end', marginTop: 6 }}>
-          <Button variant="flat" className="haha-btn-app" onClick={onClose}>取消</Button>
-          <Button color="primary" className="haha-btn-app" onClick={submit} isDisabled={!canSubmit || busy}><Icon name="send" size={15} style={{ width: 15, height: 15 }} /> {busy ? '发布中…' : '发起'}</Button>
+          <Button variant="flat" className="banana-btn-app" onClick={onClose}>取消</Button>
+          <Button color="primary" className="banana-btn-app" onClick={submit} isDisabled={!canSubmit || busy}><Icon name="send" size={15} style={{ width: 15, height: 15 }} /> {busy ? '发布中…' : '发起'}</Button>
         </div>
       </div>
     </Modal>

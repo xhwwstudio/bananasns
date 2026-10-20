@@ -99,7 +99,7 @@ export default function CircleDetail() {
         </CardBody>
       </Card>
 
-      <Tabs aria-label="圈子内容" className="ui-card haha-feed-tabs mb-4"
+      <Tabs aria-label="圈子内容" className="ui-card banana-feed-tabs mb-4"
         selectedKey={tab} onSelectionChange={(k: any) => setTab(k)}>
         <Tab key="posts" title="动态" />
         <Tab key="chat" title="聊天室" />

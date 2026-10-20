@@ -25,7 +25,7 @@ export default function AuthLanding() {
   const [showPw, setShowPw] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
   const site = useSite();
-  // 登出落地页也把标签标题设成配置的品牌（否则显示 index.html 写死的「HahaSNS」）
+  // 登出落地页也把标签标题设成配置的品牌（否则显示 index.html 写死的「BananaSNS」）
   useEffect(() => { document.title = `${site.name} · ${site.slogan}`; }, [site.name, site.slogan]);
   const set = (k: string) => (v: any) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -123,7 +123,7 @@ export default function AuthLanding() {
             {mode === 'register' && !site.registrationEnabled && (
               <div className="faint" style={{ fontSize: 13, textAlign: 'center', color: 'var(--ink-3)' }}>本站暂未开放注册</div>
             )}
-            <Button type="submit" size="lg" color="primary" fullWidth className="haha-btn-app" isDisabled={busy || (mode === 'register' && !site.registrationEnabled)} style={{ marginTop: 4, fontWeight: 700 }}>
+            <Button type="submit" size="lg" color="primary" fullWidth className="banana-btn-app" isDisabled={busy || (mode === 'register' && !site.registrationEnabled)} style={{ marginTop: 4, fontWeight: 700 }}>
               {busy ? <Spinner size="sm" color="current" /> : (mode === 'login' ? '登录' : '注册')}
             </Button>
           </form>
@@ -132,11 +132,11 @@ export default function AuthLanding() {
               type="button"
               variant="flat"
               fullWidth
-              className="haha-btn-app"
+              className="banana-btn-app"
               style={{ marginTop: 12, fontWeight: 600 }}
-              onClick={() => { enterGuest(); toast.show('已进入游客浏览（只读）'); }}
+              onClick={() => { enterGuest(); toast.show('已进入游客访问（只读）'); }}
             >
-              游客浏览
+              游客访问 →
             </Button>
           )}
         </div>

@@ -17,11 +17,11 @@ export default function RedPacketEditor({ value, onChange, userPoints }: { value
       </div>
       <div className="rp-editor-row">
         <label className="rp-ef"><span>总积分</span>
-          <Input type="number" min={1} value={value.points} onChange={(e: any) => onChange({ ...value, points: e.target.value })} className="haha-inp haha-inp-sm" /></label>
+          <Input type="number" min={1} value={value.points} onChange={(e: any) => onChange({ ...value, points: e.target.value })} className="banana-inp banana-inp-sm" /></label>
         <label className="rp-ef"><span>红包个数</span>
-          <Input type="number" min={1} max={100} value={value.count} onChange={(e: any) => onChange({ ...value, count: e.target.value })} className="haha-inp haha-inp-sm" /></label>
+          <Input type="number" min={1} max={100} value={value.count} onChange={(e: any) => onChange({ ...value, count: e.target.value })} className="banana-inp banana-inp-sm" /></label>
       </div>
-      <Input className="haha-inp haha-inp-sm rp-ef-bless" maxLength={30} placeholder="祝福语（选填）" value={value.blessing}
+      <Input className="banana-inp banana-inp-sm rp-ef-bless" maxLength={30} placeholder="祝福语（选填）" value={value.blessing}
         onChange={(e: any) => onChange({ ...value, blessing: e.target.value })} />
       <div className="rp-editor-hint">
         {Number(value.count) > 0 && `${value.count} 个红包随机分配 ${Number(value.points) || 0} 积分，先到先得 · `}

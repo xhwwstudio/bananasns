@@ -92,15 +92,15 @@ function MyBookmarks() {
         {user && <button className="nav-anchor" style={{ marginLeft: 'auto' }} onClick={() => setAdding((a) => !a)}><Icon name="plus" size={14} /> 添加</button>}
       </div>
       {!user ? (
-        <div className="ui-card"><div className="faint row gap-8" style={{ padding: '14px 16px', fontSize: 13.5, flexWrap: 'wrap' }}>登录后即可把常用网址收藏到这里，打造你的专属导航。<Button size="sm" color="primary" className="haha-btn-app" onClick={() => setAuthOpen(true)}>登录</Button></div></div>
+        <div className="ui-card"><div className="faint row gap-8" style={{ padding: '14px 16px', fontSize: 13.5, flexWrap: 'wrap' }}>登录后即可把常用网址收藏到这里，打造你的专属导航。<Button size="sm" color="primary" className="banana-btn-app" onClick={() => setAuthOpen(true)}>登录</Button></div></div>
       ) : (
         <>
           {adding && (
             <div className="ui-card" style={{ padding: 14, marginBottom: 10 }}>
               <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-                <Input className="haha-inp" style={{ maxWidth: 160 }} maxLength={40} value={form.title} onChange={(e: any) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="网站名" />
-                <Input className="haha-inp grow" maxLength={300} value={form.url} onChange={(e: any) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://… 或直接粘贴网址" onKeyDown={(e: any) => { if (e.key === 'Enter') add(); }} />
-                <Button size="sm" color="primary" className="haha-btn-app" onClick={add}>收藏</Button>
+                <Input className="banana-inp" style={{ maxWidth: 160 }} maxLength={40} value={form.title} onChange={(e: any) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="网站名" />
+                <Input className="banana-inp grow" maxLength={300} value={form.url} onChange={(e: any) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://… 或直接粘贴网址" onKeyDown={(e: any) => { if (e.key === 'Enter') add(); }} />
+                <Button size="sm" color="primary" className="banana-btn-app" onClick={add}>收藏</Button>
               </div>
             </div>
           )}

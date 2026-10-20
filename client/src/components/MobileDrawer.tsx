@@ -59,7 +59,7 @@ export default function MobileDrawer({ open, onClose }: { open: boolean; onClose
             </div>
           </Link>
         ) : (
-          <Button color="primary" fullWidth className="haha-btn-app" style={{ margin: '2px 0 6px' }} onClick={() => { setAuthOpen(true); onClose(); }}>登录 / 注册</Button>
+          <Button color="primary" fullWidth className="banana-btn-app" style={{ margin: '2px 0 6px' }} onClick={() => { setAuthOpen(true); onClose(); }}>登录 / 注册</Button>
         )}
 
         <nav className="mdrawer-nav">
@@ -88,7 +88,7 @@ export default function MobileDrawer({ open, onClose }: { open: boolean; onClose
           ))}
         </nav>
 
-        <Button size="lg" color="primary" fullWidth className="haha-btn-app" style={{ marginTop: 10 }} onClick={() => { openCompose(); onClose(); }}>
+        <Button size="lg" color="primary" fullWidth className="banana-btn-app" style={{ marginTop: 10 }} onClick={() => { openCompose(); onClose(); }}>
           {/* 内联尺寸：v3 .button 会强制内部 svg 16px，基线此图标为 17px，钉住保持像素一致 */}
           <Icon name="edit" size={17} style={{ width: 17, height: 17 }} /> 发布动态
         </Button>

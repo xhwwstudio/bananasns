@@ -3,7 +3,7 @@ import axios, { type AxiosInstance, type InternalAxiosRequestConfig, type AxiosE
 const api: AxiosInstance = axios.create({ baseURL: '/api' });
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('haha_token');
+  const token = localStorage.getItem('banana_token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });

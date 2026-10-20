@@ -104,7 +104,7 @@ export default function Notifications() {
     <Shell right={false}>
       <div className="ui-card section-head">
         <h2 className="row gap-8"><Icon name="bell" size={19} style={{ color: 'var(--brand)' }} /> 通知</h2>
-        <Button size="sm" variant="flat" className="haha-btn-app" onClick={markAll}>全部已读</Button>
+        <Button size="sm" variant="flat" className="banana-btn-app" onClick={markAll}>全部已读</Button>
       </div>
 
       {/* 统一入口：未读私信聚合到通知中心顶部，一处直达 */}
@@ -120,7 +120,7 @@ export default function Notifications() {
         </Link>
       )}
 
-      <Tabs aria-label="通知分类" className="ui-card haha-feed-tabs"
+      <Tabs aria-label="通知分类" className="ui-card banana-feed-tabs"
         selectedKey={tab} onSelectionChange={(k: any) => setTab(k)}>
         {FILTERS.map((f) => {
           const n = f.k === 'all' ? items.filter((x) => !x.read).length : items.filter((x) => f.types!.includes(x.type) && !x.read).length;

@@ -46,7 +46,7 @@ function DeployCheckCard() {
             {' · '}反代、建表开关、缓存、媒体存储——这些原本只写进服务器日志
           </div>
         </div>
-        <Button size="sm" variant="flat" className="haha-btn-app" isDisabled={loading} onClick={() => load(true)}>
+        <Button size="sm" variant="flat" className="banana-btn-app" isDisabled={loading} onClick={() => load(true)}>
           {loading ? '检查中…' : '重新检查'}
         </Button>
       </div>
@@ -118,7 +118,7 @@ export default function SystemPanel() {
               最新版本：{st.canCheck ? <span className="num">{st.latestVersion || '—'}</span> : <span className="faint">（GitHub 检测暂不可用）</span>}
             </div>
           </div>
-          <Button size="sm" variant="flat" className="haha-btn-app" isDisabled={checking} onClick={() => load(true)}><Icon name="rocket" size={14} style={{ width: 14, height: 14 }} /> {checking ? '检查中…' : '检查更新'}</Button>
+          <Button size="sm" variant="flat" className="banana-btn-app" isDisabled={checking} onClick={() => load(true)}><Icon name="rocket" size={14} style={{ width: 14, height: 14 }} /> {checking ? '检查中…' : '检查更新'}</Button>
         </div>
         <div style={{ marginTop: 14 }}>
           {st.upgrading ? (
@@ -127,9 +127,9 @@ export default function SystemPanel() {
             <div className="row gap-8" style={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <span style={{ color: 'var(--like)', fontWeight: 700 }}>● 有新版本可用</span>
               {st.upgradeEnabled
-                ? <Button color="primary" className="haha-btn-app" onClick={doUpgrade}><Icon name="rocket" size={15} style={{ width: 15, height: 15 }} /> 一键升级</Button>
+                ? <Button color="primary" className="banana-btn-app" onClick={doUpgrade}><Icon name="rocket" size={15} style={{ width: 15, height: 15 }} /> 一键升级</Button>
                 : <span className="faint" style={{ fontSize: 12.5 }}>（后台升级未启用，见下方说明）</span>}
-              <a className="haha-btn-app haha-btn-app--ghost haha-btn-app--sm" href="/changelog" target="_blank" rel="noreferrer">查看更新日志</a>
+              <a className="banana-btn-app banana-btn-app--ghost banana-btn-app--sm" href="/changelog" target="_blank" rel="noreferrer">查看更新日志</a>
             </div>
           ) : (
             <span style={{ color: 'var(--ok, #16a34a)', fontWeight: 700 }}>✓ 已是最新版本</span>

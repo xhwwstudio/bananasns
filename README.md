@@ -1,12 +1,12 @@
-# HahaSNS · 轻社交 · 轻论坛 · 轻社区
+# BananaSNS · 轻社交 · 轻论坛 · 轻社区
 
-> **HahaSNS**（中文主题名「哈哈」）是一款轻量级、一站式的开源社区系统 —— 把**信息流式 SNS**、**BBS 论坛**与**积分驱动的社区中心**融合在同一个精致的 Web 应用里。界面以真实产品的标准打磨：桌面端三栏布局、移动端底部标签栏布局，原生支持浅色 / 深色与 6 套配色皮肤。
+> **BananaSNS**（中文主题名「香蕉」）是一款轻量级、一站式的开源社区系统 —— 把**信息流式 SNS**、**BBS 论坛**与**积分驱动的社区中心**融合在同一个精致的 Web 应用里。界面以真实产品的标准打磨：桌面端三栏布局、移动端底部标签栏布局，原生支持浅色 / 深色与 6 套配色皮肤。
 
-**HahaSNS = 轻社交 · 轻论坛 · 轻社区** —— 从零原创、可自托管、可商用二次开发的现代社区平台。
+**BananaSNS = 轻社交 · 轻论坛 · 轻社区** —— 从零原创、可自托管、可商用二次开发的现代社区平台。
 
 > 💚 **完全免费 · MIT 开源 · 可商用**：源码完整开放，随意自托管、二次开发、商用，无需授权费。
 
-🔗 **在线演示：** [sns.hahaha.chat](https://sns.hahaha.chat)　·　🚀 **想自己搭一个？** 见 [快速开始](#-快速开始)（技术小白推荐用 [1Panel](docs/INSTALL-1panel.md) / [宝塔](docs/INSTALL-bt.md) 面板一键装）
+🚀 **想自己搭一个？** 见 [快速开始](#-快速开始)（技术小白推荐用 [1Panel](docs/INSTALL-1panel.md) / [宝塔](docs/INSTALL-bt.md) 面板一键装）
 
 ---
 
@@ -19,7 +19,6 @@
 - [快速开始](#-快速开始)
 - [目录结构](#-目录结构)
 - [文档导航](#-文档导航)
-- [加入社区](#-加入社区)
 - [开源协议](#-开源协议)
 - [贡献指南](#-贡献指南)
 
@@ -27,13 +26,14 @@
 
 ## 🌟 项目简介
 
-HahaSNS 想解决的问题很简单：很多团队既想要「朋友圈式」的动态社交，又想要「贴吧式」的论坛沉淀，还想要积分、签到、商城、勋章这些让社区活跃起来的运营工具 —— 通常这意味着要拼三四套系统。HahaSNS 把这些能力做进**一个**代码库、**一套**账号体系、**一致**的设计语言里，开箱即用。
+BananaSNS 想解决的问题很简单：很多团队既想要「朋友圈式」的动态社交，又想要「贴吧式」的论坛沉淀，还想要积分、签到、商城、勋章这些让社区活跃起来的运营工具 —— 通常这意味着要拼三四套系统。BananaSNS 把这些能力做进**一个**代码库、**一套**账号体系、**一致**的设计语言里，开箱即用。
 
 - **一站式**：SNS 动态、BBS 论坛、兴趣圈子、问答悬赏、资讯快报、专栏文章、活动报名、网址导航、排行榜、任务勋章、签到、抽奖、积分商城、会员体系、私信、独立后台，全部内置。
-- **好部署**：后端是 NestJS + MySQL/MariaDB + Redis，一份 `docker-compose.yml` 即可起全栈（线上 Demo 即此架构，见 [1Panel](docs/INSTALL-1panel.md) / [宝塔](docs/INSTALL-bt.md) 教程）。
+- **好部署**：后端是 NestJS + MySQL/MariaDB + Redis，一份 `docker-compose.yml` 即可起全栈（见 [1Panel](docs/INSTALL-1panel.md) / [宝塔](docs/INSTALL-bt.md) 教程）。
 - **现代前端**：React 19 + HeroUI v3 + TypeScript + Tailwind 4 + Vite，6 套配色皮肤 × 浅 / 深色，配合 framer-motion 页面转场，桌面与移动端均为原生体验。
 - **可运营**：积分、经验、等级、签到、任务、勋章、抽奖、商城、会员（VIP / V 认证）等成长与激励体系一应俱全，并配有功能完整的独立后台。
-- **可维护**：端到端 TypeScript、全局 DTO 校验、Controller → Service → Repository 分层清晰；70+ 自动化单元测试（vitest，覆盖敏感词过滤、限流与防批量注册、积分 / 等级经济、富文本解析、用户对象脱敏等核心逻辑），配合前后端类型检查构成基础质量门（`npm test`）。
+- **登录门可切换**：后台可开关「欢迎登录页」；开启时登录页提供「游客访问」只读浏览，关闭时访客直接进站。游客顶部有注册 / 登录引导条，首页发布位替换为「登录后分享你的第一条动态 →」。
+- **可维护**：端到端 TypeScript、全局 DTO 校验、Controller → Service → Repository 分层清晰；290+ 自动化单元测试（vitest，覆盖敏感词过滤、限流与防批量注册、积分 / 等级经济、富文本解析、用户对象脱敏等核心逻辑），配合前后端类型检查构成基础质量门（`npm test`）。
 - **开源**：MIT 协议，欢迎自托管、二次开发与贡献。
 
 ---
@@ -162,7 +162,7 @@ HahaSNS 想解决的问题很简单：很多团队既想要「朋友圈式」的
 ### 方式 A：Docker 一键起全栈（推荐）
 
 ```bash
-git clone https://github.com/maobase/hahasns.git && cd hahasns
+git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
 cp .env.example .env      # 填 JWT_SECRET、DB_PASSWORD（可选填 SEED_ADMIN_USER/SEED_ADMIN_PASSWORD 首启自动建管理员）
 docker compose up -d --build
 # → http://localhost:4000  （app + mariadb + redis 一并起好，app 首启自动建表）
@@ -197,7 +197,7 @@ npm run dev                                     # 同时起 NestJS(:4000, 监听
 ## 📁 目录结构
 
 ```
-hahasns/
+bananasns/
 ├── client/          # 前端 SPA：React 19 + HeroUI v3 + TypeScript + Tailwind 4 + Vite
 │   ├── public/showcase/   # 截图素材
 │   └── src/               # pages / components / context / styles
@@ -222,17 +222,6 @@ hahasns/
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统架构说明 |
 | [docs/API.md](docs/API.md) | REST 接口参考 |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | 配置与环境变量 |
-
----
-
-## 💬 加入社区
-
-种子用户们，欢迎加入 **HahaSNS 微信群**，一起反馈体验、抢先尝鲜、共建路线图：
-
-<img src="docs/wechat-group.png" alt="HahaSNS 微信种子用户群二维码" width="220" />
-
-用微信扫码加群；或添加微信号 **`xiaolizi1579687`**（凤梨酥）为好友，邀你进群。
-（群二维码会定期更新，若已失效，直接加上面的微信号即可。）
 
 ---
 

@@ -49,8 +49,8 @@ export default function ArticlesPanel() {
               </div>
               <div className="faint" style={{ fontSize: 12, marginTop: 3 }}>{a.author?.nickname} · {fmtNum(a.views)} 阅读 · {fmtNum(a.likeCount)} 赞</div>
             </div>
-            <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => feature(a, !a.featured)}>{a.featured ? '取消精选' : '设精选'}</Button>
-            <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(a)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+            <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => feature(a, !a.featured)}>{a.featured ? '取消精选' : '设精选'}</Button>
+            <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(a)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
           </div>
         </div>
       ))}

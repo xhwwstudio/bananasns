@@ -55,7 +55,7 @@ export function ReportHost() {
           ))}
         </div>
         <Textarea
-          className="haha-inp"
+          className="banana-inp"
           style={{ width: '100%', minHeight: 62, resize: 'vertical', marginTop: 12, fontSize: 14, lineHeight: 1.6, padding: '9px 11px' }}
           placeholder={reason === '其他' ? '请描述举报原因' : '补充说明（选填）'}
           value={note}
@@ -63,8 +63,8 @@ export function ReportHost() {
           maxLength={200}
         />
         <div className="row gap-8" style={{ justifyContent: 'flex-end', marginTop: 16 }}>
-          <Button variant="flat" className="haha-btn-app" onClick={() => finish(null)}>取消</Button>
-          <Button color="primary" className="haha-btn-app" isDisabled={!reason || (reason === '其他' && !note.trim())} onClick={submit}>提交举报</Button>
+          <Button variant="flat" className="banana-btn-app" onClick={() => finish(null)}>取消</Button>
+          <Button color="primary" className="banana-btn-app" isDisabled={!reason || (reason === '其他' && !note.trim())} onClick={submit}>提交举报</Button>
         </div>
       </div>
     </Modal>

@@ -1,6 +1,6 @@
 {
-  "name": "hahasns-client",
-  "version": "1.0.0",
+  "name": "bananasns-client",
+  "version": "0.1.1",
   "private": true,
   "engines": {
     "node": ">=20"

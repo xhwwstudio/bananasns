@@ -27,6 +27,19 @@ export class PayService {
     return crypto.createHash('md5').update(s, 'utf8').digest('hex');
   }
 
+  /**
+   * 原子地把订单从 pending 置为 paid，返回是否由本次调用完成状态迁移。
+   * 支付网关可能并发/重复回调：先查后写的 check-then-act 会让两个请求同时看到 pending 并各加一次积分，
+   * 造成重复到账。这里用带 status='pending' 条件的 UPDATE，只有 affected=1 的那次才发积分。
+   */
+  private async markPaid(order: PaymentOrder, tradeNo: string): Promise<boolean> {
+    const res = await this.orders.update(
+      { id: order.id, status: 'pending' },
+      { status: 'paid', trade_no: tradeNo || '', paid_at: this.helpers.nowSql() },
+    );
+    return (res.affected || 0) > 0;
+  }
+
   // 签名：非空参数(排除 sign/sign_type)按 key 升序拼 a=1&b=2…，末尾直接接商户 KEY，md5 小写
   private epaySign(params: Record<string, any>, key: string): string {
     const keys = Object.keys(params)
@@ -96,11 +109,10 @@ export class PayService {
     if (query.trade_status !== 'TRADE_SUCCESS') return 'fail';
     const order = await this.orders.findOne({ where: { out_trade_no: query.out_trade_no } });
     if (!order) return 'fail';
+    // 金额校验：签名已覆盖金额，这里再对一次订单，防止网关/配置异常导致少付多得。
+    if (query.money != null && Number(query.money) !== Number(order.amount)) return 'fail';
     if (order.status === 'paid') return 'success'; // 幂等：重复回调
-    order.status = 'paid';
-    order.trade_no = query.trade_no || '';
-    order.paid_at = this.helpers.nowSql();
-    await this.orders.save(order);
+    if (!(await this.markPaid(order, query.trade_no))) return 'success'; // 并发回调已处理
     await this.helpers.award(order.user_id, { points: order.points });
     await this.helpers
       .notify({ userId: order.user_id, type: 'system', preview: `充值成功，到账 ${order.points} 积分` })
@@ -221,10 +233,7 @@ export class PayService {
     if (!order) return 'fail';
     if (Number(body.total_amount) !== Number(order.amount)) return 'fail'; // 防金额篡改
     if (order.status === 'paid') return 'success'; // 幂等：重复回调
-    order.status = 'paid';
-    order.trade_no = body.trade_no || '';
-    order.paid_at = this.helpers.nowSql();
-    await this.orders.save(order);
+    if (!(await this.markPaid(order, body.trade_no))) return 'success'; // 并发回调已处理
     await this.helpers.award(order.user_id, { points: order.points });
     await this.helpers
       .notify({ userId: order.user_id, type: 'system', preview: `充值成功，到账 ${order.points} 积分` })
@@ -324,7 +333,7 @@ export class PayService {
           Authorization: auth,
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'User-Agent': 'HahaSNS',
+          'User-Agent': 'BananaSNS',
         },
         body,
       });
@@ -359,10 +368,7 @@ export class PayService {
       if (Number(info.amount?.total) !== Math.round(Number(order.amount) * 100))
         return { code: 'FAIL', message: '金额不符' }; // 防篡改
       if (order.status === 'paid') return { code: 'SUCCESS' }; // 幂等
-      order.status = 'paid';
-      order.trade_no = info.transaction_id || '';
-      order.paid_at = this.helpers.nowSql();
-      await this.orders.save(order);
+      if (!(await this.markPaid(order, info.transaction_id))) return { code: 'SUCCESS' }; // 并发回调已处理
       await this.helpers.award(order.user_id, { points: order.points });
       await this.helpers
         .notify({ userId: order.user_id, type: 'system', preview: `充值成功，到账 ${order.points} 积分` })

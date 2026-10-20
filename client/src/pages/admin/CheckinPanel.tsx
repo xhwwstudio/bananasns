@@ -186,7 +186,7 @@ export default function CheckinPanel() {
       </div>
 
       <div className="row" style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" className="haha-btn-app" isDisabled={saving} onClick={save}>{saving ? '保存中…' : '保存配置'}</Button>
+        <Button color="primary" className="banana-btn-app" isDisabled={saving} onClick={save}>{saving ? '保存中…' : '保存配置'}</Button>
       </div>
       <div className="sec-head" style={{ marginTop: 6 }}>签到统计</div>
       <CheckinStats />

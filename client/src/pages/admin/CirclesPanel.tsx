@@ -55,7 +55,7 @@ export default function CirclesPanel() {
               </div>
               <div className="faint" style={{ fontSize: 12, marginTop: 3 }}>{c.owner?.nickname} · {fmtNum(c.memberCount)} 成员 · {fmtNum(c.postCount)} 动态</div>
             </div>
-            <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(c)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 解散</Button>
+            <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(c)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 解散</Button>
           </div>
         </div>
       ))}

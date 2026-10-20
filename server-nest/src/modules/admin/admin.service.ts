@@ -45,7 +45,8 @@ const TOGGLE_KEYS = [
   'home_tab_video', 'home_tab_samecity', 'home_tab_following', // 首页信息流可选 tab 开关（默认开，未配置视为开）
   'widget_hottopics', 'widget_qa', 'widget_circle', 'widget_flash', 'widget_whotofollow', 'widget_checkin', 'widget_trending', // 右栏挂件开关（默认开；与模块开关叠加，可只藏挂件保留模块）
   'site_logo_only', // LOGO 独占：有 logo 时隐藏站名文字（默认关）
-  'allow_guest', // 游客浏览：登录页显示「游客浏览」按钮（默认关=强制登录）
+  'allow_guest', // 游客浏览：登录页显示「游客访问」按钮（默认关=强制登录）
+  'show_landing', // 显示欢迎登录页：开=未登录先看登录页；关=访客直接以游客身份进入站点（默认开）
   'page_about_on', 'page_roadmap_on', 'page_changelog_on', // 关于/路线图/更新日志页开关（默认开）
   's3_force_path_style', // S3 兼容 path-style（七牛等部分网关）
   ...MODULE_KEYS.map((k) => `module_${k}`), // 模块市场 (C)：各可选模块开关

@@ -1,4 +1,4 @@
-# HahaSNS 升级指南
+# BananaSNS 升级指南
 
 本项目支持**安全、版本化的升级**：升级不丢数据。核心由三部分组成——
 
@@ -36,7 +36,7 @@
 |---|---|
 | `DEPLOY_MODE` | `baremetal`（默认，宿主机直跑 Node）或 `docker`（docker compose 部署） |
 | `DB_HOST` / `DB_PORT` / `DB_USER` / `DB_PASSWORD` / `DB_NAME` / `DB_CLIENT` | 数据库连接（用于备份 + 迁移；通常已在 `server-nest/.env`，脚本会自动读取） |
-| `RESTART_CMD` | 重启命令，如 `sudo systemctl restart hahasns`。留空则自动探测 systemd 服务 `hahasns` |
+| `RESTART_CMD` | 重启命令，如 `sudo systemctl restart bananasns`。留空则自动探测 systemd 服务 `bananasns` |
 | `NPM_REGISTRY` | npm 源，默认 `https://registry.npmjs.org` |
 | `SKIP_BACKUP` / `SKIP_CLIENT` | 设 `1` 可跳过备份 / 跳过前端构建 |
 
@@ -70,7 +70,7 @@
 
 后台一键升级会让 app 进程执行 `upgrade.sh` 并触发重启，因此运行 app 的账号需能：`git pull`、`npm`、以及重启服务。
 
-- **systemd**：给该账号配置**免密 `sudo systemctl restart hahasns`**（`/etc/sudoers.d/`），并设 `RESTART_CMD="sudo systemctl restart hahasns"`。
+- **systemd**：给该账号配置**免密 `sudo systemctl restart bananasns`**（`/etc/sudoers.d/`），并设 `RESTART_CMD="sudo systemctl restart bananasns"`。
 - **docker**：该账号需能访问 docker（加入 `docker` 组），`DEPLOY_MODE=docker` 由 `docker compose up -d --build` 完成重建重启。
 
 **安全**：后台升级默认关闭；仅 admin 可触发；脚本路径固定、无用户输入拼接（无命令注入）；升级前自动备份。若不放心，可只用它做**版本检测**，实际升级仍在服务器手动运行 `./upgrade.sh`。

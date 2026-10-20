@@ -18,14 +18,12 @@ export function BrandMark({ size = 33, logo }: { size?: number; logo?: string })
   }
   return (
     <span className="brand-mark" style={{ width: size, height: size }} aria-hidden>
-      <svg viewBox="0 0 24 24" width={size * 0.62} height={size * 0.62} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-        <path d="M7 5v14M7 12h10M17 5v14" />
-      </svg>
+      <span style={{ fontSize: size * 0.58, lineHeight: 1 }}>🍌</span>
     </span>
   );
 }
 
-// 站名渲染：默认名含 Haha + SNS 时保留双色；其它自定义名整体高亮。
+// 站名渲染：默认名含 Banana + SNS 时保留双色；其它自定义名整体高亮。
 export function BrandName({ name }: { name: string }) {
   const m = name.match(/^(.*)(SNS)$/i);
   if (m && m[1]) {
@@ -128,7 +126,7 @@ export default function Navbar() {
 
         {user ? (
           <>
-            <Button type="button" size="sm" variant={checkedToday ? 'flat' : 'bordered'} className="haha-btn-app nav-checkin" onClick={checkin} isDisabled={checkedToday} style={{ gap: 5 }}>
+            <Button type="button" size="sm" variant={checkedToday ? 'flat' : 'bordered'} className="banana-btn-app nav-checkin" onClick={checkin} isDisabled={checkedToday} style={{ gap: 5 }}>
               {/* 内联尺寸：v3 .button 会强制内部 svg 16px，基线此图标为 15px，钉住保持像素一致 */}
               <Icon name="checkin" size={15} style={{ width: 15, height: 15 }} /> {checkedToday ? '已签到' : '签到'}
             </Button>
@@ -170,8 +168,8 @@ export default function Navbar() {
           </>
         ) : (
           <div className="row gap-8">
-            <Button variant="flat" className="haha-btn-app" onClick={() => setAuthOpen(true)}>登录</Button>
-            <Button color="primary" className="haha-btn-app" onClick={() => setAuthOpen(true)}>注册</Button>
+            <Button variant="flat" className="banana-btn-app" onClick={() => setAuthOpen(true)}>登录</Button>
+            <Button color="primary" className="banana-btn-app" onClick={() => setAuthOpen(true)}>注册</Button>
           </div>
         )}
       </div>

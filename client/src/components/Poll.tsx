@@ -88,7 +88,7 @@ export default function Poll({ poll: initial, postId }: { poll: any; postId: num
       </div>
       <div className="poll-foot">
         {!showResults && (
-          <Button size="sm" color="primary" className="haha-btn-app" onClick={vote} isDisabled={busy || !picked.length}>
+          <Button size="sm" color="primary" className="banana-btn-app" onClick={vote} isDisabled={busy || !picked.length}>
             {busy ? '提交中…' : '投票'}
           </Button>
         )}

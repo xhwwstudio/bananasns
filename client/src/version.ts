@@ -1,2 +1,3 @@
 // 单一版本号来源（无任何 import，避免循环依赖）。每次发版连同更新日志一起 bump。
-export const APP_VERSION = 'v5.79';
+// 版本规则：0.1.1 起，后续小版本按 0.0.1 递增（0.1.1 → 0.1.2 → …）；大版本由站长指定。
+export const APP_VERSION = 'v0.1.1';

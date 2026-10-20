@@ -60,15 +60,18 @@ function loginRequired(pathname: string): boolean {
 
 function GuestLoginGate({ children }: { children: React.ReactNode }) {
   const { user, isGuest, setAuthOpen } = useAuth();
+  const site = useSite();
   const loc = useLocation();
+  // 关闭欢迎登录页时，访客在 effect 生效前也算游客，避免登录墙/半坏页闪一下
+  const guestViewing = isGuest || (!site.showLanding && !user);
   useEffect(() => {
-    if (!user && isGuest && loginRequired(loc.pathname)) {
+    if (!user && guestViewing && loginRequired(loc.pathname)) {
       // 记住想去的页，登录后自动回去（见 AppRoutes 的回跳 effect）
-      try { sessionStorage.setItem('haha_login_return', loc.pathname + loc.search); } catch { /* */ }
+      try { sessionStorage.setItem('banana_login_return', loc.pathname + loc.search); } catch { /* */ }
       setAuthOpen(true);
     }
-  }, [user, isGuest, loc.pathname, loc.search, setAuthOpen]);
-  if (!user && isGuest && loginRequired(loc.pathname)) {
+  }, [user, guestViewing, loc.pathname, loc.search, setAuthOpen]);
+  if (!user && guestViewing && loginRequired(loc.pathname)) {
     return <Navigate to="/" replace />;
   }
   return <>{children}</>;
@@ -80,7 +83,7 @@ function PageGate({ on, children }: { on: boolean; children: React.ReactNode }) 
       <div className="center" style={{ padding: 48 }}>
         <div className="ui-card" style={{ padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 15, fontWeight: 700 }}>该页面暂未开放</div>
-          <a href="/" className="haha-btn-app haha-btn-app--primary haha-btn-app--sm" style={{ marginTop: 14 }}>返回首页</a>
+          <a href="/" className="banana-btn-app banana-btn-app--primary banana-btn-app--sm" style={{ marginTop: 14 }}>返回首页</a>
         </div>
       </div>
     );
@@ -89,25 +92,32 @@ function PageGate({ on, children }: { on: boolean; children: React.ReactNode }) 
 }
 
 function AppRoutes() {
-  const { user, loading, isGuest, exitGuest } = useAuth();
+  const { user, loading, isGuest, enterGuest, exitGuest } = useAuth();
   const site = useSite();
   const navigate = useNavigate();
-  // 站长关闭游客浏览后，清掉本地残留的游客标记，避免日后重新开启时静默再入游客态（须点「游客浏览」重新进入）
+  // 站长关闭游客浏览（且仍显示登录页）后，清掉本地残留的游客标记，避免日后重新开启时静默再入游客态。
+  // 注意：关闭「欢迎登录页」时游客态是被动进入的，不能清。
   useEffect(() => {
-    if (site.loaded && !site.allowGuest && isGuest) exitGuest();
-  }, [site.loaded, site.allowGuest, isGuest, exitGuest]);
+    if (site.loaded && site.showLanding && !site.allowGuest && isGuest) exitGuest();
+  }, [site.loaded, site.showLanding, site.allowGuest, isGuest, exitGuest]);
+  // 关闭欢迎登录页：未登录访客直接以游客身份进入站点（只读），顶部引导条与首页 CTA 随 isGuest 出现。
+  useEffect(() => {
+    if (site.loaded && !site.showLanding && !user && !isGuest) enterGuest();
+  }, [site.loaded, site.showLanding, user, isGuest, enterGuest]);
   // 登录成功后回到被拦截前想去的页（游客点了需登录的页 → 登录后自动回去）
   useEffect(() => {
     if (!user) return;
     let ret: string | null = null;
-    try { ret = sessionStorage.getItem('haha_login_return'); } catch { /* */ }
-    if (ret) { try { sessionStorage.removeItem('haha_login_return'); } catch { /* */ } navigate(ret, { replace: true }); }
+    try { ret = sessionStorage.getItem('banana_login_return'); } catch { /* */ }
+    if (ret) { try { sessionStorage.removeItem('banana_login_return'); } catch { /* */ } navigate(ret, { replace: true }); }
   }, [user, navigate]);
   if (loading) return <div className="auth-splash"><Spinner /></div>;
+  // 站点配置未返回前不渲染：否则「关闭欢迎登录页」的站点会先闪一下登录页
+  if (!site.loaded) return <div className="auth-splash"><Spinner /></div>;
 
-  // allow_guest 关 → 与现状一致：未登录整树 AuthLanding
-  // allow_guest 开 + 游客态 → Layout 只读；未进游客仍 AuthLanding
-  const canBrowse = !!user || (site.allowGuest && isGuest);
+  // 显示欢迎登录页（默认）→ 未登录看 AuthLanding；关闭后 → 访客直接进站（游客只读）。
+  // allow_guest 开 + 游客态 → Layout 只读；未进游客仍 AuthLanding。
+  const canBrowse = !!user || !site.showLanding || (site.allowGuest && isGuest);
 
   return (
     <Routes>

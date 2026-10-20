@@ -22,7 +22,7 @@ export default function AdvancedFields({ vis, price, onPriceChange, paidPriceMax
         <div className="row gap-8" style={{ marginTop: 10, fontSize: 13 }}>
           <span className="muted">解锁价格</span>
           <Input type="number" min={1} max={paidPriceMax} value={price} onChange={(e: any) => onPriceChange(e.target.value)}
-            className="haha-inp haha-inp-sm" style={{ width: 96 }} />
+            className="banana-inp banana-inp-sm" style={{ width: 96 }} />
           <span className="muted">积分</span>
         </div>
       )}
@@ -30,14 +30,14 @@ export default function AdvancedFields({ vis, price, onPriceChange, paidPriceMax
         <div className="row gap-8" style={{ marginTop: 10, fontSize: 13 }}>
           <span className="muted">访问密码</span>
           <Input value={password} onChange={(e: any) => onPasswordChange(e.target.value)} placeholder="设置查看密码"
-            className="haha-inp haha-inp-sm" style={{ width: 170 }} />
+            className="banana-inp banana-inp-sm" style={{ width: 170 }} />
         </div>
       )}
       {showLoc && (
         <div className="row gap-8" style={{ marginTop: 10, fontSize: 13 }}>
           <Icon name="location" size={15} style={{ color: 'var(--brand)' }} />
           <Input value={location} onChange={(e: any) => onLocationChange(e.target.value)} placeholder="所在城市，如：上海" maxLength={20}
-            className="haha-inp haha-inp-sm" style={{ width: 210 }} />
+            className="banana-inp banana-inp-sm" style={{ width: 210 }} />
           {location && <button className="faint" style={{ fontSize: 12 }} onClick={onLocationClear}>清除</button>}
         </div>
       )}

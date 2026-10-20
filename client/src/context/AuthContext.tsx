@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import api from '../api/client';
 import type { PublicUser } from '../types';
 
-const GUEST_KEY = 'haha_guest';
+const GUEST_KEY = 'banana_guest';
 
 export interface AuthValue {
   user: PublicUser | null;
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
   const [guest, setGuest] = useState(readGuestFlag);
 
   const refresh = useCallback(async () => {
-    const token = localStorage.getItem('haha_token');
+    const token = localStorage.getItem('banana_token');
     if (!token) { setLoading(false); return; }
     try {
       const { data } = await api.get('/auth/me');
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
       try { localStorage.removeItem(GUEST_KEY); } catch { /* */ }
       setGuest(false);
     } catch {
-      localStorage.removeItem('haha_token');
+      localStorage.removeItem('banana_token');
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
 
   const login = async (username: string, password: string): Promise<PublicUser> => {
     const { data } = await api.post('/auth/login', { username, password });
-    localStorage.setItem('haha_token', data.token);
+    localStorage.setItem('banana_token', data.token);
     try { localStorage.removeItem(GUEST_KEY); } catch { /* */ }
     setGuest(false);
     setUser(data.user);
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
 
   const register = async (payload: Record<string, unknown>): Promise<PublicUser> => {
     const { data } = await api.post('/auth/register', payload);
-    localStorage.setItem('haha_token', data.token);
+    localStorage.setItem('banana_token', data.token);
     try { localStorage.removeItem(GUEST_KEY); } catch { /* */ }
     setGuest(false);
     setUser(data.user);
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('haha_token');
+    localStorage.removeItem('banana_token');
     try { localStorage.removeItem(GUEST_KEY); } catch { /* */ }
     setGuest(false);
     setUser(null);

@@ -41,7 +41,7 @@ export default function LogsPanel() {
             ))}
           </div>
         ) : <span />}
-        <Button size="sm" variant="flat" className="haha-btn-app" isDisabled={!shown.length} title="导出当前筛选的操作日志为 CSV" onClick={() => downloadCSV(`管理日志_${filter}.csv`, [
+        <Button size="sm" variant="flat" className="banana-btn-app" isDisabled={!shown.length} title="导出当前筛选的操作日志为 CSV" onClick={() => downloadCSV(`管理日志_${filter}.csv`, [
           { label: '时间', get: (l: any) => l.createdAt },
           { label: '管理员', get: (l: any) => l.admin?.nickname || '管理员' },
           { label: '操作', get: (l: any) => l.actionLabel },

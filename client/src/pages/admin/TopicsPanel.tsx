@@ -18,12 +18,12 @@ function TopicEditForm({ topic, onSaved, onCancel }: { topic: any; onSaved: () =
   };
   return (
     <div style={{ padding: '0 16px 16px', background: 'var(--surface-2)' }}>
-      <Input className="haha-inp" value={f.description} onChange={(e: any) => setF((s) => ({ ...s, description: e.target.value }))} placeholder="话题描述" style={{ width: '100%', marginTop: 14 }} />
-      <Input className="haha-inp" value={f.cover} onChange={(e: any) => setF((s) => ({ ...s, cover: e.target.value }))} placeholder="封面图 URL（可选，发现页展示）" style={{ width: '100%', marginTop: 8 }} />
+      <Input className="banana-inp" value={f.description} onChange={(e: any) => setF((s) => ({ ...s, description: e.target.value }))} placeholder="话题描述" style={{ width: '100%', marginTop: 14 }} />
+      <Input className="banana-inp" value={f.cover} onChange={(e: any) => setF((s) => ({ ...s, cover: e.target.value }))} placeholder="封面图 URL（可选，发现页展示）" style={{ width: '100%', marginTop: 8 }} />
       <div className="row gap-12" style={{ marginTop: 8, justifyContent: 'space-between', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-        <label className="sec-field" style={{ width: 160 }}><span className="sec-label">热度（发现页排序）</span><Input className="haha-inp" type="number" min={0} value={f.hot} onChange={(e: any) => setF((s) => ({ ...s, hot: e.target.value }))} /></label>
+        <label className="sec-field" style={{ width: 160 }}><span className="sec-label">热度（发现页排序）</span><Input className="banana-inp" type="number" min={0} value={f.hot} onChange={(e: any) => setF((s) => ({ ...s, hot: e.target.value }))} /></label>
         <div className="row gap-4">
-          <Button size="sm" variant="flat" className="haha-btn-app" onClick={onCancel}>取消</Button>
+          <Button size="sm" variant="flat" className="banana-btn-app" onClick={onCancel}>取消</Button>
           <SaveBtn onSave={save} />
         </div>
       </div>
@@ -61,9 +61,9 @@ export default function TopicsPanel() {
       )}
       <div className="ui-card" style={{ padding: 16, marginBottom: 'var(--gap)' }}>
         <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-          <Input className="haha-inp" value={form.name} onChange={(e: any) => setForm((f: any) => ({ ...f, name: e.target.value }))} placeholder="话题名（必填）" style={{ flex: 1, minWidth: 120 }} />
-          <Input className="haha-inp" value={form.description} onChange={(e: any) => setForm((f: any) => ({ ...f, description: e.target.value }))} placeholder="描述" style={{ flex: 1, minWidth: 120 }} />
-          <Button color="primary" className="haha-btn-app" onClick={create} isDisabled={!form.name.trim()}>创建话题</Button>
+          <Input className="banana-inp" value={form.name} onChange={(e: any) => setForm((f: any) => ({ ...f, name: e.target.value }))} placeholder="话题名（必填）" style={{ flex: 1, minWidth: 120 }} />
+          <Input className="banana-inp" value={form.description} onChange={(e: any) => setForm((f: any) => ({ ...f, description: e.target.value }))} placeholder="描述" style={{ flex: 1, minWidth: 120 }} />
+          <Button color="primary" className="banana-btn-app" onClick={create} isDisabled={!form.name.trim()}>创建话题</Button>
         </div>
       </div>
       <div className="ui-card" style={{ overflow: 'hidden' }}>
@@ -74,8 +74,8 @@ export default function TopicsPanel() {
           <div key={t.id}>{i > 0 && <div className="divider" />}
             <div className="row gap-12" style={{ padding: '12px 16px' }}>
               <div className="grow" style={{ minWidth: 0 }}><b>#{t.name}#</b> <span className="faint" style={{ fontSize: 12 }}>{fmtNum(t.post_count)}动态 · 热度{fmtNum(t.hot)}{t.cover ? ' · 有封面' : ''}</span></div>
-              <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setEditId(editId === t.id ? null : t.id)}>{editId === t.id ? '收起' : '编辑'}</Button>
-              <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(t)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setEditId(editId === t.id ? null : t.id)}>{editId === t.id ? '收起' : '编辑'}</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(t)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
             </div>
             {editId === t.id && <TopicEditForm topic={t} onSaved={() => { setEditId(null); load(); }} onCancel={() => setEditId(null)} />}
           </div>

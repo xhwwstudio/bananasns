@@ -35,8 +35,8 @@ export function ConfirmHost() {
       <div className="modal-body">
         <div style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.65, whiteSpace: 'pre-line' }}>{st.message}</div>
         <div className="row gap-8" style={{ justifyContent: 'flex-end', marginTop: 22 }}>
-          <Button variant="flat" className="haha-btn-app" onClick={() => close(false)}>取消</Button>
-          <Button color="primary" className="haha-btn-app" style={st.danger ? { background: 'var(--like)' } : undefined} onClick={() => close(true)}>{st.confirmText || '确定'}</Button>
+          <Button variant="flat" className="banana-btn-app" onClick={() => close(false)}>取消</Button>
+          <Button color="primary" className="banana-btn-app" style={st.danger ? { background: 'var(--like)' } : undefined} onClick={() => close(true)}>{st.confirmText || '确定'}</Button>
         </div>
       </div>
     </Modal>

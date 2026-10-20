@@ -37,14 +37,14 @@ export default function TipModal({ open, onClose, postId, nickname }: TipModalPr
       <div className="modal-body">
         <div className="row gap-8" style={{ flexWrap: 'wrap', marginBottom: 12 }}>
           {[6, 18, 66, 188, 520].map((a) => (
-            <Button key={a} color="primary" variant={Number(rewardAmt) === a ? 'solid' : 'bordered'} className="haha-btn-app" onClick={() => setRewardAmt(a)}>{a}</Button>
+            <Button key={a} color="primary" variant={Number(rewardAmt) === a ? 'solid' : 'bordered'} className="banana-btn-app" onClick={() => setRewardAmt(a)}>{a}</Button>
           ))}
         </div>
         <div className="field">
           <label>自定义积分</label>
           <input type="number" min={1} value={rewardAmt} onChange={(e) => setRewardAmt(e.target.value)} />
         </div>
-        <Button size="lg" color="primary" fullWidth className="haha-btn-app" onClick={doReward}>确认打赏 {rewardAmt} 积分</Button>
+        <Button size="lg" color="primary" fullWidth className="banana-btn-app" onClick={doReward}>确认打赏 {rewardAmt} 积分</Button>
       </div>
     </Modal>
   );

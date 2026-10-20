@@ -49,7 +49,7 @@ export function PromptHost() {
       <div className="modal-body">
         {st.label && <div style={{ fontSize: 13, color: 'var(--ink-2)', marginBottom: 8 }}>{st.label}</div>}
         <Input
-          className="haha-inp"
+          className="banana-inp"
           type={st.type || 'text'}
           value={val}
           autoFocus
@@ -60,8 +60,8 @@ export function PromptHost() {
         />
         {tooShort && <div className="field-err" style={{ marginTop: 6 }}>至少 {min} 位</div>}
         <div className="row gap-8" style={{ justifyContent: 'flex-end', marginTop: 18 }}>
-          <Button variant="flat" className="haha-btn-app" onClick={() => finish(null)}>取消</Button>
-          <Button color="primary" className="haha-btn-app" isDisabled={!ok} onClick={submit}>{st.confirmText || '确定'}</Button>
+          <Button variant="flat" className="banana-btn-app" onClick={() => finish(null)}>取消</Button>
+          <Button color="primary" className="banana-btn-app" isDisabled={!ok} onClick={submit}>{st.confirmText || '确定'}</Button>
         </div>
       </div>
     </Modal>

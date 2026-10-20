@@ -24,7 +24,8 @@ const PAGE = 12;
 
 export default function Home() {
   const { user, setAuthOpen, isGuest } = useAuth();
-  const { homeTabs, feedLayout, guestFeedLimit } = useSite();
+  const { homeTabs, feedLayout, guestFeedLimit, showLanding } = useSite();
+  const guestViewing = isGuest || (!showLanding && !user);
   const layout = normalizeFeedLayout(feedLayout);
   const isWaterfall = layout === 'waterfall';
   const loc = useLocation();
@@ -53,9 +54,18 @@ export default function Home() {
   return (
     <Shell right={isWaterfall ? false : undefined} wide={isWaterfall || undefined}>
       <SiteNotice />
-      <div ref={composerRef}><Composer onPosted={onPosted} /></div>
+      <div ref={composerRef}>
+        {guestViewing ? (
+          <button type="button" className="ui-card guest-compose-cta" onClick={() => setAuthOpen(true)}>
+            <span>登录后分享你的第一条动态</span>
+            <span className="guest-compose-cta-arrow" aria-hidden>→</span>
+          </button>
+        ) : (
+          <Composer onPosted={onPosted} />
+        )}
+      </div>
 
-      <Tabs aria-label="动态筛选" className="ui-card haha-feed-tabs"
+      <Tabs aria-label="动态筛选" className="ui-card banana-feed-tabs"
         selectedKey={filter} onSelectionChange={(k: any) => { const f = tabs.find((t) => t.key === k); if (f) onFilter(f); }}>
         {tabs.map((f) => <Tab key={f.key} title={f.label} />)}
       </Tabs>
@@ -76,17 +86,17 @@ export default function Home() {
       ) : (
         <>
           <div className={isWaterfall ? 'feed-waterfall' : 'feed-list'}>
-            {(isGuest && guestFeedLimit > 0 ? posts.slice(0, guestFeedLimit) : posts).map((p) => (
+            {(guestViewing && guestFeedLimit > 0 ? posts.slice(0, guestFeedLimit) : posts).map((p) => (
               <div key={p.id} className={isWaterfall ? 'feed-waterfall-item' : undefined}>
                 <PostCard post={p} onDelete={onDelete} compact={isWaterfall} />
               </div>
             ))}
           </div>
-          {isGuest && guestFeedLimit > 0 && posts.length >= guestFeedLimit ? (
+          {guestViewing && guestFeedLimit > 0 && posts.length >= guestFeedLimit ? (
             <div className="ui-card guest-wall">
               <div className="guest-wall-title">注册解锁全部内容</div>
               <div className="guest-wall-sub">登录后可查看更多动态，并发帖、评论、参与互动。</div>
-              <Button color="primary" className="haha-btn-app" onClick={() => setAuthOpen(true)}>登录 / 注册</Button>
+              <Button color="primary" className="banana-btn-app" onClick={() => setAuthOpen(true)}>登录 / 注册</Button>
             </div>
           ) : (
             <>

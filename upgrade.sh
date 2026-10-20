@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# HahaSNS 一键升级脚本 —— 拉取最新代码 → 备份数据库 → 版本化迁移 → 重建 → 重启。
+# BananaSNS 一键升级脚本 —— 拉取最新代码 → 备份数据库 → 版本化迁移 → 重建 → 重启。
 # 从仓库根目录运行：  ./upgrade.sh
 #
 # 支持两种部署形态（DEPLOY_MODE）：
@@ -24,10 +24,10 @@ NPM_REGISTRY="${NPM_REGISTRY:-https://registry.npmjs.org}"
 DB_CLIENT="${DB_CLIENT:-mysql}"
 DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_PORT="${DB_PORT:-3306}"
-DB_USER="${DB_USER:-hahasns}"
+DB_USER="${DB_USER:-bananasns}"
 DB_PASSWORD="${DB_PASSWORD:-}"
-DB_NAME="${DB_NAME:-hahasns}"
-RESTART_CMD="${RESTART_CMD:-}"                 # 例：sudo systemctl restart hahasns
+DB_NAME="${DB_NAME:-bananasns}"
+RESTART_CMD="${RESTART_CMD:-}"                 # 例：sudo systemctl restart bananasns
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
 DB_CONTAINER="${DB_CONTAINER:-}"               # docker 模式下备份用的 DB 容器名（留空则跳过备份）
 SKIP_BACKUP="${SKIP_BACKUP:-0}"
@@ -129,10 +129,10 @@ adopt_and_migrate
 
 if [ -n "$RESTART_CMD" ]; then
   log "重启：$RESTART_CMD"; eval "$RESTART_CMD" || fail "重启失败"
-elif command -v systemctl >/dev/null 2>&1 && systemctl list-units --type=service 2>/dev/null | grep -q hahasns; then
-  log "重启 systemd 服务 hahasns"; sudo systemctl restart hahasns || fail "systemctl 重启失败（需 sudo 权限，或用 RESTART_CMD 指定）"
+elif command -v systemctl >/dev/null 2>&1 && systemctl list-units --type=service 2>/dev/null | grep -q bananasns; then
+  log "重启 systemd 服务 bananasns"; sudo systemctl restart bananasns || fail "systemctl 重启失败（需 sudo 权限，或用 RESTART_CMD 指定）"
 else
-  log "⚠️ 未配置 RESTART_CMD 且未探测到 hahasns 服务 —— 请手动重启应用进程使新版本生效"
+  log "⚠️ 未配置 RESTART_CMD 且未探测到 bananasns 服务 —— 请手动重启应用进程使新版本生效"
 fi
 
 trap - ERR

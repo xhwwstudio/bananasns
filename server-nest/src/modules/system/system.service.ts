@@ -11,7 +11,7 @@ import { buildDeployChecks, summarizeDeployChecks } from './deploy-check';
 
 const pexec = promisify(exec);
 
-const REPO = process.env.UPGRADE_REPO || 'maobase/hahasns';
+const REPO = process.env.UPGRADE_REPO || 'xhwwstudio/bananasecret';
 const BRANCH = process.env.UPGRADE_BRANCH || 'main';
 // 仓库根目录：默认取 server-nest 的上一级（git-clone 部署时即仓库根）。可用 REPO_DIR 覆盖。
 const REPO_DIR = process.env.REPO_DIR || join(process.cwd(), '..');
@@ -58,7 +58,7 @@ export class SystemService {
     try {
       // 拉最新 client/src/version.ts 解析 APP_VERSION —— 按版本号比对（不依赖 git，docker 容器内也可用）。
       const resp = await fetch(`https://raw.githubusercontent.com/${REPO}/${BRANCH}/client/src/version.ts`, {
-        headers: { 'User-Agent': 'hahasns-selfhost' },
+        headers: { 'User-Agent': 'bananasns-selfhost' },
         signal: AbortSignal.timeout(6000),
       });
       if (resp.ok) {

@@ -62,7 +62,7 @@ export function resolveStorageConfig(
   const accessKey = pick('s3_access_key', env.S3_ACCESS_KEY, '');
   const secretKey = pick('s3_secret_key', env.S3_SECRET_KEY, '');
   const endpoint = pick('s3_endpoint', env.S3_ENDPOINT, 'http://127.0.0.1:9000');
-  const bucket = pick('s3_bucket', env.S3_BUCKET, 'hahasns');
+  const bucket = pick('s3_bucket', env.S3_BUCKET, 'bananasns');
   const region = pick('s3_region', env.S3_REGION, 'us-east-1');
   const publicUrl = pick('s3_public_url', env.S3_PUBLIC_URL, '');
 

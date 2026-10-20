@@ -45,10 +45,10 @@ function CommentItem({ c, me, onReply, onLike, onDelete, onReport, onEdit }: {
         <div className="cname"><UserHoverCard user={c.author}><UserName user={c.author} /></UserHoverCard></div>
         {editing ? (
           <div className="comment-edit">
-            <Textarea className="haha-inp" value={draft} onChange={(e: any) => setDraft(e.target.value)} minRows={2} autoFocus />
+            <Textarea className="banana-inp" value={draft} onChange={(e: any) => setDraft(e.target.value)} minRows={2} autoFocus />
             <div className="comment-edit-actions">
-              <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => { setEditing(false); setDraft(c.content); }}>取消</Button>
-              <Button size="sm" color="primary" className="haha-btn-app" isDisabled={saving || !draft.trim()} onClick={saveEdit}>{saving ? '保存中…' : '保存'}</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => { setEditing(false); setDraft(c.content); }}>取消</Button>
+              <Button size="sm" color="primary" className="banana-btn-app" isDisabled={saving || !draft.trim()} onClick={saveEdit}>{saving ? '保存中…' : '保存'}</Button>
             </div>
           </div>
         ) : (
@@ -181,13 +181,13 @@ export default function Comments({ postId, threadId, articleId, onCountChange }:
             onBlur={() => setTimeout(mention.close, 120)}
             onFocus={() => !user && setAuthOpen(true)}
             placeholder={!user ? '登录后即可参与评论…' : (replyTarget ? `回复 @${replyTarget.author.nickname}：` : '友善评论，@ 提及好友…')}
-            className="haha-inp"
+            className="banana-inp"
             style={{ height: 'auto', minHeight: 40, maxHeight: 120, padding: '9px 16px', lineHeight: 1.45, resize: 'none', overflowY: 'auto' }}
           />
           {mention.dropdown}
         </div>
-        {replyTarget && <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setReplyTarget(null)}>取消</Button>}
-        <Button size="sm" color="primary" className="haha-btn-app" isDisabled={busy || !text.trim()} onClick={submit}>发送</Button>
+        {replyTarget && <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setReplyTarget(null)}>取消</Button>}
+        <Button size="sm" color="primary" className="banana-btn-app" isDisabled={busy || !text.trim()} onClick={submit}>发送</Button>
       </div>
 
       {loading ? (

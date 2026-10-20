@@ -136,6 +136,16 @@
 .guest-wall-title { font-size: 16px; font-weight: 800; color: var(--ink); }
 .guest-wall-sub { font-size: 13px; color: var(--ink-3); max-width: 300px; line-height: 1.6; }
 
+/* 游客首页发布位：游客看不到发布器，换成登录引导 CTA（点击弹登录/注册） */
+.guest-compose-cta {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 18px; margin-bottom: var(--gap); text-align: left;
+  color: var(--ink-2); font-size: 14px; cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.guest-compose-cta:hover { border-color: var(--brand); color: var(--brand); }
+.guest-compose-cta-arrow { font-weight: 800; color: var(--brand); }
+
 /* ---------- Left rail nav ---------- */
 .rail { display: flex; flex-direction: column; gap: 2px; }
 /* 分组小标题：把长导航分成 社区 / 福利·我的 等区块，层次更清晰 */

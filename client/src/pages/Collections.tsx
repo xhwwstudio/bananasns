@@ -49,14 +49,14 @@ export default function Collections() {
     <Shell layout={layout}>
       <div className="ui-card page-title">
         <span><Icon name="grid" size={20} /> 专题合集</span>
-        <Button size="sm" color="primary" className="haha-btn-app" onClick={() => (user ? setCreateOpen(true) : setAuthOpen(true))}>
+        <Button size="sm" color="primary" className="banana-btn-app" onClick={() => (user ? setCreateOpen(true) : setAuthOpen(true))}>
           {/* 内联尺寸：v3 .button 会强制内部 svg 16px，基线此图标为 15px，钉住保持像素一致 */}
           <Icon name="plus" size={15} style={{ width: 15, height: 15 }} /> 创建专题
         </Button>
       </div>
 
       {user && (
-        <Tabs aria-label="专题筛选" className="ui-card haha-feed-tabs"
+        <Tabs aria-label="专题筛选" className="ui-card banana-feed-tabs"
           selectedKey={tab} onSelectionChange={(k: any) => setTab(k)}>
           <Tab key="all" title="全部专题" />
           <Tab key="mine" title="我的专题" />
@@ -90,17 +90,17 @@ export default function Collections() {
           <h3 style={{ margin: '0 0 16px' }}>创建专题</h3>
           <div className="field">
             <label>标题</label>
-            <Input className="haha-inp" value={form.title} onChange={(e: any) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="给专题起个名字" maxLength={80} autoFocus />
+            <Input className="banana-inp" value={form.title} onChange={(e: any) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="给专题起个名字" maxLength={80} autoFocus />
           </div>
           <div className="field">
             <label>简介（可选）</label>
-            <Textarea className="haha-inp" value={form.description} onChange={(e: any) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="这个专题收录什么？" maxLength={300} />
+            <Textarea className="banana-inp" value={form.description} onChange={(e: any) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="这个专题收录什么？" maxLength={300} />
           </div>
           <div className="field">
             <label>封面图链接（可选）</label>
-            <Input className="haha-inp" value={form.cover} onChange={(e: any) => setForm((f) => ({ ...f, cover: e.target.value }))} placeholder="留空则用首个收录内容的图" maxLength={500} />
+            <Input className="banana-inp" value={form.cover} onChange={(e: any) => setForm((f) => ({ ...f, cover: e.target.value }))} placeholder="留空则用首个收录内容的图" maxLength={500} />
           </div>
-          <Button size="lg" color="primary" fullWidth className="haha-btn-app" isDisabled={busy} onClick={create}>{busy ? '创建中…' : '创建'}</Button>
+          <Button size="lg" color="primary" fullWidth className="banana-btn-app" isDisabled={busy} onClick={create}>{busy ? '创建中…' : '创建'}</Button>
         </div>
       </Modal>
     </Shell>

@@ -53,7 +53,7 @@ export default function ThreadDetail() {
         <h3 className="paywall-title">付费板块内容</h3>
         <p className="paywall-sub">「{t.title}」属于付费板块「{t.board?.name}」，解锁该板块后即可阅读全文与回复。</p>
         <div className="paywall-price"><Icon name="coin" size={19} /> {fmtNum(t.board?.price)} <span>积分</span></div>
-        <Link to={`/forum/${t.board?.slug}`} className="haha-btn-app haha-btn-app--primary haha-btn-app--lg" style={{ minWidth: 180 }}>前往解锁板块</Link>
+        <Link to={`/forum/${t.board?.slug}`} className="banana-btn-app banana-btn-app--primary banana-btn-app--lg" style={{ minWidth: 180 }}>前往解锁板块</Link>
       </div>
     </Shell>
   );
@@ -124,8 +124,8 @@ export default function ThreadDetail() {
             </div>
             {t.canModerate && (
               <div className="row gap-4 hide-mobile">
-                <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => moderate('pin')}>{t.pinned ? '取消置顶' : '置顶'}</Button>
-                <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => moderate('elite')}>{t.elite ? '取消精华' : '加精'}</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => moderate('pin')}>{t.pinned ? '取消置顶' : '置顶'}</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => moderate('elite')}>{t.elite ? '取消精华' : '加精'}</Button>
               </div>
             )}
             <div style={{ position: 'relative' }} ref={menuRef}>
@@ -143,10 +143,10 @@ export default function ThreadDetail() {
           {t.media?.length > 0 && <MediaGrid media={t.media} />}
 
           <div className="row gap-8" style={{ marginTop: 22 }}>
-            <Button color="primary" variant={t.liked ? 'solid' : 'bordered'} className="haha-btn-app" onClick={like}>
+            <Button color="primary" variant={t.liked ? 'solid' : 'bordered'} className="banana-btn-app" onClick={like}>
               <Icon name="heart" size={16} style={{ width: 16, height: 16 }} fill={t.liked} /> 赞 {t.likeCount > 0 ? fmtNum(t.likeCount) : ''}
             </Button>
-            <Button variant={t.isSubscribed ? 'flat' : 'bordered'} className="haha-btn-app" onClick={subscribe}
+            <Button variant={t.isSubscribed ? 'flat' : 'bordered'} className="banana-btn-app" onClick={subscribe}
               title={t.isSubscribed ? '已订阅，新回复会通知你' : '订阅后新回复会通知你'}>
               <Icon name={t.isSubscribed ? 'check' : 'bell'} size={16} style={{ width: 16, height: 16 }} /> {t.isSubscribed ? '已订阅' : '订阅'}
             </Button>
@@ -169,7 +169,7 @@ export default function ThreadDetail() {
             <MarkdownToolbar taRef={editTaRef} value={edit.content} onChange={(v) => setEdit((s) => ({ ...s, content: v }))} />
             <textarea ref={editTaRef} value={edit.content} onChange={(e) => setEdit((s) => ({ ...s, content: e.target.value }))} style={{ minHeight: 160 }} />
           </div>
-          <Button size="lg" color="primary" fullWidth className="haha-btn-app" onClick={saveEdit} isDisabled={!edit.title.trim() || !edit.content.trim()}>保存修改</Button>
+          <Button size="lg" color="primary" fullWidth className="banana-btn-app" onClick={saveEdit} isDisabled={!edit.title.trim() || !edit.content.trim()}>保存修改</Button>
         </div>
       </Modal>
     </Shell>

@@ -39,7 +39,7 @@ export function LoadError({ onRetry, text = '加载失败' }: { onRetry?: () => 
       <div className="e-ico">📡</div>
       <div className="e-text">{text}</div>
       <div className="faint" style={{ fontSize: 13, marginTop: 2 }}>网络或服务器开小差了，稍后再试</div>
-      {onRetry && <div className="e-action"><Button size="sm" color="primary" className="haha-btn-app" onClick={onRetry}>重试</Button></div>}
+      {onRetry && <div className="e-action"><Button size="sm" color="primary" className="banana-btn-app" onClick={onRetry}>重试</Button></div>}
     </div>
   );
 }

@@ -85,7 +85,7 @@ export default function Messages() {
   const openChat = async (pid: any) => {
     const { data } = await api.get(`/messages/${pid}`);
     setActive(data);
-    try { setText(localStorage.getItem(`haha_msgdraft_${pid}`) || ''); } catch { setText(''); }
+    try { setText(localStorage.getItem(`banana_msgdraft_${pid}`) || ''); } catch { setText(''); }
     setConvos((cs) => cs.map((c) => c.peer.id === Number(pid) ? { ...c, unread: 0 } : c));
     setTimeout(() => endRef.current?.scrollIntoView(), 50);
   };
@@ -93,7 +93,7 @@ export default function Messages() {
   // keep an unsent message per conversation so switching/leaving doesn't lose it
   useEffect(() => {
     if (!active) return;
-    const key = `haha_msgdraft_${active.peer.id}`;
+    const key = `banana_msgdraft_${active.peer.id}`;
     try { text.trim() ? localStorage.setItem(key, text) : localStorage.removeItem(key); } catch {}
   }, [text, active?.peer.id]);
   useEffect(() => { if (peerId && user) openChat(peerId); /* eslint-disable-next-line */ }, [peerId, user]);
@@ -139,7 +139,7 @@ export default function Messages() {
       </div>
       <div className={`ui-card chat-shell${active ? ' has-active' : ''}`} style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, marginTop: -1 }}>
         <div className="chat-list">
-          {loadingList ? <ChatListSkeleton /> : convos.length === 0 ? <div style={{ padding: 24 }}><Empty icon="💬" text="还没有会话"><Button size="sm" color="primary" className="haha-btn-app" onClick={() => nav('/discover')}>找人聊聊</Button></Empty></div> :
+          {loadingList ? <ChatListSkeleton /> : convos.length === 0 ? <div style={{ padding: 24 }}><Empty icon="💬" text="还没有会话"><Button size="sm" color="primary" className="banana-btn-app" onClick={() => nav('/discover')}>找人聊聊</Button></Empty></div> :
             convos.map((c) => (
               <div key={c.peer.id} className={`chat-list-item${active?.peer.id === c.peer.id ? ' active' : ''}${c.pinned ? ' pinned' : ''}`} onClick={() => nav(`/messages/${c.peer.id}`)}>
                 <Avatar user={c.peer} size={46} showV />
@@ -154,7 +154,7 @@ export default function Messages() {
                   <div className="chat-li-preview nowrap">
                     {(() => {
                       let draft = '';
-                      try { draft = localStorage.getItem(`haha_msgdraft_${c.peer.id}`) || ''; } catch {}
+                      try { draft = localStorage.getItem(`banana_msgdraft_${c.peer.id}`) || ''; } catch {}
                       if (draft && active?.peer.id !== c.peer.id) return <><span className="draft-tag">[草稿]</span> {draft}</>;
                       return <>{c.muted && <Icon name="bellOff" size={12} style={{ marginRight: 3, verticalAlign: '-1px' }} />}{c.last?.type === 'image' ? '[图片]' : c.last?.content}</>;
                     })()}
@@ -221,7 +221,7 @@ export default function Messages() {
                 <textarea ref={textRef} maxLength={5000} rows={1} value={text} onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
                   placeholder="输入消息…" />
-                <Button color="primary" className="haha-btn-app" onClick={send} isDisabled={!text.trim() || sending}>发送</Button>
+                <Button color="primary" className="banana-btn-app" onClick={send} isDisabled={!text.trim() || sending}>发送</Button>
               </div>
               <input ref={imageFile} type="file" accept="image/*" hidden onChange={sendImage} />
             </>

@@ -43,13 +43,13 @@ export default function History() {
       <div className="ui-card page-title hist-head">
         <span className="row gap-8"><Icon name="clock" size={19} style={{ color: 'var(--brand)' }} /> 浏览足迹</span>
         {items && items.length > 0 && (
-          <Button size="sm" variant="flat" className="haha-btn-app" onClick={clearAll}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 清空</Button>
+          <Button size="sm" variant="flat" className="banana-btn-app" onClick={clearAll}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 清空</Button>
         )}
       </div>
       {items === null ? <RowSkeleton rows={6} />
         : items.length === 0 ? (
           <div className="ui-card"><Empty icon="🕓" text="还没有浏览记录，去看看大家在聊什么吧">
-            <Button size="sm" color="primary" className="haha-btn-app" onClick={() => nav('/')}>去首页逛逛</Button>
+            <Button size="sm" color="primary" className="banana-btn-app" onClick={() => nav('/')}>去首页逛逛</Button>
           </Empty></div>
         ) : (
           <div className="ui-card hist-list">

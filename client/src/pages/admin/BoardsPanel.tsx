@@ -22,18 +22,18 @@ function BoardEditForm({ board, onSaved, onCancel }: { board: any; onSaved: () =
   return (
     <div style={{ padding: '0 16px 16px', background: 'var(--surface-2)' }}>
       <div className="row gap-8" style={{ flexWrap: 'wrap', paddingTop: 14 }}>
-        <Input className="haha-inp" value={f.icon} onChange={(e: any) => setF((s) => ({ ...s, icon: e.target.value }))} placeholder="图标" style={{ width: 60, textAlign: 'center' }} />
-        <Input className="haha-inp" value={f.name} onChange={(e: any) => setF((s) => ({ ...s, name: e.target.value }))} placeholder="板块名称（必填）" style={{ flex: 1, minWidth: 120 }} />
+        <Input className="banana-inp" value={f.icon} onChange={(e: any) => setF((s) => ({ ...s, icon: e.target.value }))} placeholder="图标" style={{ width: 60, textAlign: 'center' }} />
+        <Input className="banana-inp" value={f.name} onChange={(e: any) => setF((s) => ({ ...s, name: e.target.value }))} placeholder="板块名称（必填）" style={{ flex: 1, minWidth: 120 }} />
       </div>
-      <Input className="haha-inp" value={f.description} onChange={(e: any) => setF((s) => ({ ...s, description: e.target.value }))} placeholder="板块说明（可选）" style={{ width: '100%', marginTop: 8 }} />
-      <Textarea className="haha-inp" value={f.announcement} onChange={(e: any) => setF((s) => ({ ...s, announcement: e.target.value }))} placeholder="板块公告（可选）" minRows={2} style={{ width: '100%', marginTop: 8 }} />
+      <Input className="banana-inp" value={f.description} onChange={(e: any) => setF((s) => ({ ...s, description: e.target.value }))} placeholder="板块说明（可选）" style={{ width: '100%', marginTop: 8 }} />
+      <Textarea className="banana-inp" value={f.announcement} onChange={(e: any) => setF((s) => ({ ...s, announcement: e.target.value }))} placeholder="板块公告（可选）" minRows={2} style={{ width: '100%', marginTop: 8 }} />
       <div className="row gap-12" style={{ marginTop: 10, justifyContent: 'space-between', flexWrap: 'wrap', alignItems: 'center' }}>
         <label className="row gap-8" style={{ fontSize: 13, color: 'var(--ink-2)', alignItems: 'center' }}>
           <Toggle on={f.isPaid} onChange={(v) => setF((s) => ({ ...s, isPaid: v }))} /> 付费板块
-          {f.isPaid && <Input className="haha-inp" type="number" min={0} value={f.price} onChange={(e: any) => setF((s) => ({ ...s, price: e.target.value }))} placeholder="积分" style={{ width: 110 }} />}
+          {f.isPaid && <Input className="banana-inp" type="number" min={0} value={f.price} onChange={(e: any) => setF((s) => ({ ...s, price: e.target.value }))} placeholder="积分" style={{ width: 110 }} />}
         </label>
         <div className="row gap-4">
-          <Button size="sm" variant="flat" className="haha-btn-app" onClick={onCancel}>取消</Button>
+          <Button size="sm" variant="flat" className="banana-btn-app" onClick={onCancel}>取消</Button>
           <SaveBtn onSave={save} />
         </div>
       </div>
@@ -80,12 +80,12 @@ export default function BoardsPanel() {
       <div className="ui-card" style={{ padding: 16, marginBottom: 'var(--gap)' }}>
         <div style={{ fontWeight: 700, marginBottom: 12 }}>新建板块</div>
         <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-          <Input className="haha-inp" value={form.icon} onChange={(e: any) => setForm((f: any) => ({ ...f, icon: e.target.value }))} placeholder="图标" style={{ width: 60, textAlign: 'center' }} />
-          <Input className="haha-inp" value={form.name} onChange={(e: any) => setForm((f: any) => ({ ...f, name: e.target.value }))} placeholder="板块名称（必填）" style={{ flex: 1, minWidth: 120 }} />
-          <Input className="haha-inp" value={form.slug} onChange={(e: any) => setForm((f: any) => ({ ...f, slug: e.target.value }))} placeholder="slug（必填，英文）" style={{ width: 130 }} />
-          <Button color="primary" className="haha-btn-app" onClick={create} isDisabled={!form.name.trim() || !form.slug.trim()}>创建</Button>
+          <Input className="banana-inp" value={form.icon} onChange={(e: any) => setForm((f: any) => ({ ...f, icon: e.target.value }))} placeholder="图标" style={{ width: 60, textAlign: 'center' }} />
+          <Input className="banana-inp" value={form.name} onChange={(e: any) => setForm((f: any) => ({ ...f, name: e.target.value }))} placeholder="板块名称（必填）" style={{ flex: 1, minWidth: 120 }} />
+          <Input className="banana-inp" value={form.slug} onChange={(e: any) => setForm((f: any) => ({ ...f, slug: e.target.value }))} placeholder="slug（必填，英文）" style={{ width: 130 }} />
+          <Button color="primary" className="banana-btn-app" onClick={create} isDisabled={!form.name.trim() || !form.slug.trim()}>创建</Button>
         </div>
-        <Input className="haha-inp" value={form.description} onChange={(e: any) => setForm((f: any) => ({ ...f, description: e.target.value }))} placeholder="板块说明 (可选)" style={{ width: '100%', marginTop: 8 }} />
+        <Input className="banana-inp" value={form.description} onChange={(e: any) => setForm((f: any) => ({ ...f, description: e.target.value }))} placeholder="板块说明 (可选)" style={{ width: '100%', marginTop: 8 }} />
       </div>
       <div className="ui-card" style={{ overflow: 'hidden' }}>
         {boards.map((b, i) => (
@@ -93,9 +93,9 @@ export default function BoardsPanel() {
             <div className="row gap-12" style={{ padding: '12px 16px' }}>
               <span style={{ fontSize: 22 }}>{b.icon}</span>
               <div className="grow" style={{ minWidth: 0 }}><b>{b.name}</b> <span className="faint" style={{ fontSize: 12 }}>/{b.slug} · {fmtNum(b.threadCount)}帖 · {b.moderators.length}版主{b.isPaid ? ` · 付费${b.price}` : ''}</span></div>
-              <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setEditId(editId === b.id ? null : b.id)}>{editId === b.id ? '收起' : '编辑'}</Button>
-              <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => addMod(b)}>版主</Button>
-              <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(b)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setEditId(editId === b.id ? null : b.id)}>{editId === b.id ? '收起' : '编辑'}</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => addMod(b)}>版主</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(b)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
             </div>
             {editId === b.id && <BoardEditForm board={b} onSaved={() => { setEditId(null); load(); }} onCancel={() => setEditId(null)} />}
           </div>

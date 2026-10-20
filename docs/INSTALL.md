@@ -4,7 +4,7 @@
 > 分路：[图形面板 · 1Panel](INSTALL-1panel.md) / [宝塔](INSTALL-bt.md)（**非技术用户推荐**） · [命令行 · Docker / 裸机](DEPLOY.md) · [完整安装手册](INSTALL.md) · [让 AI 助手代装](DEPLOY-AI.md) · [配置与维护参考](CONFIGURATION.md)
 
 
-本手册带你从零把 HahaSNS 部署起来，覆盖**主机规格**、**依赖环境**与**部署步骤**。后端是 `server-nest/`（NestJS 10 + TypeORM），数据落 **MySQL/MariaDB**、缓存用 **Redis**、媒体默认存本地磁盘（也可走 **S3 兼容对象存储**）。
+本手册带你从零把 BananaSNS 部署起来，覆盖**主机规格**、**依赖环境**与**部署步骤**。后端是 `server-nest/`（NestJS 10 + TypeORM），数据落 **MySQL/MariaDB**、缓存用 **Redis**、媒体默认存本地磁盘（也可走 **S3 兼容对象存储**）。
 
 整套系统只有**一个 Node 进程**：它同时对外提供前端 SPA（指向 `client/dist`，由 `CLIENT_DIST` 配置）、`/api` 接口与 `/uploads` 上传文件，统一监听 `PORT`。
 
@@ -49,10 +49,10 @@
 
 ```bash
 # 用 git 拉取（推荐）
-git clone https://github.com/maobase/hahasns.git hahasns
-cd hahasns
+git clone https://github.com/xhwwstudio/bananasecret.git bananasns
+cd bananasns
 
-# 或：上传 / 解压发布包到服务器某个目录，例如 /opt/hahasns
+# 或：上传 / 解压发布包到服务器某个目录，例如 /opt/bananasns
 ```
 
 仓库是多包结构：
@@ -71,9 +71,9 @@ cd hahasns
 以 MySQL/MariaDB 为例，登录后执行（请把库名、账号、密码换成你自己的）：
 
 ```sql
-CREATE DATABASE hahasns CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'hahasns'@'%' IDENTIFIED BY '<强随机密码>';
-GRANT ALL PRIVILEGES ON hahasns.* TO 'hahasns'@'%';
+CREATE DATABASE bananasns CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'bananasns'@'%' IDENTIFIED BY '<强随机密码>';
+GRANT ALL PRIVILEGES ON bananasns.* TO 'bananasns'@'%';
 FLUSH PRIVILEGES;
 ```
 
@@ -125,9 +125,9 @@ docker compose exec app node scripts/migrate-uploads-to-s3.mjs --execute --yes -
 | `DB_CLIENT` | `mysql` | 数据库类型，保持 `mysql`（同样适用于 MariaDB） |
 | `DB_HOST` | `127.0.0.1` | 数据库地址 |
 | `DB_PORT` | `3306` | 数据库端口 |
-| `DB_USER` | `hahasns` | 数据库账号 |
+| `DB_USER` | `bananasns` | 数据库账号 |
 | `DB_PASSWORD` | 空 | 数据库密码 |
-| `DB_NAME` | `hahasns` | 数据库名 |
+| `DB_NAME` | `bananasns` | 数据库名 |
 | `DB_SYNCHRONIZE` | `false` | 首次部署设为 `true` 让 TypeORM 自动建表，建表后改回 `false` |
 | `REDIS_URL` | `redis://127.0.0.1:6379` | Redis 连接地址 |
 | `CLIENT_DIST` | 内置默认 | 前端构建产物目录，指向 `client/dist`，由后端托管 |
@@ -180,12 +180,12 @@ npm run build       # nest build → 产出 dist/
 ```bash
 NODE_ENV=production \
 DB_HOST=127.0.0.1 DB_PORT=3306 DB_CLIENT=mysql \
-DB_USER=hahasns DB_PASSWORD=<数据库密码> DB_NAME=hahasns \
+DB_USER=bananasns DB_PASSWORD=<数据库密码> DB_NAME=bananasns \
 DB_SYNCHRONIZE=true \
 REDIS_URL=redis://127.0.0.1:6379 \
 JWT_SECRET=<强随机密钥> \
 PORT=4000 \
-CLIENT_DIST=/opt/hahasns/client/dist \
+CLIENT_DIST=/opt/bananasns/client/dist \
   node dist/main.js   # → http://localhost:4000
 ```
 
@@ -199,12 +199,12 @@ CLIENT_DIST=/opt/hahasns/client/dist \
 
 ```bash
 sudo npm install -g pm2
-cd /opt/hahasns/server-nest
+cd /opt/bananasns/server-nest
 # 环境变量同上（去掉 DB_SYNCHRONIZE 或设为 false）
 NODE_ENV=production PORT=4000 JWT_SECRET=<强随机密钥> \
-DB_HOST=127.0.0.1 DB_CLIENT=mysql DB_USER=hahasns DB_PASSWORD=<数据库密码> DB_NAME=hahasns \
-REDIS_URL=redis://127.0.0.1:6379 CLIENT_DIST=/opt/hahasns/client/dist \
-  pm2 start dist/main.js --name hahasns
+DB_HOST=127.0.0.1 DB_CLIENT=mysql DB_USER=bananasns DB_PASSWORD=<数据库密码> DB_NAME=bananasns \
+REDIS_URL=redis://127.0.0.1:6379 CLIENT_DIST=/opt/bananasns/client/dist \
+  pm2 start dist/main.js --name bananasns
 pm2 save && pm2 startup        # 设置开机自启
 ```
 
@@ -266,7 +266,7 @@ server {
     server_name <你的域名>;
     client_max_body_size 30m;
 
-    root /opt/hahasns/client/dist;
+    root /opt/bananasns/client/dist;
     index index.html;
 
     # API 与上传文件转发给后端
@@ -306,7 +306,7 @@ sudo certbot --nginx -d <你的域名>      # 申请并自动配置 HTTPS
 
 - **数据库**：数据落在 MySQL/MariaDB，用 `mysqldump` 定期备份（或使用云数据库的自动备份）：
   ```bash
-  mysqldump -h 127.0.0.1 -u hahasns -p hahasns > /var/backups/hahasns-$(date +%F).sql
+  mysqldump -h 127.0.0.1 -u bananasns -p bananasns > /var/backups/bananasns-$(date +%F).sql
   ```
   恢复时用 `mysql ... < 备份文件.sql` 导回。
 - **上传媒体**：

@@ -4,7 +4,7 @@
 > 分路：[图形面板 · 1Panel](INSTALL-1panel.md) / [宝塔](INSTALL-bt.md)（**非技术用户推荐**） · [命令行 · Docker / 裸机](DEPLOY.md) · [完整安装手册](INSTALL.md) · [让 AI 助手代装](DEPLOY-AI.md) · [配置与维护参考](CONFIGURATION.md)
 
 
-HahaSNS 后端是 `server-nest`（NestJS + TypeORM + **MariaDB** + **Redis**），`app` 进程同时伺服前端页面（`client/dist`）、`/api` 接口和 `/uploads` 上传——**全部在同一个端口上**，无需单独建静态站或手写 Nginx `try_files`。
+BananaSNS 后端是 `server-nest`（NestJS + TypeORM + **MariaDB** + **Redis**），`app` 进程同时伺服前端页面（`client/dist`）、`/api` 接口和 `/uploads` 上传——**全部在同一个端口上**，无需单独建静态站或手写 Nginx `try_files`。
 
 宝塔上两种装法，**推荐 A（Docker 编排，最省事，数据库/缓存一并起好）**；不想用 Docker 走 B。
 
@@ -19,9 +19,9 @@ HahaSNS 后端是 `server-nest`（NestJS + TypeORM + **MariaDB** + **Redis**）�
 > 完全没碰过命令行也能装完。前提：一台服务器 + 已装宝塔面板。
 
 1. **装 Docker**：宝塔「软件商店」搜 `Docker` → 安装（会一并装好 Docker Compose）。
-2. **把代码放上去**：宝塔「文件」进到 `/www/wwwroot`，用「远程下载」拉发布包解压、或直接在「终端」里 `git clone https://github.com/maobase/hahasns.git hahasns`，得到一个 `hahasns` 文件夹。
-3. **填 2 个密码**：宝塔「文件」里打开 `hahasns/.env`，把 `JWT_SECRET` 和 `DB_PASSWORD` 各改成一长串随机字母数字（随便敲长一点、别人猜不到即可）。〔**大陆服务器**：再把 `NPM_REGISTRY=https://registry.npmmirror.com` 那行前面的 `#` 删掉。〕
-4. **一键起**：宝塔「Docker → 编排 → 创建编排」，目录选 `/www/wwwroot/hahasns`（里面有 `docker-compose.yml`），点构建并启动。等几分钟，浏览器访问 `你的服务器IP:4000` 就能看到站点。
+2. **把代码放上去**：宝塔「文件」进到 `/www/wwwroot`，用「远程下载」拉发布包解压、或直接在「终端」里 `git clone https://github.com/xhwwstudio/bananasecret.git bananasns`，得到一个 `bananasns` 文件夹。
+3. **填 2 个密码**：宝塔「文件」里打开 `bananasns/.env`，把 `JWT_SECRET` 和 `DB_PASSWORD` 各改成一长串随机字母数字（随便敲长一点、别人猜不到即可）。〔**大陆服务器**：再把 `NPM_REGISTRY=https://registry.npmmirror.com` 那行前面的 `#` 删掉。〕
+4. **一键起**：宝塔「Docker → 编排 → 创建编排」，目录选 `/www/wwwroot/bananasns`（里面有 `docker-compose.yml`），点构建并启动。等几分钟，浏览器访问 `你的服务器IP:4000` 就能看到站点。
 
 > 想**绑域名 + HTTPS**、**设管理员账号**、或哪一步**卡住了** → 看下面「方式 A」的详细步骤与说明。
 > **实在搞不定？** 把本仓库和 [AI 部署指南](DEPLOY-AI.md) 一起丢给 Claude Code / Codex，让 AI 助手照着帮你装（它会自己填配置、跑健康检查）。
@@ -40,7 +40,7 @@ HahaSNS 后端是 `server-nest`（NestJS + TypeORM + **MariaDB** + **Redis**）�
 宝塔「终端」：
 ```bash
 cd /www/wwwroot
-git clone https://github.com/maobase/hahasns.git hahasns && cd hahasns
+git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
 cp .env.example .env
 # 编辑 .env：JWT_SECRET 和 DB_PASSWORD 都改成强随机串
 #   node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
@@ -48,11 +48,11 @@ cp .env.example .env
 ```
 
 ### 3) 起容器
-宝塔「Docker → 编排 → 创建编排」，来源指到 `/www/wwwroot/hahasns`（含 `docker-compose.yml`），构建并启动；或终端：
+宝塔「Docker → 编排 → 创建编排」，来源指到 `/www/wwwroot/bananasns`（含 `docker-compose.yml`），构建并启动；或终端：
 ```bash
-cd /www/wwwroot/hahasns
+cd /www/wwwroot/bananasns
 docker compose up -d --build      # 首次构建 + 拉起 mariadb/redis，几分钟
-curl http://127.0.0.1:4000/api/health   # 应返回 {"ok":true,"app":"HahaSNS"}
+curl http://127.0.0.1:4000/api/health   # 应返回 {"ok":true,"app":"BananaSNS"}
 ```
 `app` 首启会自动建表（`DB_SYNCHRONIZE=true`）。数据库初始为空。**设首个管理员**两种方式任选：① 部署前在 `.env` 加 `SEED_ADMIN_USER` 与 `SEED_ADMIN_PASSWORD`，首启自动建管理员（库内已有管理员则忽略）；② 或先注册一个账号，再在 mariadb 容器执行 `UPDATE users SET role='admin' WHERE username='你的账号';`。
 
@@ -61,9 +61,9 @@ curl http://127.0.0.1:4000/api/health   # 应返回 {"ok":true,"app":"HahaSNS"}
 
 ### 5) 更新与数据
 ```bash
-cd /www/wwwroot/hahasns && git pull && docker compose up -d --build
+cd /www/wwwroot/bananasns && git pull && docker compose up -d --build
 ```
-数据库/缓存/上传都在 Docker **命名卷**（`hahasns-db` / `hahasns-redis` / `hahasns-uploads`），`git pull` 与重建容器都不丢；生产建议定期 `docker exec hahasns-mariadb mariadb-dump` 备份库。
+数据库/缓存/上传都在 Docker **命名卷**（`bananasns-db` / `bananasns-redis` / `bananasns-uploads`），`git pull` 与重建容器都不丢；生产建议定期 `docker exec bananasns-mariadb mariadb-dump` 备份库。
 
 ---
 
@@ -73,11 +73,11 @@ cd /www/wwwroot/hahasns && git pull && docker compose up -d --build
 
 ### 1) 准备
 - 软件商店装 **Node.js 版本管理器**（装 Node 20 LTS 设默认）、**MySQL**（5.7/8 均可）、**Redis**。
-- MySQL 里建库 `hahasns` 与用户（记下用户名/密码）。
+- MySQL 里建库 `bananasns` 与用户（记下用户名/密码）。
 
 ### 2) 拉代码 + 构建
 ```bash
-cd /www/wwwroot/hahasns
+cd /www/wwwroot/bananasns
 # 前端
 cd client && npm install && npm run build && cd ..
 # 后端（server-nest）
@@ -91,7 +91,7 @@ cd server-nest && npm install && npm run build && cd ..
 
 | 项 | 填写 |
 | --- | --- |
-| 项目目录 | `/www/wwwroot/hahasns/server-nest` |
+| 项目目录 | `/www/wwwroot/bananasns/server-nest` |
 | 启动方式 | `node dist/main.js` |
 | Node 版本 | 20 |
 | 端口 | `4000` |
@@ -105,20 +105,20 @@ cd server-nest && npm install && npm run build && cd ..
 | `PORT` | `4000` |
 | `DB_CLIENT` | `mysql` |
 | `DB_HOST` / `DB_PORT` | `127.0.0.1` / `3306` |
-| `DB_USER` / `DB_PASSWORD` / `DB_NAME` | 宝塔里建的 MySQL 用户/密码/库（库名 `hahasns`） |
+| `DB_USER` / `DB_PASSWORD` / `DB_NAME` | 宝塔里建的 MySQL 用户/密码/库（库名 `bananasns`） |
 | `DB_SYNCHRONIZE` | `true`（首启建表；稳定后可改 `false`） |
 | `REDIS_URL` | `redis://127.0.0.1:6379`（宝塔 Redis 有密码则 `redis://:密码@127.0.0.1:6379`） |
-| `CLIENT_DIST` | `/www/wwwroot/hahasns/client/dist` |
-| `UPLOADS_DIR` | `/www/wwwroot/hahasns/server-nest/uploads`（上传存这里；配了 `S3_*` 则走对象存储） |
+| `CLIENT_DIST` | `/www/wwwroot/bananasns/client/dist` |
+| `UPLOADS_DIR` | `/www/wwwroot/bananasns/server-nest/uploads`（上传存这里；配了 `S3_*` 则走对象存储） |
 | `NODE_ENV` | `production` |
 
 > 生成 JWT 密钥：`node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`
 
-启动后 `curl http://127.0.0.1:4000/api/health` 应返回 `{"ok":true,"app":"HahaSNS"}`。绑域名同方式 A 第 4 步。
+启动后 `curl http://127.0.0.1:4000/api/health` 应返回 `{"ok":true,"app":"BananaSNS"}`。绑域名同方式 A 第 4 步。
 
 ### 更新
 ```bash
-cd /www/wwwroot/hahasns && git pull
+cd /www/wwwroot/bananasns && git pull
 cd client && npm run build && cd ../server-nest && npm install && npm run build
 # 然后宝塔 Node 项目里点重启
 ```

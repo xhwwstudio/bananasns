@@ -58,7 +58,7 @@ export default function QaPanel() {
               </div>
               <div className="faint" style={{ fontSize: 12, marginTop: 3 }}>{q.author?.nickname} · {fmtNum(q.answerCount)} 回答 · {fmtNum(q.viewCount)} 浏览</div>
             </div>
-            <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(q)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+            <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(q)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
           </div>
         </div>
       ))}

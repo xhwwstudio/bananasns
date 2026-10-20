@@ -26,9 +26,9 @@ export default () => ({
           : '3306'),
       10,
     ),
-    username: process.env.DB_USER || 'hahasns',
+    username: process.env.DB_USER || 'bananasns',
     password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'hahasns',
+    database: process.env.DB_NAME || 'bananasns',
     // dev convenience — keep OFF in production, use migrations instead
     synchronize: process.env.DB_SYNCHRONIZE === 'true',
     logging: process.env.DB_LOGGING === 'true',
@@ -44,7 +44,7 @@ export default () => ({
     // 只保留显式值：默认地址由 storage-config.resolveStorageConfig 统一兜底，
     // 若在此预填默认会掩盖「用户未配置」，导致 testConnection 预警失效。
     endpoint: process.env.S3_ENDPOINT || '',
-    bucket: process.env.S3_BUCKET || 'hahasns',
+    bucket: process.env.S3_BUCKET || 'bananasns',
     accessKey: process.env.S3_ACCESS_KEY || '',
     secretKey: process.env.S3_SECRET_KEY || '',
     region: process.env.S3_REGION || 'us-east-1',

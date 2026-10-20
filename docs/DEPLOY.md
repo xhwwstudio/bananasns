@@ -4,7 +4,7 @@
 > 分路：[图形面板 · 1Panel](INSTALL-1panel.md) / [宝塔](INSTALL-bt.md)（**非技术用户推荐**） · [命令行 · Docker / 裸机](DEPLOY.md) · [完整安装手册](INSTALL.md) · [让 AI 助手代装](DEPLOY-AI.md) · [配置与维护参考](CONFIGURATION.md)
 
 
-HahaSNS 后端是 **server-nest**（NestJS + TypeORM + MySQL/MariaDB + Redis），`app` 进程同时伺服
+BananaSNS 后端是 **server-nest**（NestJS + TypeORM + MySQL/MariaDB + Redis），`app` 进程同时伺服
 `/api`、构建后的 SPA 与 `/uploads`——同一个端口。生产部署有两条路：
 
 - **Docker Compose（推荐，最省事）** —— 一份 `docker-compose.yml` 起 `app + mariadb + redis`，
@@ -20,13 +20,13 @@ HahaSNS 后端是 **server-nest**（NestJS + TypeORM + MySQL/MariaDB + Redis）�
 ```bash
 cp .env.example .env        # 设 JWT_SECRET、DB_PASSWORD（大陆可设 NPM_REGISTRY 加速）
 docker compose up -d --build
-curl http://127.0.0.1:4000/api/health   # {"ok":true,"app":"HahaSNS"}
+curl http://127.0.0.1:4000/api/health   # {"ok":true,"app":"BananaSNS"}
 ```
 
 `app` 首启自动建表（`DB_SYNCHRONIZE=true`）。数据库/缓存/上传存于命名卷
-（`hahasns-db` / `hahasns-redis` / `hahasns-uploads`），重建容器不丢。用面板反向代理把域名转发到
+（`bananasns-db` / `bananasns-redis` / `bananasns-uploads`），重建容器不丢。用面板反向代理把域名转发到
 `127.0.0.1:4000` 并申请 HTTPS；大文件上传把反代 `client_max_body_size` 调到 `30m`。
-更新：`git pull && docker compose up -d --build`。备份：`docker exec hahasns-mariadb mariadb-dump …`。
+更新：`git pull && docker compose up -d --build`。备份：`docker exec bananasns-mariadb mariadb-dump …`。
 
 ---
 
@@ -34,12 +34,12 @@ curl http://127.0.0.1:4000/api/health   # {"ok":true,"app":"HahaSNS"}
 
 ### 1. 准备
 - **Node.js 18+**（推荐 20 LTS）、**MySQL/MariaDB**、**Redis**。
-- 建库 `hahasns` 与用户/密码。
-- 一个非 root 部署用户，拥有应用目录（如 `/home/<deploy-user>/hahasns`）。
+- 建库 `bananasns` 与用户/密码。
+- 一个非 root 部署用户，拥有应用目录（如 `/home/<deploy-user>/bananasns`）。
 
 ### 2. 构建
 ```bash
-git clone https://github.com/maobase/hahasns.git hahasns && cd hahasns
+git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
 npm run install:all          # 装 server-nest + client 依赖
 npm run build                # 构建前端(client/dist) + 编译后端(server-nest/dist)
 ```
@@ -50,7 +50,7 @@ npm run build                # 构建前端(client/dist) + 编译后端(server-n
 | `JWT_SECRET` | **必设**，强随机串（`node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`） |
 | `PORT` | 监听端口，如 `4000` |
 | `DB_CLIENT`/`DB_HOST`/`DB_PORT` | `mysql` / `127.0.0.1` / `3306` |
-| `DB_USER`/`DB_PASSWORD`/`DB_NAME` | MySQL 用户/密码/库（`hahasns`） |
+| `DB_USER`/`DB_PASSWORD`/`DB_NAME` | MySQL 用户/密码/库（`bananasns`） |
 | `DB_SYNCHRONIZE` | 首次部署设 `true` 让 TypeORM 按实体自动建表（**本项目无独立迁移脚本**，表结构靠 synchronize 生成）；建表完成后改回 `false` |
 | `REDIS_URL` | `redis://127.0.0.1:6379`（有密码：`redis://:pw@127.0.0.1:6379`） |
 | `CLIENT_DIST` | `<repo>/client/dist`（伺服前端） |
@@ -58,16 +58,16 @@ npm run build                # 构建前端(client/dist) + 编译后端(server-n
 | `SEED_ADMIN_USER`/`SEED_ADMIN_PASSWORD` | 可选：两项都设且库内无管理员时，首启自动建管理员（见下「首个管理员」）。建好后可去掉 |
 | `NODE_ENV` | `production` |
 
-### 4. systemd unit（`~/.config/systemd/user/hahasns.service`，或系统级）
+### 4. systemd unit（`~/.config/systemd/user/bananasns.service`，或系统级）
 ```ini
 [Unit]
-Description=HahaSNS (NestJS)
+Description=BananaSNS (NestJS)
 After=network.target
 
 [Service]
-WorkingDirectory=/home/<deploy-user>/hahasns/server-nest
-EnvironmentFile=/home/<deploy-user>/hahasns/server-nest/.env
-ExecStart=/usr/bin/node /home/<deploy-user>/hahasns/server-nest/dist/main.js
+WorkingDirectory=/home/<deploy-user>/bananasns/server-nest
+EnvironmentFile=/home/<deploy-user>/bananasns/server-nest/.env
+ExecStart=/usr/bin/node /home/<deploy-user>/bananasns/server-nest/dist/main.js
 Restart=always
 RestartSec=3
 
@@ -75,14 +75,14 @@ RestartSec=3
 WantedBy=default.target
 ```
 ```bash
-systemctl --user daemon-reload && systemctl --user enable --now hahasns
+systemctl --user daemon-reload && systemctl --user enable --now bananasns
 curl http://127.0.0.1:4000/api/health
 ```
 前面用 nginx/面板反代绑域名 + HTTPS（转发到 `PORT`）。
 
 ### 5. 更新
 ```bash
-cd <repo> && git pull && npm run build && systemctl --user restart hahasns
+cd <repo> && git pull && npm run build && systemctl --user restart bananasns
 ```
 数据在 MySQL（用 `mariadb-dump` 备份）、上传在 `UPLOADS_DIR` 或对象存储，更新切勿覆盖。
 
@@ -104,9 +104,9 @@ cd <repo> && git pull && npm run build && systemctl --user restart hahasns
 - **手动**：先在站点正常注册一个账号，再把它提成管理员：
   ```bash
   # Docker：$DB_PASSWORD 需在当前 shell 可见（set -a; . .env; set +a 可从 .env 载入）
-  docker exec hahasns-mariadb mariadb -uhahasns -p"$DB_PASSWORD" hahasns \
+  docker exec bananasns-mariadb mariadb -ubananasns -p"$DB_PASSWORD" bananasns \
     -e "UPDATE users SET role='admin' WHERE username='<注册的用户名>';"
-  # 裸机：mysql -uhahasns -p hahasns -e "UPDATE users SET role='admin' WHERE username='<用户名>';"
+  # 裸机：mysql -ubananasns -p bananasns -e "UPDATE users SET role='admin' WHERE username='<用户名>';"
   ```
 
 管理员登录后右上角进 `/admin`：可配模块开关、页面布局、快报/导航、**支付网关（凭据走后台 `site_config`，

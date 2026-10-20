@@ -21,15 +21,15 @@ function FlashEditForm({ item, onSaved, onCancel }: { item: any; onSaved: () => 
   return (
     <div style={{ padding: '0 18px 16px', background: 'var(--surface-2)' }}>
       <div className="sec-grid" style={{ paddingTop: 14 }}>
-        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">标题 <i className="sec-req">*</i></span><Input className="haha-inp" maxLength={120} value={f.title} onChange={(e: any) => setF((s) => ({ ...s, title: e.target.value }))} /></label>
-        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">摘要</span><Textarea className="haha-inp" minRows={2} maxLength={300} value={f.summary} onChange={(e: any) => setF((s) => ({ ...s, summary: e.target.value }))} /></label>
-        <label className="sec-field"><span className="sec-label">分类</span><select className="haha-inp" value={f.category} onChange={(e) => setF((s) => ({ ...s, category: e.target.value }))}>{FLASH_CATS.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
-        <label className="sec-field"><span className="sec-label">链接</span><Input className="haha-inp" maxLength={300} value={f.url} onChange={(e: any) => setF((s) => ({ ...s, url: e.target.value }))} placeholder="https://…" /></label>
+        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">标题 <i className="sec-req">*</i></span><Input className="banana-inp" maxLength={120} value={f.title} onChange={(e: any) => setF((s) => ({ ...s, title: e.target.value }))} /></label>
+        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">摘要</span><Textarea className="banana-inp" minRows={2} maxLength={300} value={f.summary} onChange={(e: any) => setF((s) => ({ ...s, summary: e.target.value }))} /></label>
+        <label className="sec-field"><span className="sec-label">分类</span><select className="banana-inp" value={f.category} onChange={(e) => setF((s) => ({ ...s, category: e.target.value }))}>{FLASH_CATS.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
+        <label className="sec-field"><span className="sec-label">链接</span><Input className="banana-inp" maxLength={300} value={f.url} onChange={(e: any) => setF((s) => ({ ...s, url: e.target.value }))} placeholder="https://…" /></label>
       </div>
       <div className="row" style={{ justifyContent: 'space-between', marginTop: 12, alignItems: 'center' }}>
         <label className="row gap-8" style={{ fontSize: 13.5 }}><Toggle on={f.pinned} onChange={(v) => setF((s) => ({ ...s, pinned: v }))} /> 置顶</label>
         <div className="row gap-4">
-          <Button size="sm" variant="flat" className="haha-btn-app" onClick={onCancel}>取消</Button>
+          <Button size="sm" variant="flat" className="banana-btn-app" onClick={onCancel}>取消</Button>
           <SaveBtn onSave={save} />
         </div>
       </div>
@@ -62,14 +62,14 @@ export default function FlashPanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 12 }}>发布快报</div>
         <div className="sec-grid">
-          <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">标题 <i className="sec-req">*</i></span><Input className="haha-inp" maxLength={120} value={form.title} onChange={(e: any) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="一句话快报标题" /></label>
-          <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">摘要（可选）</span><Textarea className="haha-inp" minRows={2} maxLength={300} value={form.summary} onChange={(e: any) => setForm((f) => ({ ...f, summary: e.target.value }))} placeholder="补充说明…" /></label>
-          <label className="sec-field"><span className="sec-label">分类</span><select className="haha-inp" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}>{FLASH_CATS.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
-          <label className="sec-field"><span className="sec-label">链接（可选）</span><Input className="haha-inp" maxLength={300} value={form.url} onChange={(e: any) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://…" /></label>
+          <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">标题 <i className="sec-req">*</i></span><Input className="banana-inp" maxLength={120} value={form.title} onChange={(e: any) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="一句话快报标题" /></label>
+          <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">摘要（可选）</span><Textarea className="banana-inp" minRows={2} maxLength={300} value={form.summary} onChange={(e: any) => setForm((f) => ({ ...f, summary: e.target.value }))} placeholder="补充说明…" /></label>
+          <label className="sec-field"><span className="sec-label">分类</span><select className="banana-inp" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}>{FLASH_CATS.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
+          <label className="sec-field"><span className="sec-label">链接（可选）</span><Input className="banana-inp" maxLength={300} value={form.url} onChange={(e: any) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://…" /></label>
         </div>
         <div className="row" style={{ justifyContent: 'space-between', marginTop: 14 }}>
           <label className="row gap-8" style={{ fontSize: 13.5 }}><Toggle on={form.pinned} onChange={(v) => setForm((f) => ({ ...f, pinned: v }))} /> 置顶</label>
-          <Button color="primary" className="haha-btn-app" onClick={publish} isDisabled={saving}>{saving ? '发布中…' : '发布快报'}</Button>
+          <Button color="primary" className="banana-btn-app" onClick={publish} isDisabled={saving}>{saving ? '发布中…' : '发布快报'}</Button>
         </div>
       </div>
       <div className="ui-card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -89,8 +89,8 @@ export default function FlashPanel() {
                 </div>
                 {f.summary && <div className="faint" style={{ fontSize: 12.5, marginTop: 4, lineHeight: 1.5 }}>{f.summary}</div>}
               </div>
-              <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setEditId(editId === f.id ? null : f.id)}>{editId === f.id ? '收起' : '编辑'}</Button>
-              <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => remove(f.id)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setEditId(editId === f.id ? null : f.id)}>{editId === f.id ? '收起' : '编辑'}</Button>
+              <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => remove(f.id)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
             </div>
             {editId === f.id && <FlashEditForm item={f} onSaved={() => { setEditId(null); load(); }} onCancel={() => setEditId(null)} />}
           </div>

@@ -39,7 +39,7 @@ export default function PagesPanel() {
                 <Toggle on={(cfg[toggleKey] ?? '1') !== '0'} onChange={(v) => setK(toggleKey, v ? '1' : '0')} />
               </label>
             </div>
-            <Textarea className="haha-inp" maxLength={20000} minRows={8} value={cfg[contentKey] ?? ''}
+            <Textarea className="banana-inp" maxLength={20000} minRows={8} value={cfg[contentKey] ?? ''}
               onChange={(e: any) => setK(contentKey, e.target.value)}
               placeholder={`${label} Markdown（留空用内置）`}
               style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 12.5, lineHeight: 1.55 }} />
@@ -47,7 +47,7 @@ export default function PagesPanel() {
         ))}
       </div>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" className="haha-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存页面内容'}</Button>
+        <Button color="primary" className="banana-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存页面内容'}</Button>
       </div>
     </div>
   );

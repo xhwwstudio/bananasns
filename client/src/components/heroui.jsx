@@ -77,7 +77,7 @@ function buttonVariant({ color, variant }) {
 export function Card({ children, className, isPressable, as: As, to, href, ...rest }) {
   // Strip v2-only visual props v3 derives from its own variants.
   const { shadow, radius, ...domRest } = rest;
-  const classes = cx('haha-card', isPressable && 'haha-card-pressable', className);
+  const classes = cx('banana-card', isPressable && 'banana-card-pressable', className);
 
   if (As) {
     // Polymorphic link/element card (e.g. <Card as={Link} to=…>).
@@ -93,11 +93,11 @@ export function Card({ children, className, isPressable, as: As, to, href, ...re
 }
 
 export function CardBody({ children, className, ...rest }) {
-  return <V3Card.Content className={cx('haha-card-body', className)} {...rest}>{children}</V3Card.Content>;
+  return <V3Card.Content className={cx('banana-card-body', className)} {...rest}>{children}</V3Card.Content>;
 }
 
 export function CardHeader({ children, className, ...rest }) {
-  return <V3Card.Header className={cx('haha-card-header', className)} {...rest}>{children}</V3Card.Header>;
+  return <V3Card.Header className={cx('banana-card-header', className)} {...rest}>{children}</V3Card.Header>;
 }
 
 /* ---- Tabs / Tab ----------------------------------------------------- */
@@ -124,12 +124,12 @@ export function Tabs({
   return (
     <V3Tabs
       aria-label={ariaLabel}
-      className={cx('haha-tabs', fullWidth && 'haha-tabs-full', className, classNames?.base)}
+      className={cx('banana-tabs', fullWidth && 'banana-tabs-full', className, classNames?.base)}
       selectedKey={selectedKey}
       onSelectionChange={onSelectionChange}
       {...rest}
     >
-      <V3Tabs.List className={cx('haha-tablist', classNames?.tabList)}>
+      <V3Tabs.List className={cx('banana-tablist', classNames?.tabList)}>
         {tabs.map((t) => {
           const id = unkey(t.key);
           return (
@@ -186,10 +186,10 @@ export function Button({
   // v3 Button has no success/warning variant, so buttonVariant() falls back to
   // secondary (neutral gray). Re-tint via a class so status-colored buttons
   // (e.g. QA「采纳」= success) keep their green/amber instead of going gray.
-  const statusClass = color === 'success' ? 'haha-btn-success' : color === 'warning' ? 'haha-btn-warning' : '';
+  const statusClass = color === 'success' ? 'banana-btn-success' : color === 'warning' ? 'banana-btn-warning' : '';
   return (
     <V3Button
-      className={cx('haha-btn', statusClass, className)}
+      className={cx('banana-btn', statusClass, className)}
       variant={buttonVariant({ color, variant })}
       size={size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md'}
       fullWidth={!!fullWidth}
@@ -199,7 +199,7 @@ export function Button({
       {...extra}
       {...rest}
     >
-      {isLoading && <V3Spinner size="sm" className="haha-btn-spinner" />}
+      {isLoading && <V3Spinner size="sm" className="banana-btn-spinner" />}
       {!isLoading && startContent}
       {children}
       {!isLoading && endContent}
@@ -211,10 +211,10 @@ export function Button({
 function Field({ label, labelPlacement, description, className, htmlFor, children }) {
   if (!label && !description) return children;
   return (
-    <div className={cx('haha-field', `haha-field-${labelPlacement || 'outside'}`, className)}>
-      {label && <label className="haha-field-label" htmlFor={htmlFor}>{label}</label>}
+    <div className={cx('banana-field', `banana-field-${labelPlacement || 'outside'}`, className)}>
+      {label && <label className="banana-field-label" htmlFor={htmlFor}>{label}</label>}
       {children}
-      {description && <Description className="haha-field-desc">{description}</Description>}
+      {description && <Description className="banana-field-desc">{description}</Description>}
     </div>
   );
 }
@@ -247,10 +247,10 @@ export function Input({
     onValueChange?.(e?.target?.value ?? '');
   };
   const field = (
-    <div className={cx('haha-input-wrap', className)} style={style}>
-      {startContent && <span className="haha-input-start">{startContent}</span>}
+    <div className={cx('banana-input-wrap', className)} style={style}>
+      {startContent && <span className="banana-input-start">{startContent}</span>}
       <V3Input
-        className="haha-input"
+        className="banana-input"
         id={inputId}
         ref={ref}
         value={value ?? ''}
@@ -258,7 +258,7 @@ export function Input({
         required={isRequired}
         {...rest}
       />
-      {endContent && <span className="haha-input-end">{endContent}</span>}
+      {endContent && <span className="banana-input-end">{endContent}</span>}
     </div>
   );
   return (
@@ -292,7 +292,7 @@ export function Textarea({
   };
   const field = (
     <V3TextArea
-      className={cx('haha-textarea', className)}
+      className={cx('banana-textarea', className)}
       id={inputId}
       ref={ref}
       value={value ?? ''}
@@ -344,16 +344,16 @@ export function Select({
   const field = (
     <V3Select
       aria-label={ariaLabel || (typeof label === 'string' ? label : undefined)}
-      className={cx('haha-select', className)}
+      className={cx('banana-select', className)}
       selectedKey={selected ?? null}
       onSelectionChange={handleSelection}
       {...rest}
     >
-      <V3Select.Trigger className="haha-select-trigger">
+      <V3Select.Trigger className="banana-select-trigger">
         <V3Select.Value />
         <V3Select.Indicator />
       </V3Select.Trigger>
-      <V3Select.Popover className="haha-select-popover">
+      <V3Select.Popover className="banana-select-popover">
         <ListBox>
           {items.map((it) => {
             const id = unkey(it.key);
@@ -430,7 +430,7 @@ export function Modal({
     <V3Modal isOpen={isOpen} onOpenChange={handleOpenChange} {...rest}>
       <V3Modal.Backdrop className={classNames?.backdrop} variant={backdrop === 'blur' ? 'blur' : undefined}>
         <V3Modal.Container className={classNames?.container} placement={placement} size={size}>
-          <V3Modal.Dialog className={cx('haha-modal-dialog', classNames?.dialog)}>{dialogChildren}</V3Modal.Dialog>
+          <V3Modal.Dialog className={cx('banana-modal-dialog', classNames?.dialog)}>{dialogChildren}</V3Modal.Dialog>
         </V3Modal.Container>
       </V3Modal.Backdrop>
     </V3Modal>
@@ -444,13 +444,13 @@ export function ModalContent() {
 }
 
 export function ModalHeader({ children, className, ...rest }) {
-  return <V3Modal.Header className={cx('haha-modal-header', className)} {...rest}>{children}</V3Modal.Header>;
+  return <V3Modal.Header className={cx('banana-modal-header', className)} {...rest}>{children}</V3Modal.Header>;
 }
 export function ModalBody({ children, className, ...rest }) {
-  return <V3Modal.Body className={cx('haha-modal-body', className)} {...rest}>{children}</V3Modal.Body>;
+  return <V3Modal.Body className={cx('banana-modal-body', className)} {...rest}>{children}</V3Modal.Body>;
 }
 export function ModalFooter({ children, className, ...rest }) {
-  return <V3Modal.Footer className={cx('haha-modal-footer', className)} {...rest}>{children}</V3Modal.Footer>;
+  return <V3Modal.Footer className={cx('banana-modal-footer', className)} {...rest}>{children}</V3Modal.Footer>;
 }
 
 /* ---- Chip ----------------------------------------------------------- */
@@ -478,7 +478,7 @@ export function Chip({ children, className, color = 'default', variant = 'flat',
   }
   return (
     <V3Chip
-      className={cx('haha-chip', className)}
+      className={cx('banana-chip', className)}
       color={v3color}
       variant={v3variant}
       size={size}
@@ -495,7 +495,7 @@ export function Chip({ children, className, color = 'default', variant = 'flat',
 // render the neutral soft chip and recolor it to the active skin via CSS.
 function brandChip({ children, className, size, startContent, endContent, rest }) {
   return (
-    <V3Chip className={cx('haha-chip haha-chip-brand', className)} color="default" variant="soft" size={size} {...rest}>
+    <V3Chip className={cx('banana-chip banana-chip-brand', className)} color="default" variant="soft" size={size} {...rest}>
       {startContent}
       {children}
       {endContent}
@@ -505,7 +505,7 @@ function brandChip({ children, className, size, startContent, endContent, rest }
 
 /* ---- Spinner -------------------------------------------------------- */
 export function Spinner({ color, size = 'md', className, ...rest }) {
-  return <V3Spinner className={cx('haha-spinner', className)} color={color} size={size} {...rest} />;
+  return <V3Spinner className={cx('banana-spinner', className)} color={color} size={size} {...rest} />;
 }
 
 /* ---- Progress ------------------------------------------------------- */
@@ -515,13 +515,13 @@ export function Progress({ value = 0, color, size = 'md', className, 'aria-label
   return (
     <V3ProgressBar
       aria-label={ariaLabel}
-      className={cx('haha-progress', color === 'success' && 'haha-progress-success', className)}
+      className={cx('banana-progress', color === 'success' && 'banana-progress-success', className)}
       value={value}
       size={size}
       {...rest}
     >
-      <V3ProgressBar.Track className="haha-progress-track">
-        <V3ProgressBar.Fill className="haha-progress-fill" />
+      <V3ProgressBar.Track className="banana-progress-track">
+        <V3ProgressBar.Fill className="banana-progress-fill" />
       </V3ProgressBar.Track>
     </V3ProgressBar>
   );

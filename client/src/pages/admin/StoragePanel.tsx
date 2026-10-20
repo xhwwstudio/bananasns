@@ -218,26 +218,26 @@ export default function StoragePanel() {
         <div className="sec-grid" style={{ marginTop: 14 }}>
           <label className="sec-field">
             <span className="sec-label">存储驱动</span>
-            <select className="haha-inp" value={driverValue} onChange={(e) => setK('storage_driver', e.target.value)}>
+            <select className="banana-inp" value={driverValue} onChange={(e) => setK('storage_driver', e.target.value)}>
               <option value="local">本地磁盘</option>
               <option value="s3">S3 兼容</option>
             </select>
           </label>
           <label className="sec-field">
             <span className="sec-label">S3 Endpoint</span>
-            <Input className="haha-inp" value={cfg.s3_endpoint ?? ''} onChange={(e: any) => setK('s3_endpoint', e.target.value)} placeholder={envHint('endpoint', status?.endpoint) || 'https://s3-cn-east-1.qiniucs.com'} />
+            <Input className="banana-inp" value={cfg.s3_endpoint ?? ''} onChange={(e: any) => setK('s3_endpoint', e.target.value)} placeholder={envHint('endpoint', status?.endpoint) || 'https://s3-cn-east-1.qiniucs.com'} />
           </label>
           <label className="sec-field">
             <span className="sec-label">Bucket</span>
-            <Input className="haha-inp" value={cfg.s3_bucket ?? ''} onChange={(e: any) => setK('s3_bucket', e.target.value)} placeholder={envHint('bucket', status?.bucket) || 'hahasns'} />
+            <Input className="banana-inp" value={cfg.s3_bucket ?? ''} onChange={(e: any) => setK('s3_bucket', e.target.value)} placeholder={envHint('bucket', status?.bucket) || 'bananasns'} />
           </label>
           <label className="sec-field">
             <span className="sec-label">Region</span>
-            <Input className="haha-inp" value={cfg.s3_region ?? ''} onChange={(e: any) => setK('s3_region', e.target.value)} placeholder={envHint('region', status?.region) || 'cn-east-1'} />
+            <Input className="banana-inp" value={cfg.s3_region ?? ''} onChange={(e: any) => setK('s3_region', e.target.value)} placeholder={envHint('region', status?.region) || 'cn-east-1'} />
           </label>
           <label className="sec-field">
             <span className="sec-label">Public URL（CDN）</span>
-            <Input className="haha-inp" value={cfg.s3_public_url ?? ''} onChange={(e: any) => setK('s3_public_url', e.target.value)} placeholder={envHint('publicUrl', status?.publicUrl) || 'https://cdn.example.com'} />
+            <Input className="banana-inp" value={cfg.s3_public_url ?? ''} onChange={(e: any) => setK('s3_public_url', e.target.value)} placeholder={envHint('publicUrl', status?.publicUrl) || 'https://cdn.example.com'} />
           </label>
           <label className="sec-field row gap-8" style={{ flexDirection: 'row', alignItems: 'center' }}>
             {/* 生效默认开（后端 env 未设时按 true）：仅显式 '0' 显示关；保存时未配置键不落库（undefined 不入 JSON），用户勾选后才是显式选择 */}
@@ -246,13 +246,13 @@ export default function StoragePanel() {
           </label>
           <label className="sec-field">
             <span className="sec-label">Access Key {secrets.s3_access_key ? '（已配置）' : ''}</span>
-            <Input className="haha-inp" type="password" autoComplete="new-password"
+            <Input className="banana-inp" type="password" autoComplete="new-password"
               value={cfg.s3_access_key ?? ''} onChange={(e: any) => setK('s3_access_key', e.target.value)}
               placeholder={secrets.s3_access_key ? '••••（留空保留）' : src.accessKey === 'env' ? '已由环境变量提供' : 'Access Key'} />
           </label>
           <label className="sec-field">
             <span className="sec-label">Secret Key {secrets.s3_secret_key ? '（已配置）' : ''}</span>
-            <Input className="haha-inp" type="password" autoComplete="new-password"
+            <Input className="banana-inp" type="password" autoComplete="new-password"
               value={cfg.s3_secret_key ?? ''} onChange={(e: any) => setK('s3_secret_key', e.target.value)}
               placeholder={secrets.s3_secret_key ? '••••（留空保留）' : src.secretKey === 'env' ? '已由环境变量提供' : 'Secret Key'} />
           </label>
@@ -327,10 +327,10 @@ export default function StoragePanel() {
       )}
       <div className="row gap-8" style={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
         {status?.hasSiteConfig && (
-          <Button color="danger" variant="light" className="haha-btn-app" onClick={clearSite} isDisabled={clearing}>{clearing ? '清除中…' : '清除后台设置'}</Button>
+          <Button color="danger" variant="light" className="banana-btn-app" onClick={clearSite} isDisabled={clearing}>{clearing ? '清除中…' : '清除后台设置'}</Button>
         )}
-        <Button variant="bordered" className="haha-btn-app" onClick={test} isDisabled={testing}>{testing ? '测试中…' : '测试连接'}</Button>
-        <Button color="primary" className="haha-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存存储配置'}</Button>
+        <Button variant="bordered" className="banana-btn-app" onClick={test} isDisabled={testing}>{testing ? '测试中…' : '测试连接'}</Button>
+        <Button color="primary" className="banana-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存存储配置'}</Button>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ export default function ShareModal({ open, onClose, post }: ShareModalProps) {
           <UserName user={post.author} showBadges={false} />
           <div className="post-body" style={{ fontSize: 13 }}>{(post.content || '').slice(0, 80)}</div>
         </div>
-        <Button size="lg" color="primary" fullWidth className="haha-btn-app" style={{ marginTop: 14 }} onClick={doShare}>转发</Button>
+        <Button size="lg" color="primary" fullWidth className="banana-btn-app" style={{ marginTop: 14 }} onClick={doShare}>转发</Button>
       </div>
     </Modal>
   );

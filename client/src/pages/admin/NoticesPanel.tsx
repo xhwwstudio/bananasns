@@ -24,14 +24,14 @@ function NoticeEditForm({ item, onSaved, onCancel }: { item: any; onSaved: () =>
   return (
     <div style={{ padding: '0 16px 16px', background: 'var(--surface-2)' }}>
       <div className="sec-grid" style={{ paddingTop: 14 }}>
-        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">标题 <i className="sec-req">*</i></span><Input className="haha-inp" maxLength={120} value={f.title} onChange={(e: any) => setF((s) => ({ ...s, title: e.target.value }))} /></label>
-        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">补充说明</span><Textarea className="haha-inp" minRows={2} maxLength={500} value={f.body} onChange={(e: any) => setF((s) => ({ ...s, body: e.target.value }))} /></label>
-        <label className="sec-field"><span className="sec-label">级别</span><select className="haha-inp" value={f.level} onChange={(e) => setF((s) => ({ ...s, level: e.target.value }))}>{NOTICE_LEVELS.map((l) => <option key={l.k} value={l.k}>{l.l}</option>)}</select></label>
-        <label className="sec-field"><span className="sec-label">跳转链接</span><Input className="haha-inp" maxLength={300} value={f.link} onChange={(e: any) => setF((s) => ({ ...s, link: e.target.value }))} placeholder="如 /events" /></label>
-        <label className="sec-field"><span className="sec-label">按钮文字</span><Input className="haha-inp" maxLength={30} value={f.linkLabel} onChange={(e: any) => setF((s) => ({ ...s, linkLabel: e.target.value }))} placeholder="如 查看详情" /></label>
+        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">标题 <i className="sec-req">*</i></span><Input className="banana-inp" maxLength={120} value={f.title} onChange={(e: any) => setF((s) => ({ ...s, title: e.target.value }))} /></label>
+        <label className="sec-field" style={{ gridColumn: '1 / -1' }}><span className="sec-label">补充说明</span><Textarea className="banana-inp" minRows={2} maxLength={500} value={f.body} onChange={(e: any) => setF((s) => ({ ...s, body: e.target.value }))} /></label>
+        <label className="sec-field"><span className="sec-label">级别</span><select className="banana-inp" value={f.level} onChange={(e) => setF((s) => ({ ...s, level: e.target.value }))}>{NOTICE_LEVELS.map((l) => <option key={l.k} value={l.k}>{l.l}</option>)}</select></label>
+        <label className="sec-field"><span className="sec-label">跳转链接</span><Input className="banana-inp" maxLength={300} value={f.link} onChange={(e: any) => setF((s) => ({ ...s, link: e.target.value }))} placeholder="如 /events" /></label>
+        <label className="sec-field"><span className="sec-label">按钮文字</span><Input className="banana-inp" maxLength={30} value={f.linkLabel} onChange={(e: any) => setF((s) => ({ ...s, linkLabel: e.target.value }))} placeholder="如 查看详情" /></label>
       </div>
       <div className="row gap-4" style={{ justifyContent: 'flex-end', marginTop: 12 }}>
-        <Button size="sm" variant="flat" className="haha-btn-app" onClick={onCancel}>取消</Button>
+        <Button size="sm" variant="flat" className="banana-btn-app" onClick={onCancel}>取消</Button>
         <SaveBtn onSave={save} />
       </div>
     </div>
@@ -58,20 +58,20 @@ export default function NoticesPanel() {
     <>
       <div className="ui-card" style={{ padding: 16, marginBottom: 'var(--gap)' }}>
         <div className="col gap-8">
-          <Input className="haha-inp" value={form.title} onChange={(e: any) => setForm((f: any) => ({ ...f, title: e.target.value }))} placeholder="公告标题（必填）" style={{ width: '100%' }} />
-          <Input className="haha-inp" value={form.body} onChange={(e: any) => setForm((f: any) => ({ ...f, body: e.target.value }))} placeholder="补充说明（选填）" style={{ width: '100%' }} />
+          <Input className="banana-inp" value={form.title} onChange={(e: any) => setForm((f: any) => ({ ...f, title: e.target.value }))} placeholder="公告标题（必填）" style={{ width: '100%' }} />
+          <Input className="banana-inp" value={form.body} onChange={(e: any) => setForm((f: any) => ({ ...f, body: e.target.value }))} placeholder="补充说明（选填）" style={{ width: '100%' }} />
           <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-            <select className="haha-inp" value={form.level} onChange={(e) => setForm((f: any) => ({ ...f, level: e.target.value }))} style={{ minWidth: 110, width: 'auto' }}>
+            <select className="banana-inp" value={form.level} onChange={(e) => setForm((f: any) => ({ ...f, level: e.target.value }))} style={{ minWidth: 110, width: 'auto' }}>
               {NOTICE_LEVELS.map((l) => <option key={l.k} value={l.k}>{l.l}</option>)}
             </select>
-            <Input className="haha-inp" value={form.link} onChange={(e: any) => setForm((f: any) => ({ ...f, link: e.target.value }))} placeholder="跳转链接（选填，如 /events）" style={{ flex: 1, minWidth: 150 }} />
-            <Input className="haha-inp" value={form.linkLabel} onChange={(e: any) => setForm((f: any) => ({ ...f, linkLabel: e.target.value }))} placeholder="按钮文字" style={{ width: 110 }} />
+            <Input className="banana-inp" value={form.link} onChange={(e: any) => setForm((f: any) => ({ ...f, link: e.target.value }))} placeholder="跳转链接（选填，如 /events）" style={{ flex: 1, minWidth: 150 }} />
+            <Input className="banana-inp" value={form.linkLabel} onChange={(e: any) => setForm((f: any) => ({ ...f, linkLabel: e.target.value }))} placeholder="按钮文字" style={{ width: 110 }} />
           </div>
           <div className="row gap-12" style={{ justifyContent: 'space-between' }}>
             <label className="row gap-6" style={{ fontSize: 13, cursor: 'pointer', color: 'var(--ink-2)' }}>
               <input type="checkbox" checked={form.pinned} onChange={(e) => setForm((f: any) => ({ ...f, pinned: e.target.checked }))} /> 置顶展示
             </label>
-            <Button color="primary" className="haha-btn-app" onClick={create} isDisabled={!form.title.trim()}>发布公告</Button>
+            <Button color="primary" className="banana-btn-app" onClick={create} isDisabled={!form.title.trim()}>发布公告</Button>
           </div>
         </div>
       </div>
@@ -86,10 +86,10 @@ export default function NoticesPanel() {
                 <div className="faint" style={{ fontSize: 11.5, marginTop: 4 }}>{timeAgo(n.createdAt)} · {n.active ? '展示中' : '已下线'}</div>
               </div>
               <div className="row gap-6" style={{ flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => setEditId(editId === n.id ? null : n.id)}>{editId === n.id ? '收起' : '编辑'}</Button>
-                <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => patch(n, { active: !n.active })}>{n.active ? '下线' : '上线'}</Button>
-                <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => patch(n, { pinned: !n.pinned })}>{n.pinned ? '取消置顶' : '置顶'}</Button>
-                <Button size="sm" variant="flat" className="haha-btn-app danger" onClick={() => del(n)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => setEditId(editId === n.id ? null : n.id)}>{editId === n.id ? '收起' : '编辑'}</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => patch(n, { active: !n.active })}>{n.active ? '下线' : '上线'}</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => patch(n, { pinned: !n.pinned })}>{n.pinned ? '取消置顶' : '置顶'}</Button>
+                <Button size="sm" variant="flat" className="banana-btn-app danger" onClick={() => del(n)}><Icon name="trash" size={14} style={{ width: 14, height: 14 }} /> 删除</Button>
               </div>
             </div>
             {editId === n.id && <NoticeEditForm item={n} onSaved={() => { setEditId(null); load(); }} onCancel={() => setEditId(null)} />}

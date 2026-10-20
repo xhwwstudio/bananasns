@@ -50,7 +50,7 @@ export default function SharePoster({ open, onClose, post }: { open: boolean; on
   const download = () => {
     if (!img) return;
     const a = document.createElement('a');
-    a.href = img; a.download = `hahasns-${post?.id || 'post'}.png`; a.click();
+    a.href = img; a.download = `bananasns-${post?.id || 'post'}.png`; a.click();
     toast.ok('海报已保存');
   };
 
@@ -93,7 +93,7 @@ export default function SharePoster({ open, onClose, post }: { open: boolean; on
             <Spinner />
           </div>
         )}
-        <Button size="lg" color="primary" fullWidth className="haha-btn-app" isDisabled={busy || !img} onClick={download}>
+        <Button size="lg" color="primary" fullWidth className="banana-btn-app" isDisabled={busy || !img} onClick={download}>
           {/* 内联尺寸：v3 .button 移动端(<768px)强制内部 svg 20px，钉住保持基线 16px */}
           <Icon name="share" size={16} style={{ width: 16, height: 16 }} /> 保存海报
         </Button>

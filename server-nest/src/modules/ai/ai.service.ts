@@ -17,7 +17,7 @@ const MODELS: Record<string, string> = {
   'claude-haiku-4-5': 'Claude Haiku 4.5',
 };
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
-const SYSTEM = `你是「HahaSNS 智能助手」，一个轻社交社区里友好、克制、实用的中文 AI 助手。
+const SYSTEM = `你是「BananaSNS 智能助手」，一个轻社交社区里友好、克制、实用的中文 AI 助手。
 你可以帮用户：润色 / 续写动态文案、想话题灵感、解答社区功能用法（圈子、投票、问答、积分、签到等）、给建议。
 风格：简洁、真诚、有温度，不啰嗦，不卖弄。除非用户要求，否则不要用大量 emoji。`;
 
@@ -54,7 +54,7 @@ export class AiService {
       return {
         demo: true,
         text:
-          `（演示模式）你好，我是 HahaSNS 智能助手。当前服务端未配置 ANTHROPIC_API_KEY，所以这是一条占位回复。\n\n` +
+          `（演示模式）你好，我是 BananaSNS 智能助手。当前服务端未配置 ANTHROPIC_API_KEY，所以这是一条占位回复。\n\n` +
           `配置密钥后我就能真正回答「${last.slice(0, 40)}${
             last.length > 40 ? '…' : ''
           }」这类问题，并帮你润色动态、想话题、解答社区用法。`,

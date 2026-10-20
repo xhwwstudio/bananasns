@@ -38,7 +38,7 @@ export default function Bookmarks() {
       {loading && posts.length === 0 ? <><PostSkeleton /><PostSkeleton /><PostSkeleton /></>
         : error ? <div className="ui-card"><LoadError onRetry={reload} /></div>
         : posts.length === 0 ? <div className="ui-card"><Empty icon="🔖" text="还没有收藏任何动态">
-          <Button size="sm" color="primary" className="haha-btn-app" onClick={() => nav('/')}>去首页逛逛</Button>
+          <Button size="sm" color="primary" className="banana-btn-app" onClick={() => nav('/')}>去首页逛逛</Button>
         </Empty></div>
         : <>
           {posts.map((p: any) => <PostCard key={p.id} post={p} onDelete={(id: number) => setPosts((x) => x.filter((y) => y.id !== id))} />)}

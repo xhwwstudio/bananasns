@@ -45,7 +45,7 @@ export default function LayoutPanel() {
           {LAYOUT_PAGE_LIST.map(([k, label, def]) => (
             <div className="row" style={{ justifyContent: 'space-between', gap: 12 }} key={k}>
               <span style={{ fontSize: 13.5 }}>{label}</span>
-              <select className="haha-inp" style={{ width: 150, flex: 'none' }} value={cfg[`layout_${k}`] || def} onChange={(e) => setK(`layout_${k}`, e.target.value)}>
+              <select className="banana-inp" style={{ width: 150, flex: 'none' }} value={cfg[`layout_${k}`] || def} onChange={(e) => setK(`layout_${k}`, e.target.value)}>
                 {LAYOUT_OPTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
               </select>
             </div>
@@ -55,7 +55,7 @@ export default function LayoutPanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>首页信息流布局</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>list = 现状单列；waterfall = 多列瀑布流（吸收右栏，左栏宽度不变）。默认 list。</div>
-        <select className="haha-inp" style={{ marginTop: 12, maxWidth: 280 }} value={cfg.feed_layout || 'list'} onChange={(e) => setK('feed_layout', e.target.value)}>
+        <select className="banana-inp" style={{ marginTop: 12, maxWidth: 280 }} value={cfg.feed_layout || 'list'} onChange={(e) => setK('feed_layout', e.target.value)}>
           <option value="list">列表（默认）</option>
           <option value="waterfall">瀑布流</option>
         </select>
@@ -85,7 +85,7 @@ export default function LayoutPanel() {
         </div>
       </div>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" className="haha-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存布局'}</Button>
+        <Button color="primary" className="banana-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存布局'}</Button>
       </div>
     </div>
   );

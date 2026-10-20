@@ -88,7 +88,7 @@ export default function RedPacket({ data: initial, postId }: { data: RedPacketDa
               ))}
             </div>
           )}
-          <Button color="primary" fullWidth className="haha-btn-app" style={{ marginTop: 14 }} onClick={() => setResult(null)}>开心收下</Button>
+          <Button color="primary" fullWidth className="banana-btn-app" style={{ marginTop: 14 }} onClick={() => setResult(null)}>开心收下</Button>
         </div>
       </Modal>
     </div>

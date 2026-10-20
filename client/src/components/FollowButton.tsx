@@ -42,7 +42,7 @@ export default function FollowButton({ user, size = 'sm', onChange }: FollowButt
   };
 
   return (
-    <Button size={size} variant={following ? 'flat' : 'bordered'} className={`haha-btn-app follow-btn${following ? ' following' : ''}`} onClick={toggle}>
+    <Button size={size} variant={following ? 'flat' : 'bordered'} className={`banana-btn-app follow-btn${following ? ' following' : ''}`} onClick={toggle}>
       {following
         ? <><span className="fb-on">已关注</span><span className="fb-off">取消关注</span></>
         : <><Icon name="plus" size={14} style={{ width: 14, height: 14 }} /> 关注</>}

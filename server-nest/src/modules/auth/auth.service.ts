@@ -175,8 +175,8 @@ export class AuthService implements OnApplicationBootstrap {
       actorId: null,
       type: 'system',
       preview: inviter
-        ? `欢迎加入 HahaSNS！受邀注册 +30 积分见面礼 🎁`
-        : '欢迎加入 HahaSNS！完善资料、发布第一条动态吧～',
+        ? `欢迎加入 BananaSNS！受邀注册 +30 积分见面礼 🎁`
+        : '欢迎加入 BananaSNS！完善资料、发布第一条动态吧～',
     });
 
     // 邀请奖励：邀请人 +50 积分 +10 经验，并收到通知
@@ -186,7 +186,7 @@ export class AuthService implements OnApplicationBootstrap {
         userId: inviter.id,
         actorId: user.id,
         type: 'system',
-        preview: `${user.nickname} 通过你的邀请加入了 HahaSNS，奖励 +50 积分 🎉`,
+        preview: `${user.nickname} 通过你的邀请加入了 BananaSNS，奖励 +50 积分 🎉`,
       });
     }
 

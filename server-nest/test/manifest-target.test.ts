@@ -44,8 +44,8 @@ describe('parsePersistentMounts', () => {
 
 describe('resolveManifestTarget', () => {
   test('宿主机直跑：cwd 即落点，不翻挂载表，也不啰嗦', () => {
-    const t = resolveManifestTarget({ cwd: '/home/tt/hahasns', inContainer: false });
-    expect(t.dir).toBe('/home/tt/hahasns');
+    const t = resolveManifestTarget({ cwd: '/home/tt/bananasns', inContainer: false });
+    expect(t.dir).toBe('/home/tt/bananasns');
     expect(t.persistent).toBe(true);
     expect(t.warnings).toEqual([]);
   });
@@ -56,11 +56,11 @@ describe('resolveManifestTarget', () => {
       inContainer: true,
       mountPoints: parsePersistentMounts(CONTAINER_MOUNTS),
       uploadsDir: '/app/uploads',
-      containerHint: 'hahasns',
+      containerHint: 'bananasns',
     });
     expect(t.persistent).toBe(false);
     const text = t.warnings.join('\n');
-    expect(text).toContain('docker cp hahasns:/app/server-nest/migrate-rollback-*.json');
+    expect(text).toContain('docker cp bananasns:/app/server-nest/migrate-rollback-*.json');
     expect(text).toContain('--manifest-dir /app/manifests');
   });
 

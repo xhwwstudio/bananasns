@@ -32,7 +32,7 @@ export default function WriteArticle() {
       <Shell narrow>
         <div className="ui-card" style={{ padding: 40, textAlign: 'center' }}>
           登录后即可发表专栏文章。
-          <div><Button size="sm" color="primary" className="haha-btn-app" style={{ marginTop: 12 }} onClick={() => setAuthOpen(true)}>登录 / 注册</Button></div>
+          <div><Button size="sm" color="primary" className="banana-btn-app" style={{ marginTop: 12 }} onClick={() => setAuthOpen(true)}>登录 / 注册</Button></div>
         </div>
       </Shell>
     );
@@ -73,12 +73,12 @@ export default function WriteArticle() {
 
         <label className="art-ed-field">
           <span className="art-ed-label"><Icon name="image" size={14} /> 封面图链接（选填）</span>
-          <Input className="haha-inp" placeholder="https://… 留空将使用分类配色封面" value={cover} onChange={(e: any) => setCover(e.target.value)} />
+          <Input className="banana-inp" placeholder="https://… 留空将使用分类配色封面" value={cover} onChange={(e: any) => setCover(e.target.value)} />
         </label>
 
         <div className="row gap-8 art-ed-toolbar" style={{ justifyContent: 'space-between', alignItems: 'center', margin: '4px 0 8px' }}>
           <MarkdownToolbar taRef={taRef} value={content} onChange={setContent} />
-          <Button type="button" size="sm" variant="flat" className="haha-btn-app" style={{ padding: '3px 12px', fontSize: 12.5, flex: 'none' }} onClick={() => setPreview((p) => !p)}>{preview ? '继续编辑' : '预览'}</Button>
+          <Button type="button" size="sm" variant="flat" className="banana-btn-app" style={{ padding: '3px 12px', fontSize: 12.5, flex: 'none' }} onClick={() => setPreview((p) => !p)}>{preview ? '继续编辑' : '预览'}</Button>
         </div>
         {preview ? (
           <div className="art-ed-body" style={{ overflowY: 'auto' }}>
@@ -91,7 +91,7 @@ export default function WriteArticle() {
 
         <label className="art-ed-field">
           <span className="art-ed-label"><Icon name="edit" size={14} /> 摘要（选填，留空自动截取）</span>
-          <Input className="haha-inp" placeholder="一句话概括这篇文章" value={summary} maxLength={120} onChange={(e: any) => setSummary(e.target.value)} />
+          <Input className="banana-inp" placeholder="一句话概括这篇文章" value={summary} maxLength={120} onChange={(e: any) => setSummary(e.target.value)} />
         </label>
 
         <div className="art-ed-footer">
@@ -104,8 +104,8 @@ export default function WriteArticle() {
             )}
           </span>
           <div className="row gap-8">
-            <Link to="/articles" className="haha-btn-app haha-btn-app--ghost">取消</Link>
-            <Button color="primary" className="haha-btn-app" onClick={publish} isDisabled={!canPublish || busy}>
+            <Link to="/articles" className="banana-btn-app banana-btn-app--ghost">取消</Link>
+            <Button color="primary" className="banana-btn-app" onClick={publish} isDisabled={!canPublish || busy}>
               {/* 内联尺寸：v3 .button 会强制内部 svg 16px，基线此图标为 15px，钉住保持像素一致 */}
               <Icon name="send" size={15} style={{ width: 15, height: 15 }} /> {busy ? '发布中…' : '发布'}
             </Button>

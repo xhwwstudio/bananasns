@@ -188,7 +188,7 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
             <div className="composer-submit">
               {savedHint && <span className="composer-saved"><Icon name="check" size={11} /> 已存草稿</span>}
               <span className="faint num" style={{ fontSize: 12 }}>{content.length}/1000</span>
-              <Button color="primary" className="haha-btn-app" isDisabled={busy || (!content.trim() && !media.length && !poll)} onClick={submit}>
+              <Button color="primary" className="banana-btn-app" isDisabled={busy || (!content.trim() && !media.length && !poll)} onClick={submit}>
                 {busy ? '发布中…' : '发布'}
               </Button>
             </div>

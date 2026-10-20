@@ -54,13 +54,13 @@ describe('composer draft persistence', () => {
   });
 
   test('向后兼容：旧的纯文本草稿(非 { 开头)读作 { content }', () => {
-    (globalThis as any).localStorage.setItem('haha_draft', '这是旧版纯文本草稿');
+    (globalThis as any).localStorage.setItem('banana_draft', '这是旧版纯文本草稿');
     expect(loadDraft()).toEqual({ content: '这是旧版纯文本草稿' });
     expect(hasDraft()).toBe(true);
   });
 
   test('损坏的 JSON(以 { 开头但非法) → loadDraft 容错返回 null', () => {
-    (globalThis as any).localStorage.setItem('haha_draft', '{坏的:json,');
+    (globalThis as any).localStorage.setItem('banana_draft', '{坏的:json,');
     expect(loadDraft()).toBeNull();
   });
 });
@@ -77,10 +77,10 @@ describe('keyed draft slots (spec 01 §2.4 草稿推广)', () => {
     expect(loadDraft('answer_2')).toBeNull(); // 另一题没有草稿
   });
 
-  test('key 落到独立的 localStorage 键（haha_draft_<key>），不污染默认键', () => {
+  test('key 落到独立的 localStorage 键（banana_draft_<key>），不污染默认键', () => {
     saveDraft({ content: '回答' }, 'answer_1');
-    expect((globalThis as any).localStorage.getItem('haha_draft_answer_1')).not.toBeNull();
-    expect((globalThis as any).localStorage.getItem('haha_draft')).toBeNull();
+    expect((globalThis as any).localStorage.getItem('banana_draft_answer_1')).not.toBeNull();
+    expect((globalThis as any).localStorage.getItem('banana_draft')).toBeNull();
   });
 
   test('title 计入「非空」判定：仅有标题的帖子草稿也会保存', () => {

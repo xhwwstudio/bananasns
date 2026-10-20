@@ -4,13 +4,13 @@
 > 分路：[图形面板 · 1Panel](INSTALL-1panel.md) / [宝塔](INSTALL-bt.md)（**非技术用户推荐**） · [命令行 · Docker / 裸机](DEPLOY.md) · [完整安装手册](INSTALL.md) · [让 AI 助手代装](DEPLOY-AI.md) · [配置与维护参考](CONFIGURATION.md)
 
 
-Runtime configuration, the admin account, content filtering, file uploads, and backup for a HahaSNS deployment. For first-time install and run instructions see [`INSTALL.md`](INSTALL.md); for deployment see [`DEPLOY.md`](DEPLOY.md).
+Runtime configuration, the admin account, content filtering, file uploads, and backup for a BananaSNS deployment. For first-time install and run instructions see [`INSTALL.md`](INSTALL.md); for deployment see [`DEPLOY.md`](DEPLOY.md).
 
 > **架构**：后端为 **NestJS 10 + TypeORM 0.3 + MySQL/MariaDB（mysql2）+ Redis（缓存）+ 存储驱动（本地磁盘或 S3）**，源码位于 `server-nest/`。单个 Node 进程在 `PORT` 上同时伺服 SPA（`client/dist`，由 `CLIENT_DIST` 指定）、`/api` 接口与 `/uploads` 静态文件。完整变量见 `server-nest/.env.example` 与 [INSTALL-1panel.md](INSTALL-1panel.md)。
 
 ## Environment variables
 
-HahaSNS reads configuration from process environment variables (copy `server-nest/.env.example` to `.env`). Production deployments **must** set `JWT_SECRET` and the database credentials.
+BananaSNS reads configuration from process environment variables (copy `server-nest/.env.example` to `.env`). Production deployments **must** set `JWT_SECRET` and the database credentials.
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -22,9 +22,9 @@ HahaSNS reads configuration from process environment variables (copy `server-nes
 | `DB_CLIENT` | `mysql` | Database driver. |
 | `DB_HOST` | `127.0.0.1` | Database host. |
 | `DB_PORT` | `3306` | Database port. |
-| `DB_USER` | `hahasns` | Database user. |
+| `DB_USER` | `bananasns` | Database user. |
 | `DB_PASSWORD` | — | Database password. |
-| `DB_NAME` | `hahasns` | Database name. |
+| `DB_NAME` | `bananasns` | Database name. |
 | `DB_SYNCHRONIZE` | `false` | When `true`, TypeORM auto-creates/updates tables from the entities on startup — convenient for the **first run** of a fresh install. **Set it back to `false` afterwards** so schema isn't auto-altered in production. |
 | `DB_LOGGING` | `false` | Log SQL queries. |
 | `REDIS_URL` | `redis://127.0.0.1:6379` | Redis connection used for caching. |
@@ -82,6 +82,7 @@ A number of site-wide settings are configurable at runtime from the admin panel 
 | Setting | What it controls |
 | --- | --- |
 | **模块（modules）** | Enable/disable site modules (features). |
+| **访问与游客（access / guests）** | `show_landing`（default on）：show the welcome/login page to anonymous visitors. Turn it off and visitors enter the site directly as read-only guests. `allow_guest`：when the landing page is shown, it displays a「游客访问」button; guests see a top register/login banner and the home composer is replaced by a login CTA. Writing still requires login. |
 | **外观（appearance）** | Site appearance (e.g. name, default skin). |
 | **安全（security）** | Security toggles (e.g. content filter / moderation switches). |
 | **布局（layout）** | Per-page layout, stored as `site_config` keys `layout_<page>` with values `default`（三栏）/ `wide`（宽屏）/ `narrow`（居中）. Covered pages include collections, nav, mall, circles, achievements, member, bookmarks, history, settings, changelog and thread. `GET /api/site` returns these as a `layouts` map; the frontend `useLayout(key, fallback)` reads them so layout can be switched from the admin「布局」tab without code changes. |
@@ -113,7 +114,7 @@ Storage can also be configured **at runtime from the admin「系统 → 存储�
 
 ## Database & backup
 
-HahaSNS stores its data in a **MySQL/MariaDB** database (configured by the `DB_*` variables). On the first run with `DB_SYNCHRONIZE=true`, TypeORM creates and updates the tables from the entity definitions — there is no separate migration step for a fresh install. Set `DB_SYNCHRONIZE=false` afterwards so the schema isn't auto-altered in production.
+BananaSNS stores its data in a **MySQL/MariaDB** database (configured by the `DB_*` variables). On the first run with `DB_SYNCHRONIZE=true`, TypeORM creates and updates the tables from the entity definitions — there is no separate migration step for a fresh install. Set `DB_SYNCHRONIZE=false` afterwards so the schema isn't auto-altered in production.
 
 **What to back up**
 
@@ -126,10 +127,10 @@ Dump the database with `mysqldump`, then back up the media separately. For examp
 
 ```bash
 # database dump
-mysqldump -u "$DB_USER" -p "$DB_NAME" > hahasns-backup.sql
+mysqldump -u "$DB_USER" -p "$DB_NAME" > bananasns-backup.sql
 
 # local uploads (local storage driver)
-tar -czf hahasns-uploads.tar.gz -C "$UPLOADS_DIR" .
+tar -czf bananasns-uploads.tar.gz -C "$UPLOADS_DIR" .
 ```
 
-Restore by importing the SQL dump into a database of the same name (`mysql -u "$DB_USER" -p "$DB_NAME" < hahasns-backup.sql`) and putting the media back in `UPLOADS_DIR` (or restoring the S3 bucket). The database holds only URL references to media, so the two must be kept in sync.
+Restore by importing the SQL dump into a database of the same name (`mysql -u "$DB_USER" -p "$DB_NAME" < bananasns-backup.sql`) and putting the media back in `UPLOADS_DIR` (or restoring the S3 bucket). The database holds only URL references to media, so the two must be kept in sync.

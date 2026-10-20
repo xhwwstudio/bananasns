@@ -90,12 +90,12 @@ function AdminLogin() {
     <div className="admin-center">
       <form className="admin-login-card" onSubmit={submit}>
         <span className="admin-logo lg"><Icon name="shield" size={26} /></span>
-        <div style={{ fontWeight: 800, fontSize: 19, marginTop: 12 }}>HahaSNS 管理后台</div>
+        <div style={{ fontWeight: 800, fontSize: 19, marginTop: 12 }}>BananaSNS 管理后台</div>
         <div className="muted" style={{ fontSize: 13, marginTop: 4, marginBottom: 18 }}>请使用管理员账号登录</div>
         {err && <div className="form-err">{err}</div>}
-        <Input className="haha-inp" placeholder="管理员用户名" value={u} onChange={(e: any) => setU(e.target.value)} autoFocus />
-        <Input className="haha-inp" type="password" placeholder="密码" value={p} onChange={(e: any) => setP(e.target.value)} style={{ marginTop: 10 }} />
-        <Button type="submit" size="lg" color="primary" fullWidth className="haha-btn-app" isDisabled={busy} style={{ marginTop: 14, fontWeight: 700 }}>
+        <Input className="banana-inp" placeholder="管理员用户名" value={u} onChange={(e: any) => setU(e.target.value)} autoFocus />
+        <Input className="banana-inp" type="password" placeholder="密码" value={p} onChange={(e: any) => setP(e.target.value)} style={{ marginTop: 10 }} />
+        <Button type="submit" size="lg" color="primary" fullWidth className="banana-btn-app" isDisabled={busy} style={{ marginTop: 14, fontWeight: 700 }}>
           {busy ? '登录中…' : '登录'}
         </Button>
         <Link to="/" className="faint" style={{ fontSize: 12.5, marginTop: 16, display: 'inline-block' }}>← 返回前台</Link>
@@ -115,11 +115,11 @@ export default function Admin() {
   const setTab = (k: string) => navigate('/admin/' + k);
   // 后台独立的浅/深主题（与前台主题互不影响），持久化到 localStorage。design.md 深色变体。
   const [adminTheme, setAdminTheme] = useState<string>(() => {
-    try { return localStorage.getItem('haha_admin_theme') || 'light'; } catch { return 'light'; }
+    try { return localStorage.getItem('banana_admin_theme') || 'light'; } catch { return 'light'; }
   });
   const toggleTheme = () => setAdminTheme((t) => {
     const n = t === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('haha_admin_theme', n); } catch { /* ignore */ }
+    try { localStorage.setItem('banana_admin_theme', n); } catch { /* ignore */ }
     return n;
   });
 
@@ -137,7 +137,7 @@ export default function Admin() {
           <div style={{ fontSize: 42 }}>🛡️</div>
           <div style={{ fontWeight: 800, fontSize: 18, marginTop: 10 }}>需要管理员权限</div>
           <div className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>该后台仅对管理员开放</div>
-          <Link to="/" className="haha-btn-app haha-btn-app--primary haha-btn-app--lg" style={{ marginTop: 18 }}>返回前台首页</Link>
+          <Link to="/" className="banana-btn-app banana-btn-app--primary banana-btn-app--lg" style={{ marginTop: 18 }}>返回前台首页</Link>
         </div>
       </div>
     );

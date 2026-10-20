@@ -115,9 +115,9 @@ function connectDb() {
   return mysql.createConnection({
     host: process.env.DB_HOST || '127.0.0.1',
     port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USER || 'hahasns',
+    user: process.env.DB_USER || 'bananasns',
     password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'hahasns',
+    database: process.env.DB_NAME || 'bananasns',
   });
 }
 
@@ -176,7 +176,7 @@ async function main() {
 
   const cfg = {
     endpoint: process.env.S3_ENDPOINT || 'http://127.0.0.1:9000',
-    bucket: process.env.S3_BUCKET || 'hahasns',
+    bucket: process.env.S3_BUCKET || 'bananasns',
     region: process.env.S3_REGION || 'us-east-1',
     accessKey: process.env.S3_ACCESS_KEY || '',
     secretKey: process.env.S3_SECRET_KEY || '',

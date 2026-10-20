@@ -65,7 +65,7 @@ export class SiteService {
       epay: cfg.get('pay_epay_enabled') === '1',
     };
     return {
-      name: cfg.get('site_name') || 'HahaSNS',
+      name: cfg.get('site_name') || 'BananaSNS',
       slogan: cfg.get('site_slogan') || '轻社交社区',
       logo: cfg.get('site_logo') || '',
       logoOnly: cfg.get('site_logo_only') === '1',
@@ -79,6 +79,8 @@ export class SiteService {
       registrationEnabled: (cfg.get('registration_enabled') ?? '1') !== '0',
       inviteRequired: cfg.get('invite_required') === '1',
       allowGuest: cfg.get('allow_guest') === '1',
+      // 欢迎登录页开关：默认开（保持旧行为）；关闭后未登录访客直接进入站点（游客只读）
+      showLanding: (cfg.get('show_landing') ?? '1') !== '0',
       // 游客信息流上限：未配置→8；配 0→不限；否则 clamp [0,200]
       guestFeedLimit: (() => {
         const v = cfg.get('guest_feed_limit');

@@ -57,7 +57,7 @@ export default function Topic() {
             <div className="muted" style={{ fontSize: 13.5 }}>{topic.description || '一起来聊聊吧'}</div>
           </div>
           {user && (
-            <Button color="primary" variant={following ? 'flat' : 'solid'} className={`haha-btn-app follow-btn${following ? ' following' : ''}`} onClick={toggleFollow} style={{ alignSelf: 'flex-start' }}>
+            <Button color="primary" variant={following ? 'flat' : 'solid'} className={`banana-btn-app follow-btn${following ? ' following' : ''}`} onClick={toggleFollow} style={{ alignSelf: 'flex-start' }}>
               {following ? <><span className="fb-on">已关注</span><span className="fb-off">取消关注</span></> : <><Icon name="plus" size={15} style={{ width: 15, height: 15 }} /> 关注</>}
             </Button>
           )}
@@ -71,7 +71,7 @@ export default function Topic() {
 
       {user && <Composer prefill={`#${topic.name}# `} onPosted={onPosted} />}
 
-      <Tabs aria-label="话题动态排序" className="ui-card haha-feed-tabs"
+      <Tabs aria-label="话题动态排序" className="ui-card banana-feed-tabs"
         selectedKey={sort} onSelectionChange={(k: any) => setSort(k)}>
         <Tab key="latest" title="最新" />
         <Tab key="hot" title="最热" />

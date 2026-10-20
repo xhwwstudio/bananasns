@@ -136,7 +136,7 @@ export default function Mall() {
         {user && <div className="row gap-6 num" style={{ fontWeight: 700, color: 'var(--gold-deep)' }}><Icon name="coin" size={16} /> {fmtNum(user.points)}</div>}
       </div>
 
-      <Tabs aria-label="商城" className="ui-card haha-feed-tabs"
+      <Tabs aria-label="商城" className="ui-card banana-feed-tabs"
         selectedKey={tab} onSelectionChange={(k: any) => setTab(k)}>
         <Tab key="shop" title="商品" />
         <Tab key="orders" title={<>我的兑换 {orders.length > 0 && `(${orders.length})`}</>} />
@@ -150,14 +150,14 @@ export default function Mall() {
               <div className="faint" style={{ fontSize: 12.5, marginTop: 2 }}>1 元 = 100 积分，支付成功后自动到账</div>
             </div>
             <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
-              <Input className="haha-inp" type="number" min={1} value={rechargeAmt} onChange={(e: any) => setRechargeAmt(e.target.value)} style={{ maxWidth: 110 }} placeholder="金额(元)" />
-              <select className="haha-inp" value={rechargeCh} onChange={(e) => setRechargeCh(e.target.value)} style={{ maxWidth: 130 }}>
+              <Input className="banana-inp" type="number" min={1} value={rechargeAmt} onChange={(e: any) => setRechargeAmt(e.target.value)} style={{ maxWidth: 110 }} placeholder="金额(元)" />
+              <select className="banana-inp" value={rechargeCh} onChange={(e) => setRechargeCh(e.target.value)} style={{ maxWidth: 130 }}>
                 {epayOn && <option value="alipay">支付宝</option>}
                 {epayOn && <option value="wxpay">微信</option>}
                 {alipayOn && <option value="alipay_direct">支付宝（官方）</option>}
                 {wechatOn && <option value="wechat_native">微信（扫码）</option>}
               </select>
-              <Button color="primary" className="haha-btn-app" onClick={recharge}>去支付</Button>
+              <Button color="primary" className="banana-btn-app" onClick={recharge}>去支付</Button>
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function Mall() {
                   <Button
                     size="sm" color="primary"
                     variant={p.owned && p.category !== 'item' ? 'flat' : p.soldOut ? 'flat' : 'solid'}
-                    className="haha-btn-app"
+                    className="banana-btn-app"
                     isDisabled={p.soldOut || (p.owned && p.category !== 'item')}
                     onClick={() => redeem(p)}>
                     {p.owned && p.category !== 'item' ? '已拥有' : p.soldOut ? '已售罄' : '兑换'}
@@ -241,7 +241,7 @@ export default function Mall() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button variant="flat" fullWidth className="haha-btn-app" onClick={() => setWxQr(null)}>关闭</Button>
+            <Button variant="flat" fullWidth className="banana-btn-app" onClick={() => setWxQr(null)}>关闭</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -273,8 +273,8 @@ export default function Mall() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button variant="flat" className="haha-btn-app" onClick={() => setPending(null)} isDisabled={busy}>取消</Button>
-            <Button color="primary" className="haha-btn-app" onClick={confirmRedeem} isDisabled={busy || !affordable}>
+            <Button variant="flat" className="banana-btn-app" onClick={() => setPending(null)} isDisabled={busy}>取消</Button>
+            <Button color="primary" className="banana-btn-app" onClick={confirmRedeem} isDisabled={busy || !affordable}>
               {busy ? '兑换中…' : affordable ? '确认兑换' : '积分不足'}
             </Button>
           </ModalFooter>

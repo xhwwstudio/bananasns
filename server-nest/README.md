@@ -1,4 +1,4 @@
-# HahaSNS — NestJS Backend (`server-nest/`)
+# BananaSNS — NestJS Backend (`server-nest/`)
 
 A NestJS 10 + TypeScript backend that migrates the original Express +
 better-sqlite3 API (`../server/`) onto production infrastructure:
@@ -105,7 +105,7 @@ Copy `.env.example` to `.env` and fill in. Summary:
 | `REDIS_URL` | Redis connection | `redis://127.0.0.1:6379` |
 | `REDIS_TTL` | default cache TTL (ms) | `30000` |
 | `S3_ENDPOINT` | rustfs / MinIO / S3 endpoint | `http://127.0.0.1:9000` |
-| `S3_BUCKET` | bucket name | `hahasns` |
+| `S3_BUCKET` | bucket name | `bananasns` |
 | `S3_ACCESS_KEY` / `S3_SECRET_KEY` | credentials | — |
 | `S3_REGION` | region | `us-east-1` |
 | `S3_FORCE_PATH_STYLE` | path-style addressing (rustfs/MinIO) | `true` |
@@ -147,7 +147,7 @@ npm run build
 npm run start:prod     # node dist/main.js
 ```
 
-Health check: `GET http://localhost:4000/api/health` → `{ "ok": true, "app": "HahaSNS" }`
+Health check: `GET http://localhost:4000/api/health` → `{ "ok": true, "app": "BananaSNS" }`
 
 ---
 

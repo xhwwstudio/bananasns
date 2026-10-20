@@ -1,6 +1,6 @@
-# HahaSNS REST API Reference
+# BananaSNS REST API Reference
 
-HahaSNS is a NestJS + MySQL/MariaDB social network backend. This document covers the HTTP endpoints exposed under the API base path.
+BananaSNS is a NestJS + MySQL/MariaDB social network backend. This document covers the HTTP endpoints exposed under the API base path.
 
 > 下文各分节给出主要接口的请求 / 响应细节。文末的 [附录 · 完整接口清单](#full-endpoint-index) 由脚本从源码 controller 自动提取，**覆盖全部 30 个模块、206 个 handler**（205 业务 + 1 健康检查），用于确保接口文档与代码零漂移。
 
@@ -15,7 +15,7 @@ HahaSNS is a NestJS + MySQL/MariaDB social network backend. This document covers
   - **Admin** — requires a valid token whose user has `role === 'admin'`; otherwise `403`. Some modules gate inline (`req.user.role !== 'admin'`); the `admin` module gates its whole router via `requireAuth` + `requireAdmin`.
 - **User object:** Endpoints returning a user emit a `publicUser` shape: `id, username, nickname, avatar, cover, bio, gender, location, verified, verifiedNote, vip, role, banned, title, avatarFrame, points, experience, balance, level, levelProgress, checkinStreak, lastCheckin, createdAt, followers, following, postCount, isFollowing`. The password hash is never exposed.
 - **Errors:** Non-2xx responses are `{ "error": "<message>" }` (messages are in Chinese). Common codes: `400` invalid input, `401` not logged in, `402` insufficient points, `403` forbidden, `404` not found, `409` conflict.
-- **Health check:** `GET /api/health` → `{ ok: true, app: "HahaSNS" }` (Public).
+- **Health check:** `GET /api/health` → `{ ok: true, app: "BananaSNS" }` (Public).
 - **Static files:** uploaded media is served from `/uploads/<filename>` (outside `/api`).
 
 ## Table of Contents
@@ -681,7 +681,7 @@ Public site settings (sourced from the `site_config` table; written via the admi
 
 ### `GET /api/site`
 Public site configuration consumed by the frontend. **Auth:** Public.
-- Response: `{ modules: { ... }, layouts: { ... } }` — `modules` is the enabled-module map; `layouts` maps each page to its layout (`default` | `wide` | `narrow`), read by the frontend `useLayout(key, fallback)`.
+- Response: `{ modules: { ... }, layouts: { ... } }` — `modules` is the enabled-module map; `layouts` maps each page to its layout (`default` | `wide` | `narrow`), read by the frontend `useLayout(key, fallback)`. Also includes `showLanding` (whether anonymous visitors see the welcome/login page) and `allowGuest` (whether the landing page offers guest access).
 
 ---
 

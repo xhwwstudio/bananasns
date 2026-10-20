@@ -27,7 +27,7 @@ export default function Search() {
   const [error, setError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [tab, setTab] = useState('all');
-  const [history, setHistory] = useState<any[]>(() => { try { return JSON.parse(localStorage.getItem('haha_search_history') || '[]'); } catch { return []; } });
+  const [history, setHistory] = useState<any[]>(() => { try { return JSON.parse(localStorage.getItem('banana_search_history') || '[]'); } catch { return []; } });
   const [trending, setTrending] = useState<any[]>([]);
   const [hotTopics, setHotTopics] = useState<any[]>([]);
 
@@ -42,24 +42,24 @@ export default function Search() {
   useEffect(() => {
     if (!q) { setRes(null); setError(false); setLoading(false); return; }
     setLoading(true); setError(false);
-    setHistory((h) => { const next = [q, ...h.filter((x) => x !== q)].slice(0, 10); try { localStorage.setItem('haha_search_history', JSON.stringify(next)); } catch {} return next; });
+    setHistory((h) => { const next = [q, ...h.filter((x) => x !== q)].slice(0, 10); try { localStorage.setItem('banana_search_history', JSON.stringify(next)); } catch {} return next; });
     api.get('/search', { params: { q } }).then(({ data }) => setRes(data)).catch(() => setError(true)).finally(() => setLoading(false));
   }, [q, reloadKey]);
 
   const has = (k: string) => res && res[k]?.length > 0;
   const submit = (e: React.FormEvent) => { e.preventDefault(); if (input.trim()) nav(`/search?q=${encodeURIComponent(input.trim())}`); };
-  const clearHistory = () => { setHistory([]); try { localStorage.removeItem('haha_search_history'); } catch {} };
+  const clearHistory = () => { setHistory([]); try { localStorage.removeItem('banana_search_history'); } catch {} };
 
   return (
     <Shell>
       <form className="search-bar" onSubmit={submit}>
         <Icon name="search" size={18} style={{ color: 'var(--ink-3)', flex: 'none' }} />
         <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="搜索用户、动态、帖子、话题…" autoFocus={!q && typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches} />
-        <Button size="sm" color="primary" className="haha-btn-app" type="submit">搜索</Button>
+        <Button size="sm" color="primary" className="banana-btn-app" type="submit">搜索</Button>
       </form>
       {q && <div className="muted" style={{ padding: '0 20px', fontSize: 13 }}>“{q}” 的搜索结果</div>}
       {q && (
-        <Tabs aria-label="搜索结果分类" className="ui-card haha-feed-tabs"
+        <Tabs aria-label="搜索结果分类" className="ui-card banana-feed-tabs"
           selectedKey={tab} onSelectionChange={(k: any) => setTab(k)}>
           {TABS.map((t) => <Tab key={t.k} title={t.l} />)}
         </Tabs>
@@ -107,7 +107,7 @@ export default function Search() {
                 <div className="user-row" key={u.id} style={{ borderTop: '1px solid var(--line)' }}>
                   <Avatar user={u} size={44} showV />
                   <div className="meta nowrap"><Link to={`/u/${u.username}`} className="nm uname">{u.nickname} <Badges user={u} showLevel={false} /></Link><div className="sub nowrap">@{u.username} · {fmtNum(u.followers)} 粉丝</div></div>
-                  {me && me.id !== u.id && <Button size="sm" variant="flat" className="haha-btn-app" onClick={() => nav(`/messages/${u.id}`)}><Icon name="mail" size={14} style={{ width: 14, height: 14 }} /></Button>}
+                  {me && me.id !== u.id && <Button size="sm" variant="flat" className="banana-btn-app" onClick={() => nav(`/messages/${u.id}`)}><Icon name="mail" size={14} style={{ width: 14, height: 14 }} /></Button>}
                   <FollowButton user={u} />
                 </div>
               ))}

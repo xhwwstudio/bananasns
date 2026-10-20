@@ -41,42 +41,42 @@ export default function AppearancePanel() {
     <div className="flex flex-col gap-4">
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>站点品牌</div>
-        <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>显示在导航栏、浏览器标题与登录页。Logo 留空则用内置「H」标记。</div>
+        <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>显示在导航栏、浏览器标题与登录页。Logo 留空则用内置「🍌」标记。</div>
         <div className="sec-grid" style={{ marginTop: 14 }}>
           <label className="sec-field">
             <span className="sec-label">站点名称</span>
-            <Input className="haha-inp" maxLength={40} value={cfg.site_name ?? ''} onChange={(e: any) => setK('site_name', e.target.value)} placeholder="HahaSNS" />
+            <Input className="banana-inp" maxLength={40} value={cfg.site_name ?? ''} onChange={(e: any) => setK('site_name', e.target.value)} placeholder="BananaSNS" />
           </label>
           <label className="sec-field">
             <span className="sec-label">副标题 / Slogan</span>
-            <Input className="haha-inp" maxLength={60} value={cfg.site_slogan ?? ''} onChange={(e: any) => setK('site_slogan', e.target.value)} placeholder="轻社交社区" />
+            <Input className="banana-inp" maxLength={60} value={cfg.site_slogan ?? ''} onChange={(e: any) => setK('site_slogan', e.target.value)} placeholder="轻社交社区" />
           </label>
           <label className="sec-field">
             <span className="sec-label">页脚版权文案</span>
-            <Input className="haha-inp" maxLength={200} value={cfg.footer_text ?? ''} onChange={(e: any) => setK('footer_text', e.target.value)} placeholder="© 2026 HahaSNS · 轻社交 · 轻论坛 · 轻社区（留空用默认）" />
+            <Input className="banana-inp" maxLength={200} value={cfg.footer_text ?? ''} onChange={(e: any) => setK('footer_text', e.target.value)} placeholder="© 2026 BananaSNS · 轻社交 · 轻论坛 · 轻社区（留空用默认）" />
           </label>
           <label className="sec-field">
             <span className="sec-label">ICP 备案号（页脚显示，链到工信部）</span>
-            <Input className="haha-inp" maxLength={100} value={cfg.icp_beian ?? ''} onChange={(e: any) => setK('icp_beian', e.target.value)} placeholder="如：京ICP备12345678号（留空不显示）" />
+            <Input className="banana-inp" maxLength={100} value={cfg.icp_beian ?? ''} onChange={(e: any) => setK('icp_beian', e.target.value)} placeholder="如：京ICP备12345678号（留空不显示）" />
           </label>
           <label className="sec-field">
             <span className="sec-label">登录页主标题（可用换行，留空用默认）</span>
-            <Textarea className="haha-inp" maxLength={80} value={cfg.landing_title ?? ''} onChange={(e: any) => setK('landing_title', e.target.value)} minRows={2} placeholder={'连接有趣的人\n与值得分享的内容'} style={{ lineHeight: 1.5 }} />
+            <Textarea className="banana-inp" maxLength={80} value={cfg.landing_title ?? ''} onChange={(e: any) => setK('landing_title', e.target.value)} minRows={2} placeholder={'连接有趣的人\n与值得分享的内容'} style={{ lineHeight: 1.5 }} />
           </label>
           <label className="sec-field">
             <span className="sec-label">登录页副标题（留空用默认）</span>
-            <Input className="haha-inp" maxLength={60} value={cfg.landing_subtitle ?? ''} onChange={(e: any) => setK('landing_subtitle', e.target.value)} placeholder="轻社交 · 轻论坛 · 轻社区" />
+            <Input className="banana-inp" maxLength={60} value={cfg.landing_subtitle ?? ''} onChange={(e: any) => setK('landing_subtitle', e.target.value)} placeholder="轻社交 · 轻论坛 · 轻社区" />
           </label>
           <label className="sec-field">
             <span className="sec-label">默认皮肤（新访客，用户可自选覆盖）</span>
-            <select className="haha-inp" value={cfg.default_skin ?? ''} onChange={(e) => setK('default_skin', e.target.value)}>
+            <select className="banana-inp" value={cfg.default_skin ?? ''} onChange={(e) => setK('default_skin', e.target.value)}>
               <option value="">内置默认（经典蓝）</option>
               {SKINS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
             </select>
           </label>
           <label className="sec-field">
             <span className="sec-label">默认亮暗（新访客）</span>
-            <select className="haha-inp" value={cfg.default_mode ?? ''} onChange={(e) => setK('default_mode', e.target.value)}>
+            <select className="banana-inp" value={cfg.default_mode ?? ''} onChange={(e) => setK('default_mode', e.target.value)}>
               <option value="">跟随系统</option>
               <option value="light">浅色</option>
               <option value="dark">深色</option>
@@ -84,7 +84,7 @@ export default function AppearancePanel() {
           </label>
           <label className="sec-field">
             <span className="sec-label">默认视觉风格（新访客）</span>
-            <select className="haha-inp" value={cfg.default_style ?? ''} onChange={(e) => setK('default_style', e.target.value)}>
+            <select className="banana-inp" value={cfg.default_style ?? ''} onChange={(e) => setK('default_style', e.target.value)}>
               <option value="">内置默认（现代）</option>
               {STYLES.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
             </select>
@@ -96,8 +96,8 @@ export default function AppearancePanel() {
             {cfg.site_logo
               ? <img src={cfg.site_logo} alt="" width={36} height={36} style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
               : <span className="admin-logo" style={{ width: 36, height: 36, flexShrink: 0 }}><Icon name="image" size={18} /></span>}
-            <Input className="haha-inp" maxLength={500} value={cfg.site_logo ?? ''} onChange={(e: any) => setK('site_logo', e.target.value)} placeholder="上传或粘贴 URL（留空用内置标记）" style={{ flex: 1 }} />
-            <label className="haha-btn-app haha-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('site_logo', e)} /></label>
+            <Input className="banana-inp" maxLength={500} value={cfg.site_logo ?? ''} onChange={(e: any) => setK('site_logo', e.target.value)} placeholder="上传或粘贴 URL（留空用内置标记）" style={{ flex: 1 }} />
+            <label className="banana-btn-app banana-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('site_logo', e)} /></label>
           </div>
         </label>
         <div className="sec-grid" style={{ marginTop: 12 }}>
@@ -107,7 +107,7 @@ export default function AppearancePanel() {
           </label>
           <label className="sec-field">
             <span className="sec-label">Logo 高度（px，24–64，默认 33）</span>
-            <Input className="haha-inp" type="number" min={24} max={64} value={cfg.site_logo_height ?? '33'}
+            <Input className="banana-inp" type="number" min={24} max={64} value={cfg.site_logo_height ?? '33'}
               onChange={(e: any) => setK('site_logo_height', e.target.value)} />
           </label>
         </div>
@@ -117,8 +117,8 @@ export default function AppearancePanel() {
             {cfg.site_favicon
               ? <img src={cfg.site_favicon} alt="" width={36} height={36} style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />
               : <span className="admin-logo" style={{ width: 36, height: 36, flexShrink: 0 }}><Icon name="image" size={18} /></span>}
-            <Input className="haha-inp" maxLength={500} value={cfg.site_favicon ?? ''} onChange={(e: any) => setK('site_favicon', e.target.value)} placeholder="上传或粘贴 URL（留空用内置图标）" style={{ flex: 1 }} />
-            <label className="haha-btn-app haha-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('site_favicon', e)} /></label>
+            <Input className="banana-inp" maxLength={500} value={cfg.site_favicon ?? ''} onChange={(e: any) => setK('site_favicon', e.target.value)} placeholder="上传或粘贴 URL（留空用内置图标）" style={{ flex: 1 }} />
+            <label className="banana-btn-app banana-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('site_favicon', e)} /></label>
           </div>
         </label>
         <label className="sec-field" style={{ marginTop: 12 }}>
@@ -127,8 +127,8 @@ export default function AppearancePanel() {
             {cfg.default_avatar && /^(https?:|\/uploads)/.test(cfg.default_avatar)
               ? <img src={cfg.default_avatar} alt="" width={36} height={36} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
               : <span className="admin-logo" style={{ width: 36, height: 36, flexShrink: 0 }}><Icon name="image" size={18} /></span>}
-            <Input className="haha-inp" maxLength={500} value={cfg.default_avatar ?? ''} onChange={(e: any) => setK('default_avatar', e.target.value)} placeholder="上传/粘贴 URL（留空按昵称生成渐变头像）" style={{ flex: 1 }} />
-            <label className="haha-btn-app haha-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('default_avatar', e)} /></label>
+            <Input className="banana-inp" maxLength={500} value={cfg.default_avatar ?? ''} onChange={(e: any) => setK('default_avatar', e.target.value)} placeholder="上传/粘贴 URL（留空按昵称生成渐变头像）" style={{ flex: 1 }} />
+            <label className="banana-btn-app banana-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('default_avatar', e)} /></label>
           </div>
         </label>
       </div>
@@ -136,16 +136,16 @@ export default function AppearancePanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>自定义 CSS</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>全站注入到页面 <code>&lt;head&gt;</code>，可覆盖任意样式做二次开发装饰；系统升级不会重置此处内容。请谨慎使用，错误的 CSS 可能影响页面显示。</div>
-        <Textarea className="haha-inp" value={cfg.site_custom_css ?? ''} maxLength={20000} spellCheck={false}
+        <Textarea className="banana-inp" value={cfg.site_custom_css ?? ''} maxLength={20000} spellCheck={false}
           onChange={(e: any) => setK('site_custom_css', e.target.value)}
-          placeholder={'/* 例如：把主按钮换成圆角胶囊 */\n.haha-btn-app--primary { border-radius: 999px; }'}
+          placeholder={'/* 例如：把主按钮换成圆角胶囊 */\n.banana-btn-app--primary { border-radius: 999px; }'}
           style={{ marginTop: 12, minHeight: 220, fontFamily: 'var(--font-mono, ui-monospace, monospace)', fontSize: 12.5, lineHeight: 1.6, resize: 'vertical' }} />
       </div>
 
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>自定义导航链接</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>在左栏与移动抽屉导航底部追加自定义链接，每行一条「标题|网址」，最多 8 条。网址以 http(s):// 开头为外链（新标签打开），以 / 开头为站内路径。例：<code>官网|https://example.com</code></div>
-        <Textarea className="haha-inp" value={cfg.custom_nav_links ?? ''} maxLength={800} spellCheck={false}
+        <Textarea className="banana-inp" value={cfg.custom_nav_links ?? ''} maxLength={800} spellCheck={false}
           onChange={(e: any) => setK('custom_nav_links', e.target.value)}
           placeholder={'官网|https://example.com\n帮助中心|https://help.example.com'}
           style={{ marginTop: 12, minHeight: 100, fontSize: 13, lineHeight: 1.6, resize: 'vertical' }} />
@@ -154,7 +154,7 @@ export default function AppearancePanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>导航项改名</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>重命名内置导航项，每行一条「/路径|新名称」。常见路径：/discover 发现、/forum 论坛、/qa 问答、/circles 圈子、/flash 快报、/articles 专栏、/mall 积分商城、/leaderboard 排行榜、/member 会员中心。例：<code>/forum|讨论区</code></div>
-        <Textarea className="haha-inp" value={cfg.nav_labels ?? ''} maxLength={600} spellCheck={false}
+        <Textarea className="banana-inp" value={cfg.nav_labels ?? ''} maxLength={600} spellCheck={false}
           onChange={(e: any) => setK('nav_labels', e.target.value)}
           placeholder={'/forum|讨论区\n/discover|发现精选'}
           style={{ marginTop: 12, minHeight: 100, fontSize: 13, lineHeight: 1.6, resize: 'vertical' }} />
@@ -162,7 +162,11 @@ export default function AppearancePanel() {
 
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>访问与游客</div>
-        <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>关闭时强制登录（现状）；开启后登录页出现「游客浏览」按钮，游客可只读公开内容，写操作仍需登录。</div>
+        <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>「显示欢迎登录页」关闭后，未登录访客不再经过登录页，直接以游客身份进入站点（只读）；「允许游客浏览」开启后，登录页会出现「游客访问」按钮，写操作仍需登录。</div>
+        <div className="row" style={{ justifyContent: 'space-between', marginTop: 12 }}>
+          <span style={{ fontSize: 13.5 }}>显示欢迎登录页<span className="faint" style={{ fontSize: 12 }}>（关闭 = 直接进站）</span></span>
+          <Toggle on={cfg.show_landing !== '0'} onChange={(v) => setK('show_landing', v ? '1' : '0')} />
+        </div>
         <div className="row" style={{ justifyContent: 'space-between', marginTop: 12 }}>
           <span style={{ fontSize: 13.5 }}>允许游客浏览</span>
           <Toggle on={cfg.allow_guest === '1'} onChange={(v) => setK('allow_guest', v ? '1' : '0')} />
@@ -170,7 +174,7 @@ export default function AppearancePanel() {
         {cfg.allow_guest === '1' && (
           <div className="row" style={{ justifyContent: 'space-between', marginTop: 12, alignItems: 'center' }}>
             <span style={{ fontSize: 13.5 }}>游客信息流上限<span className="faint" style={{ fontSize: 12 }}>（0 = 不限；游客刷到此条数后出「注册解锁」卡）</span></span>
-            <Input className="haha-inp" style={{ width: 88, textAlign: 'right' }} type="number" min={0} max={200}
+            <Input className="banana-inp" style={{ width: 88, textAlign: 'right' }} type="number" min={0} max={200}
               value={cfg.guest_feed_limit ?? ''} placeholder="8"
               onChange={(e: any) => setK('guest_feed_limit', e.target.value)} />
           </div>
@@ -180,7 +184,7 @@ export default function AppearancePanel() {
       <ThemePackagesPanel cfg={cfg} setK={setK} />
 
       <div className="row" style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" className="haha-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存外观'}</Button>
+        <Button color="primary" className="banana-btn-app" onClick={save} isDisabled={saving}>{saving ? '保存中…' : '保存外观'}</Button>
       </div>
     </div>
   );
@@ -252,22 +256,22 @@ function ThemePackagesPanel({ cfg, setK }: { cfg: Record<string, string>; setK: 
                 {p.name} <span className="faint">({p.id} v{p.version})</span>
               </span>
               <span className="row gap-6">
-                <Button type="button" size="sm" variant="flat" className="haha-btn-app" onClick={() => exportOne(p)}>导出</Button>
-                <Button type="button" size="sm" variant="flat" className="haha-btn-app danger" onClick={() => remove(p.id)}>删除</Button>
+                <Button type="button" size="sm" variant="flat" className="banana-btn-app" onClick={() => exportOne(p)}>导出</Button>
+                <Button type="button" size="sm" variant="flat" className="banana-btn-app danger" onClick={() => remove(p.id)}>删除</Button>
               </span>
             </div>
           ))}
         </div>
       )}
-      <Textarea className="haha-inp" value={draft} onChange={(e: any) => setDraft(e.target.value)} minRows={8} spellCheck={false}
+      <Textarea className="banana-inp" value={draft} onChange={(e: any) => setDraft(e.target.value)} minRows={8} spellCheck={false}
         placeholder={'{\n  "id": "ocean",\n  "name": "深海蓝",\n  "version": "1.0.0",\n  "tokens": { "--brand": "#0e7490", "--brand-strong": "#155e75", "--page": "#f0f9ff" }\n}'}
         style={{ marginTop: 12, fontFamily: 'var(--font-mono, monospace)', fontSize: 12.5, lineHeight: 1.5 }} />
       {editErr && <div className="form-err" style={{ marginTop: 8 }}>{editErr}</div>}
       {preview && <div className="faint" style={{ marginTop: 8, fontSize: 12.5 }}>预览中：{preview.name}（仅后台沙箱，点「导入」再保存）</div>}
       <div className="row gap-8" style={{ marginTop: 10, flexWrap: 'wrap' }}>
-        <button type="button" className="haha-btn-app haha-btn-app--sm" style={{ display: 'inline-flex' }} onClick={applyPreview}>预览</button>
-        <Button type="button" size="sm" color="primary" className="haha-btn-app" onClick={importJson} isDisabled={!draft.trim()}>导入到列表</Button>
-        <Button type="button" size="sm" variant="flat" className="haha-btn-app" onClick={() => {
+        <button type="button" className="banana-btn-app banana-btn-app--sm" style={{ display: 'inline-flex' }} onClick={applyPreview}>预览</button>
+        <Button type="button" size="sm" color="primary" className="banana-btn-app" onClick={importJson} isDisabled={!draft.trim()}>导入到列表</Button>
+        <Button type="button" size="sm" variant="flat" className="banana-btn-app" onClick={() => {
           const el = document.getElementById('theme-admin-preview');
           if (el) el.textContent = '';
           setPreview(null);

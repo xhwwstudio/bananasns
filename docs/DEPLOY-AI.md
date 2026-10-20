@@ -4,7 +4,7 @@
 > 分路：[图形面板 · 1Panel](INSTALL-1panel.md) / [宝塔](INSTALL-bt.md)（**非技术用户推荐**） · [命令行 · Docker / 裸机](DEPLOY.md) · [完整安装手册](INSTALL.md) · [让 AI 助手代装](DEPLOY-AI.md) · [配置与维护参考](CONFIGURATION.md)
 
 
-> 这份文档是写给**会执行命令的 AI 助手**看的：让你（AI）在一台全新 Linux 服务器上把 HahaSNS 自主部署起来。
+> 这份文档是写给**会执行命令的 AI 助手**看的：让你（AI）在一台全新 Linux 服务器上把 BananaSNS 自主部署起来。
 > 全程以 **Docker 编排**为主路径（最确定、最可复现）。每一步都给了**校验闸门**与**期望输出**——校验不通过就停下排查，不要继续。
 > **面向非技术站长**：也可以完全不碰命令行，改用 1Panel / 宝塔面板可视化部署——见下方「选择部署方式」。
 >
@@ -14,7 +14,7 @@
 
 ## ⭐ 部署环境建议（先读 · 中国站长尤其重要）
 
-**强烈建议把 HahaSNS 部署在「中国大陆以外」的服务器上**（香港 / 新加坡 / 日本 / 美国 / 欧洲 等）。原因：
+**强烈建议把 BananaSNS 部署在「中国大陆以外」的服务器上**（香港 / 新加坡 / 日本 / 美国 / 欧洲 等）。原因：
 
 - **构建更顺畅**：镜像构建要访问 Docker Hub、npm registry、GitHub。大陆直连这些常超时 / 被限速，导致 `docker compose up --build` 失败或极慢；非大陆基本一次过。
 - **内置 AI 助手可用**：AI 助手走 Anthropic API（`ANTHROPIC_API_KEY`），**大陆无法直连**；只有非大陆环境（或服务器自备可访问的代理）才能启用，否则只能用降级的演示模式。
@@ -81,7 +81,7 @@ docker --version && docker compose version && git --version
 
 ```bash
 cd /opt        # 或 /www/wwwroot（宝塔）等
-git clone https://github.com/maobase/hahasns.git hahasns && cd hahasns
+git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
 ```
 ✅ `ls docker-compose.yml .env.example Dockerfile` 三个文件都在 → 通过。
 
@@ -114,7 +114,7 @@ docker compose up -d --build      # 首次构建前端+后端镜像 + 拉起 mar
 ```
 校验容器健康：
 ```bash
-docker compose ps                 # app / hahasns-mariadb / hahasns-redis 都应 Up（db/redis 为 healthy）
+docker compose ps                 # app / bananasns-mariadb / bananasns-redis 都应 Up（db/redis 为 healthy）
 ```
 ✅ 三个容器都 Up，mariadb/redis 显示 healthy → 通过。若 `app` 反复重启，看日志：`docker compose logs app --tail=50`（多半是连不上库或环境变量缺失）。
 
@@ -123,7 +123,7 @@ docker compose ps                 # app / hahasns-mariadb / hahasns-redis 都应
 ## 5. 健康校验闸门（必须通过才算部署成功）
 
 ```bash
-curl -s http://127.0.0.1:4000/api/health      # 期望 {"ok":true,"app":"HahaSNS"}
+curl -s http://127.0.0.1:4000/api/health      # 期望 {"ok":true,"app":"BananaSNS"}
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:4000/        # 期望 200（前端 SPA）
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:4000/api/posts   # 期望 200（API）
 ```
@@ -151,7 +151,7 @@ curl -s -X POST http://127.0.0.1:4000/api/auth/login \
 
 **B. 手动提权（不想用 env 时）** —— 先在前台注册一个账号，再提成管理员：
 ```bash
-docker exec hahasns-mariadb mariadb -uhahasns -p"$DB_PASSWORD" hahasns \
+docker exec bananasns-mariadb mariadb -ubananasns -p"$DB_PASSWORD" bananasns \
   -e "UPDATE users SET role='admin' WHERE username='<注册的用户名>';"
 ```
 > `$DB_PASSWORD` 需在当前 shell 可见（`set -a; . .env; set +a` 可从 `.env` 载入）。
@@ -179,13 +179,13 @@ location / {
 
 ```bash
 # 更新：拉新代码重建（数据在命名卷里，不丢）
-cd /opt/hahasns && git pull && docker compose up -d --build
+cd /opt/bananasns && git pull && docker compose up -d --build
 
 # 备份：数据库 + 上传媒体
-docker exec hahasns-mariadb mariadb-dump -uhahasns -p"$DB_PASSWORD" hahasns > backup-$(date +%F).sql
-docker run --rm -v hahasns_hahasns-uploads:/u -v "$PWD":/b alpine tar czf /b/uploads-$(date +%F).tgz -C /u .
+docker exec bananasns-mariadb mariadb-dump -ubananasns -p"$DB_PASSWORD" bananasns > backup-$(date +%F).sql
+docker run --rm -v bananasns_bananasns-uploads:/u -v "$PWD":/b alpine tar czf /b/uploads-$(date +%F).tgz -C /u .
 ```
-数据卷：`hahasns_hahasns-db`（库）/ `hahasns_hahasns-redis`（缓存）/ `hahasns_hahasns-uploads`（上传）。
+数据卷：`bananasns_bananasns-db`（库）/ `bananasns_bananasns-redis`（缓存）/ `bananasns_bananasns-uploads`（上传）。
 
 ---
 

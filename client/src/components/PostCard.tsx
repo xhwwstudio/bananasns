@@ -248,7 +248,7 @@ export default function PostCard({ post: initial, onDelete, defaultOpenComments 
           {post.locked.type === 'paid' ? (
             <>
               <div className="lk-text">这是付费内容，{post.locked.price} 积分解锁查看</div>
-              <Button size="sm" color="primary" className="haha-btn-app" onClick={unlock}>支付 {post.locked.price} 积分解锁</Button>
+              <Button size="sm" color="primary" className="banana-btn-app" onClick={unlock}>支付 {post.locked.price} 积分解锁</Button>
             </>
           ) : (
             <>
@@ -256,7 +256,7 @@ export default function PostCard({ post: initial, onDelete, defaultOpenComments 
               <div className="row gap-8 center">
                 <input value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="访问密码"
                   style={{ height: 36, width: 160, border: '1.5px solid var(--line-2)', borderRadius: 8, padding: '0 12px' }} />
-                <Button size="sm" color="primary" className="haha-btn-app" onClick={unlock}>解锁</Button>
+                <Button size="sm" color="primary" className="banana-btn-app" onClick={unlock}>解锁</Button>
               </div>
             </>
           )}

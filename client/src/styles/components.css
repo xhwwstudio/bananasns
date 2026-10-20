@@ -288,7 +288,7 @@
 .comments-more:hover { background: var(--surface-2); }
 /* inline comment editing */
 .comment-edit { margin-top: 4px; }
-.comment-edit .haha-textarea { width: 100%; min-height: 58px; resize: vertical; font-size: 14.5px; line-height: 1.6; }
+.comment-edit .banana-textarea { width: 100%; min-height: 58px; resize: vertical; font-size: 14.5px; line-height: 1.6; }
 .comment-edit-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
 .cmt-edited { color: var(--ink-4); }
 
@@ -347,23 +347,23 @@
 .srch-topic-n { font-size: 12px; color: var(--ink-4); }
 .srch-topic-go { color: var(--ink-4); flex: none; transform: rotate(-90deg); opacity: .55; }
 
-/* ---------- Feed filter tabs（HeroUI Tabs 经 shim 渲染，opt-in 封装类 .haha-feed-tabs） ----------
+/* ---------- Feed filter tabs（HeroUI Tabs 经 shim 渲染，opt-in 封装类 .banana-feed-tabs） ----------
    视觉逐项对齐旧自研轨道：active 白字 + brand 实心 pill、inactive hover 灰底、
    内容宽 tab、徽标、:active scale(.96)、移动端 44px 触摸高度 + 横向滚动隐藏滚动条。
    全走语义 token，6 皮肤 + 暗色自动活；不影响其余 6 页 HeroUI Tabs 的默认观感。
    （transition 由 styles.css 的圆角/底色过渡规则统一给出，与旧轨道一致。） */
-.haha-feed-tabs { position: sticky; top: calc(var(--nav-h) + 4px); z-index: 20; }
-.haha-feed-tabs .tabs__list { background: transparent; padding: 6px; gap: 4px; border-radius: 0; }
-.haha-feed-tabs .tabs__tab {
+.banana-feed-tabs { position: sticky; top: calc(var(--nav-h) + 4px); z-index: 20; }
+.banana-feed-tabs .tabs__list { background: transparent; padding: 6px; gap: 4px; border-radius: 0; }
+.banana-feed-tabs .tabs__tab {
   width: auto; flex: 0 0 auto; height: auto;
   padding: 8px 16px; border-radius: var(--r-pill);
   font-weight: 600; font-size: 14.5px; line-height: 1.6; color: var(--ink-3); white-space: nowrap;
 }
-.haha-feed-tabs .tabs__tab:hover, .haha-feed-tabs .tabs__tab[data-hovered="true"] { color: var(--ink); background: var(--surface-2); opacity: 1; }
-.haha-feed-tabs .tabs__tab[data-selected="true"] { color: #fff; background: var(--brand); opacity: 1; }
-.haha-feed-tabs .tab-badge { display: inline-grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; margin-left: 5px; border-radius: 999px; background: var(--like); color: #fff; font-size: 10px; font-weight: 700; vertical-align: 1px; }
-.haha-feed-tabs .tabs__tab[data-selected="true"] .tab-badge { background: rgba(255,255,255,.32); }
-.haha-feed-tabs .tabs__tab:active { transform: scale(.96); }
+.banana-feed-tabs .tabs__tab:hover, .banana-feed-tabs .tabs__tab[data-hovered="true"] { color: var(--ink); background: var(--surface-2); opacity: 1; }
+.banana-feed-tabs .tabs__tab[data-selected="true"] { color: #fff; background: var(--brand); opacity: 1; }
+.banana-feed-tabs .tab-badge { display: inline-grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; margin-left: 5px; border-radius: 999px; background: var(--like); color: #fff; font-size: 10px; font-weight: 700; vertical-align: 1px; }
+.banana-feed-tabs .tabs__tab[data-selected="true"] .tab-badge { background: rgba(255,255,255,.32); }
+.banana-feed-tabs .tabs__tab:active { transform: scale(.96); }
 
 /* ---------- Section header card ---------- */
 .section-head { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
@@ -427,7 +427,7 @@
 .field label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; }
 /* ── Unified input language (HeroUI-Pro style): clean surface fill, crisp 1.5px
    border, soft brand focus ring. `.field` 容器内的原生控件共用同一套输入语言；
-   行内输入框一律走 shim + .haha-inp（见下方抹平层）。── */
+   行内输入框一律走 shim + .banana-inp（见下方抹平层）。── */
 .field input, .field textarea, .field select {
   width: 100%; height: 44px; padding: 0 14px; border: 1.5px solid var(--line-2); border-radius: var(--r-md);
   outline: none; transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out), background .15s;
@@ -480,9 +480,9 @@
   .act { height: 44px; }
   .nav-icon-btn { width: 44px; height: 44px; flex: none; }  /* flex:none → don't compress below the 44px touch target */
   .post-menu { width: 40px; height: 40px; }                  /* 更多操作 bigger tap target on touch */
-  .haha-feed-tabs .tabs__tab { padding: 10px 12px; min-height: 44px; font-size: 13.5px; }
-  .haha-feed-tabs .tabs__list, .subtabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .haha-feed-tabs .tabs__list::-webkit-scrollbar, .subtabs::-webkit-scrollbar { display: none; }
+  .banana-feed-tabs .tabs__tab { padding: 10px 12px; min-height: 44px; font-size: 13.5px; }
+  .banana-feed-tabs .tabs__list, .subtabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .banana-feed-tabs .tabs__list::-webkit-scrollbar, .subtabs::-webkit-scrollbar { display: none; }
   .subtab { white-space: nowrap; flex: 0 0 auto; }
 }
 
@@ -601,101 +601,101 @@
    ============================================================ */
 
 /* Cards — v3 Card is a bare div; give it the app card chrome. */
-.haha-card { background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); color: var(--ink); }
-.haha-card-pressable { cursor: pointer; transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); display: block; text-decoration: none; }
-.haha-card-pressable:hover { box-shadow: var(--shadow-md); }
-.haha-card-pressable:active { transform: scale(.99); }
-.haha-card-body { padding: 16px 18px; }
-.haha-card-body.p-0 { padding: 0; }
-.haha-card-header { padding: 14px 18px 0; }
+.banana-card { background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); color: var(--ink); }
+.banana-card-pressable { cursor: pointer; transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); display: block; text-decoration: none; }
+.banana-card-pressable:hover { box-shadow: var(--shadow-md); }
+.banana-card-pressable:active { transform: scale(.99); }
+.banana-card-body { padding: 16px 18px; }
+.banana-card-body.p-0 { padding: 0; }
+.banana-card-header { padding: 14px 18px 0; }
 
 /* Field wrapper (label + control + description) */
-.haha-field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-.haha-field-label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
-.haha-field-desc { font-size: 12px; color: var(--ink-4); margin-top: 2px; }
+.banana-field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.banana-field-label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+.banana-field-desc { font-size: 12px; color: var(--ink-4); margin-top: 2px; }
 
 /* Inputs / textareas — v3 primitives, app-styled. */
-.haha-input-wrap { position: relative; display: flex; align-items: center; gap: 8px;
+.banana-input-wrap { position: relative; display: flex; align-items: center; gap: 8px;
   border: 1.5px solid var(--line-2); border-radius: var(--r-md); background: var(--surface);
   padding: 0 12px; transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
-.haha-input-wrap:focus-within { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
-.haha-input { flex: 1; min-width: 0; height: 42px; border: 0; background: transparent; color: var(--ink);
+.banana-input-wrap:focus-within { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.banana-input { flex: 1; min-width: 0; height: 42px; border: 0; background: transparent; color: var(--ink);
   font-size: 14.5px; outline: none; width: 100%; }
 /* HeroUI v3 stamps generic `.input .input--primary` chrome on the native field
    (its own radius + a white→brand focus ring). That collides with our wrapper-based
    field, drawing a second, smaller-radius ring inside the real one — the doubled
-   border. The border + focus ring belong to `.haha-input-wrap`; strip the inner
+   border. The border + focus ring belong to `.banana-input-wrap`; strip the inner
    element's leaked chrome so only one ring shows. */
-.haha-input, .haha-input:focus, .haha-input:focus-visible {
+.banana-input, .banana-input:focus, .banana-input:focus-visible {
   box-shadow: none !important; border-radius: 0 !important; background: transparent !important; }
-.haha-input::placeholder { color: var(--ink-4); }
-.haha-input-start, .haha-input-end { display: inline-flex; align-items: center; color: var(--ink-3); flex: none; }
-.haha-textarea { width: 100%; border: 1.5px solid var(--line-2); border-radius: var(--r-md);
+.banana-input::placeholder { color: var(--ink-4); }
+.banana-input-start, .banana-input-end { display: inline-flex; align-items: center; color: var(--ink-3); flex: none; }
+.banana-textarea { width: 100%; border: 1.5px solid var(--line-2); border-radius: var(--r-md);
   background: var(--surface); color: var(--ink); font-size: 14.5px; padding: 10px 12px;
   resize: vertical; min-height: 80px; outline: none; transition: border-color var(--dur-fast), box-shadow var(--dur-fast); font-family: inherit; }
-.haha-textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
-.haha-textarea::placeholder { color: var(--ink-4); }
+.banana-textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.banana-textarea::placeholder { color: var(--ink-4); }
 
 /* ── 自研 inp 双轨抹平层（spec01 §1.2，输入框收敛）──
-   shim Input/Textarea 加 .haha-inp（紧凑款再叠 .haha-inp-sm）即逐像素对齐原自研 inp：
+   shim Input/Textarea 加 .banana-inp（紧凑款再叠 .banana-inp-sm）即逐像素对齐原自研 inp：
    固定总高 44px/36px（不定内高——Chrome 会把 1.5px 边取整，派生高度会差 1px）、
    0 14px / 0 11px 内距、hover 灰边、focus 品牌环、同款过渡；
    textarea 对齐原生 textarea 版 inp（11px 14px 内距、90px 最小高、1.6 行高）。
    全仓 inp 用例清零后自研本体已删（末批 v5.54），本层即唯一输入语言。 */
 /* wrap 默认 position:relative（hero shim 基座）会把自己抬进 positioned 绘制层，聚焦环因此盖住
    相邻按钮投影——原生 inp 是普通流，环在按钮投影之下；归位 static 逐像素对齐基线（nav/mall 实测）。 */
-.haha-inp { position: static; height: 44px; padding: 0 14px; transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out), background .15s; }
-.haha-inp:hover { border-color: var(--ink-4); }
+.banana-inp { position: static; height: 44px; padding: 0 14px; transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out), background .15s; }
+.banana-inp:hover { border-color: var(--ink-4); }
 /* focus 规则必须放在 hover 之后：聚焦+悬停时保持品牌边/环（对齐原 inp 规则里 :focus 后于 :hover 的次序） */
-.haha-inp:focus-within, .haha-inp:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.banana-inp:focus-within, .banana-inp:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
 /* 基线怪癖对齐：base.css 的 input:focus-visible{border-radius:revert} 会把聚焦的原生 inp 打成直角；
    wrap 不是原生 input 吃不到该规则，用 :has 同步同一表现（环随直角走）。 */
-.haha-inp:has(:focus-visible) { border-radius: revert; }
+.banana-inp:has(:focus-visible) { border-radius: revert; }
 /* HeroUI v3 给 .input 自带 21.75px 行高，会推开 datetime-local 内部编辑器的垂直居中（390 下整行字偏 1px）；
    line-height 归一到 body 的 1.6（23.2px@14.5px），与原生 inp 的行高继承结果一致。 */
-.haha-inp .haha-input { height: 100%; line-height: 1.6; }
-.haha-inp-sm { height: 36px; padding: 0 11px; border-radius: var(--r-sm); }
-.haha-inp-sm .haha-input { height: 100%; font-size: 13.5px; }
+.banana-inp .banana-input { height: 100%; line-height: 1.6; }
+.banana-inp-sm { height: 36px; padding: 0 11px; border-radius: var(--r-sm); }
+.banana-inp-sm .banana-input { height: 100%; font-size: 13.5px; }
 /* HeroUI v3 给 .textarea 盖了 field 全套 state chrome（默认 shadow-field、hover/focus 换底色），
    与 inp 语言（无阴影、hover 只换边色、focus 只品牌边+环、底色恒 --surface）不符，逐态抹掉。 */
-textarea.haha-inp { height: auto; padding: 11px 14px; resize: vertical; min-height: 90px; line-height: 1.6; box-shadow: none; }
-textarea.haha-inp:hover { background: var(--surface); box-shadow: none; }
-textarea.haha-inp:focus { background: var(--surface); box-shadow: 0 0 0 3px var(--brand-soft); }
+textarea.banana-inp { height: auto; padding: 11px 14px; resize: vertical; min-height: 90px; line-height: 1.6; box-shadow: none; }
+textarea.banana-inp:hover { background: var(--surface); box-shadow: none; }
+textarea.banana-inp:focus { background: var(--surface); box-shadow: 0 0 0 3px var(--brand-soft); }
 /* 批 2 页面层补充两种形态：
    ① .field 容器（Collections 创建专题）——`.field input` 后代选择器仍会命中 wrap 里的裸 input，
-      边框/内距已在 wrap 上，内部抹零防止双边框双内距（高度由 .haha-inp .haha-input 接管）。 */
-.field .haha-input-wrap .haha-input { border: 0; padding: 0; }
-/* ② 原生 <select>（Mall 充值渠道）——shim 只覆盖 Input/Textarea，原生下拉直挂 .haha-inp 时
-      补全 inp 基座声明（边/圆角/底/字/宽），hover/focus 态沿用上方 .haha-inp 通用规则。 */
-select.haha-inp { width: 100%; border: 1.5px solid var(--line-2); border-radius: var(--r-md); outline: none;
+      边框/内距已在 wrap 上，内部抹零防止双边框双内距（高度由 .banana-inp .banana-input 接管）。 */
+.field .banana-input-wrap .banana-input { border: 0; padding: 0; }
+/* ② 原生 <select>（Mall 充值渠道）——shim 只覆盖 Input/Textarea，原生下拉直挂 .banana-inp 时
+      补全 inp 基座声明（边/圆角/底/字/宽），hover/focus 态沿用上方 .banana-inp 通用规则。 */
+select.banana-inp { width: 100%; border: 1.5px solid var(--line-2); border-radius: var(--r-md); outline: none;
   background: var(--surface); color: var(--ink); font-size: 14.5px; font-family: inherit; }
 
 /* Select — v3 compound; style the trigger + popover. */
-.haha-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
+.banana-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
   height: 42px; border: 1.5px solid var(--line-2); border-radius: var(--r-md); background: var(--surface);
   color: var(--ink); font-size: 14.5px; padding: 0 12px; cursor: pointer; transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
-.haha-select-trigger[data-focused], .haha-select-trigger[data-open] { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
-.haha-select-popover { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
+.banana-select-trigger[data-focused], .banana-select-trigger[data-open] { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.banana-select-popover { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
   box-shadow: var(--shadow-pop); padding: 6px; min-width: var(--trigger-width, 160px); z-index: 1200; }
-.haha-select-popover [data-rac][role="option"], .haha-select-popover [role="option"] {
+.banana-select-popover [data-rac][role="option"], .banana-select-popover [role="option"] {
   padding: 8px 10px; border-radius: var(--r-sm); font-size: 14px; color: var(--ink-2); cursor: pointer; outline: none; }
-.haha-select-popover [role="option"][data-focused], .haha-select-popover [role="option"][data-hovered] { background: var(--surface-2); }
-.haha-select-popover [role="option"][data-selected] { color: var(--brand); font-weight: 600; background: var(--brand-tint); }
+.banana-select-popover [role="option"][data-focused], .banana-select-popover [role="option"][data-hovered] { background: var(--surface-2); }
+.banana-select-popover [role="option"][data-selected] { color: var(--brand); font-weight: 600; background: var(--brand-tint); }
 
 /* Modal dialog padding (v3 Modal.Dialog) */
-.haha-modal-dialog { background: var(--surface); color: var(--ink); border-radius: var(--r-lg); box-shadow: var(--shadow-pop); }
-.haha-modal-header { padding: 18px 20px 6px; font-weight: 800; font-size: 17px; }
-.haha-modal-body { padding: 6px 20px; display: flex; flex-direction: column; gap: 12px; }
-.haha-modal-footer { padding: 12px 20px 18px; display: flex; justify-content: flex-end; gap: 10px; }
+.banana-modal-dialog { background: var(--surface); color: var(--ink); border-radius: var(--r-lg); box-shadow: var(--shadow-pop); }
+.banana-modal-header { padding: 18px 20px 6px; font-weight: 800; font-size: 17px; }
+.banana-modal-body { padding: 6px 20px; display: flex; flex-direction: column; gap: 12px; }
+.banana-modal-footer { padding: 12px 20px 18px; display: flex; justify-content: flex-end; gap: 10px; }
 
 /* Button spinner alignment when isLoading */
-.haha-btn-spinner { margin-right: 6px; }
-/* v3 Spinner 默认 color=accent，而 --accent 只在 .haha-btn 内有映射；
+.banana-btn-spinner { margin-right: 6px; }
+/* v3 Spinner 默认 color=accent，而 --accent 只在 .banana-btn 内有映射；
    这里给独立使用的 shim <Spinner> 补上同样的品牌色映射（6 皮肤 + 暗色随 token 自动换）。 */
-.haha-spinner { --accent: var(--brand); }
+.banana-spinner { --accent: var(--brand); }
 
 /* HeroUI v3 buttons rendered as no-fill dark text (e.g. Settings「保存修改」
-   主按钮) for TWO reasons, both fixed here (scoped to .haha-btn so no other
+   主按钮) for TWO reasons, both fixed here (scoped to .banana-btn so no other
    HeroUI component is touched; auto-themes across light/暗/6 皮肤):
    1) v3 keys color variants on tokens the app never defines (--accent /
       --default / --danger / --border) → --button-bg fell back to transparent.
@@ -704,7 +704,7 @@ select.haha-inp { width: 100%; border: 1.5px solid var(--line-2); border-radius:
       UNLAYERED and overrides HeroUI's @layer-ed `.button` bg/border/color.
       → re-apply bg/color/border here (also unlayered + higher specificity)
         from the --button-* tokens each .button--variant already resolves. */
-.haha-btn {
+.banana-btn {
   --accent: var(--brand);
   --accent-hover: var(--brand-strong);
   --accent-foreground: #fff;
@@ -722,25 +722,25 @@ select.haha-inp { width: 100%; border: 1.5px solid var(--line-2); border-radius:
   background-color: var(--button-bg);
   color: var(--button-fg);
 }
-.haha-btn:hover, .haha-btn[data-hovered="true"] { background-color: var(--button-bg-hover); }
-.haha-btn:active, .haha-btn[data-pressed="true"] { background-color: var(--button-bg-pressed); }
-.haha-btn.button--outline { border: 1px solid var(--border); }
-/* 语义色按钮软填充（v3 无 success/warning variant，由 shim 加 .haha-btn-success/-warning 类补色） */
-.haha-btn.haha-btn-success { background-color: var(--good-soft); color: var(--good-deep); }
-.haha-btn.haha-btn-success:hover, .haha-btn.haha-btn-success[data-hovered="true"] { background-color: color-mix(in srgb, var(--good) 18%, transparent); }
-.haha-btn.haha-btn-warning { background-color: var(--gold-soft); color: var(--gold-deep); }
-.haha-btn.haha-btn-warning:hover, .haha-btn.haha-btn-warning[data-hovered="true"] { background-color: color-mix(in srgb, var(--gold) 18%, transparent); }
+.banana-btn:hover, .banana-btn[data-hovered="true"] { background-color: var(--button-bg-hover); }
+.banana-btn:active, .banana-btn[data-pressed="true"] { background-color: var(--button-bg-pressed); }
+.banana-btn.button--outline { border: 1px solid var(--border); }
+/* 语义色按钮软填充（v3 无 success/warning variant，由 shim 加 .banana-btn-success/-warning 类补色） */
+.banana-btn.banana-btn-success { background-color: var(--good-soft); color: var(--good-deep); }
+.banana-btn.banana-btn-success:hover, .banana-btn.banana-btn-success[data-hovered="true"] { background-color: color-mix(in srgb, var(--good) 18%, transparent); }
+.banana-btn.banana-btn-warning { background-color: var(--gold-soft); color: var(--gold-deep); }
+.banana-btn.banana-btn-warning:hover, .banana-btn.banana-btn-warning[data-hovered="true"] { background-color: color-mix(in srgb, var(--gold) 18%, transparent); }
 
 /* ============================================================
    自研按钮轨道 → shim Button 抹平层（按钮双轨收敛·批 1 建立；末批起旧轨道 CSS 已删，此为唯一实现）。
-   shim Button 挂 haha-btn-app 后逐态复刻旧自研按钮的语言：
+   shim Button 挂 banana-btn-app 后逐态复刻旧自研按钮的语言：
    38px 高 / --r-pill 胶囊 / 600 字重 / gap 6 / :active scale(.96) /
    primary 投影+hover 上浮 / ghost 灰底 / outline 1.5px 描边 / disabled .55。
    只影响挂此类的按钮；未挂的既有 shim Button（QA/Settings 等）保持 v3 原貌。
    transition 自带 radius/bg .2s（与旧轨道当年在 styles.css 全局过渡规则里的生效值一致，其余瞬时）。
    修饰类 --ghost/--sm 给非 v3 元素用：ThreadRow「查看完整帖子」是
    react-router <Link>（RAC Button 只渲染 <button>），挂修饰类共享同一外观。 */
-.haha-btn-app {
+.banana-btn-app {
   align-items: center; justify-content: center; gap: 6px;
   height: 38px; padding: 0 18px; border-radius: var(--r-pill);
   font-size: 14px; font-weight: 600; line-height: 1.6; letter-spacing: -.01em;
@@ -760,41 +760,41 @@ select.haha-inp { width: 100%; border: 1.5px solid var(--line-2); border-radius:
 /* display 不进基座：v3 .button 自带 inline-flex；写在这里会压过 layout.css:177
    移动端 .nav-checkin{display:none}（同特异性、components.css 更靠后）把签到按钮顶出来。
    仅 <Link> 形态（ThreadRow 查看完整帖子）需要补 display，元素选择器限定不影响 button。 */
-a.haha-btn-app { display: inline-flex; }
-.haha-btn-app:active, .haha-btn-app[data-pressed="true"] { transform: scale(.96); }
+a.banana-btn-app { display: inline-flex; }
+.banana-btn-app:active, .banana-btn-app[data-pressed="true"] { transform: scale(.96); }
 /* pointer-events:auto：旧自研按钮 :disabled 仍响应 hover 样式与 not-allowed 光标（v3 status-disabled 是 none，抹回） */
-.haha-btn-app:disabled { opacity: .55; cursor: not-allowed; pointer-events: auto; }
+.banana-btn-app:disabled { opacity: .55; cursor: not-allowed; pointer-events: auto; }
 /* primary ≈ 旧轨道主按钮：品牌底 + 投影 + hover 上浮。
    hover 用 background 简写（顺带复位 background-image），非 anime 皮肤下与旧规则一致；
    anime 皮肤的渐变规则（styles.css）特异性更高/更靠后，依旧胜出——与基线行为相同。 */
-.haha-btn-app.button--primary { background-color: var(--brand); color: var(--on-brand); box-shadow: var(--shadow-brand); }
-.haha-btn-app.button--primary:hover, .haha-btn-app.button--primary[data-hovered="true"] { background: var(--brand-strong); box-shadow: var(--shadow-brand); transform: translateY(-1px); }
-.haha-btn-app.button--primary:active, .haha-btn-app.button--primary[data-pressed="true"] { transform: translateY(0) scale(.97); }
+.banana-btn-app.button--primary { background-color: var(--brand); color: var(--on-brand); box-shadow: var(--shadow-brand); }
+.banana-btn-app.button--primary:hover, .banana-btn-app.button--primary[data-hovered="true"] { background: var(--brand-strong); box-shadow: var(--shadow-brand); transform: translateY(-1px); }
+.banana-btn-app.button--primary:active, .banana-btn-app.button--primary[data-pressed="true"] { transform: translateY(0) scale(.97); }
 /* ghost ≈ 旧轨道幽灵按钮：surface-2 灰底。v3 secondary 把文字染成品牌色（--accent-soft-foreground），拉回 --ink-2 */
-.haha-btn-app.button--secondary, .haha-btn-app--ghost { background-color: var(--surface-2); color: var(--ink-2); }
-.haha-btn-app.button--secondary:hover, .haha-btn-app.button--secondary[data-hovered="true"], .haha-btn-app--ghost:hover { background-color: var(--surface-3); color: var(--ink); }
+.banana-btn-app.button--secondary, .banana-btn-app--ghost { background-color: var(--surface-2); color: var(--ink-2); }
+.banana-btn-app.button--secondary:hover, .banana-btn-app.button--secondary[data-hovered="true"], .banana-btn-app--ghost:hover { background-color: var(--surface-3); color: var(--ink); }
 /* outline ≈ 旧轨道描边按钮：1.5px 描边，hover 品牌化（v3 outline 是 1px --border，抹成 1.5px --line-2） */
-.haha-btn-app.button--outline { background-color: transparent; border: 1.5px solid var(--line-2); color: var(--ink-2); }
-.haha-btn-app.button--outline:hover, .haha-btn-app.button--outline[data-hovered="true"] { background-color: var(--brand-tint); border-color: var(--brand); color: var(--brand); }
+.banana-btn-app.button--outline { background-color: transparent; border: 1.5px solid var(--line-2); color: var(--ink-2); }
+.banana-btn-app.button--outline:hover, .banana-btn-app.button--outline[data-hovered="true"] { background-color: var(--brand-tint); border-color: var(--brand); color: var(--brand); }
 /* 尺寸 ≈ 旧轨道 sm / lg（v3 sm=36/32px、lg=44/40px，与自研不同，统一抹平） */
-.haha-btn-app.button--sm, .haha-btn-app--sm { height: 32px; padding: 0 14px; font-size: 13px; }
-.haha-btn-app.button--lg, .haha-btn-app--lg { height: 46px; padding: 0 24px; font-size: 15px; }
+.banana-btn-app.button--sm, .banana-btn-app--sm { height: 32px; padding: 0 14px; font-size: 13px; }
+.banana-btn-app.button--lg, .banana-btn-app--lg { height: 46px; padding: 0 24px; font-size: 15px; }
 /* Link 形态补充修饰类（批 2：ThreadDetail 付费墙「前往解锁板块」是 <Link>，共享 primary 外观；
-   规则置于 .haha-btn-app:active 之后，同特异性下 :active 胜出 scale(.97) 与旧轨道主按钮一致） */
-.haha-btn-app--primary { background-color: var(--brand); color: var(--on-brand); box-shadow: var(--shadow-brand); }
-.haha-btn-app--primary:hover { background: var(--brand-strong); box-shadow: var(--shadow-brand); transform: translateY(-1px); }
-.haha-btn-app--primary:active { transform: translateY(0) scale(.97); }
+   规则置于 .banana-btn-app:active 之后，同特异性下 :active 胜出 scale(.97) 与旧轨道主按钮一致） */
+.banana-btn-app--primary { background-color: var(--brand); color: var(--on-brand); box-shadow: var(--shadow-brand); }
+.banana-btn-app--primary:hover { background: var(--brand-strong); box-shadow: var(--shadow-brand); transform: translateY(-1px); }
+.banana-btn-app--primary:active { transform: translateY(0) scale(.97); }
 /* outline / block 的 Link 形态修饰类（批 3：About 开源仓库/部署教程/查看源码、CollectModal 新建专题等
    是 <a>/<Link>，复刻旧轨道 outline 的 1.5px 描边 + hover 品牌化、block 的通栏宽） */
-.haha-btn-app--outline { background-color: transparent; border: 1.5px solid var(--line-2); color: var(--ink-2); }
-.haha-btn-app--outline:hover { background-color: var(--brand-tint); border-color: var(--brand); color: var(--brand); }
-.haha-btn-app--block { width: 100%; }
+.banana-btn-app--outline { background-color: transparent; border: 1.5px solid var(--line-2); color: var(--ink-2); }
+.banana-btn-app--outline:hover { background-color: var(--brand-tint); border-color: var(--brand); color: var(--brand); }
+.banana-btn-app--block { width: 100%; }
 /* Profile 关注按钮「已关注」悬停红化（批 2）：原 .follow-btn.following:hover（上方 :42）与抹平层
    ghost hover 同特异性且位置更前会被压过，后置恢复；v3 悬停走 data-hovered，一并覆盖 */
-.haha-btn-app.follow-btn.following:hover, .haha-btn-app.follow-btn.following[data-hovered="true"] { background-color: var(--like-soft); color: var(--like); border-color: var(--like); }
+.banana-btn-app.follow-btn.following:hover, .banana-btn-app.follow-btn.following[data-hovered="true"] { background-color: var(--like-soft); color: var(--like); border-color: var(--like); }
 @media (max-width: 880px) {
   /* 沿用旧轨道 sm 按钮的移动端触控加高 */
-  .haha-btn-app.button--sm, .haha-btn-app--sm { height: 36px; }
+  .banana-btn-app.button--sm, .banana-btn-app--sm { height: 36px; }
 }
 
 /* 结构化举报弹窗（report.tsx）——预设理由单选列表 */
@@ -806,11 +806,11 @@ a.haha-btn-app { display: inline-flex; }
 
 /* Brand-tinted "flat primary" chip — v3 has no soft-primary color hue,
    so recolor the neutral soft chip to the active skin. */
-.haha-chip-brand { background: var(--brand-soft) !important; color: var(--brand) !important; }
+.banana-chip-brand { background: var(--brand-soft) !important; color: var(--brand) !important; }
 
 /* Progress fill follows brand / success per the original color prop. */
-.haha-progress-fill { background: var(--brand); }
-.haha-progress-success .haha-progress-fill { background: var(--good); }
+.banana-progress-fill { background: var(--brand); }
+.banana-progress-success .banana-progress-fill { background: var(--good); }
 
 /* ---------- 运营公告 / Site notice banner ---------- */
 .site-notice {
