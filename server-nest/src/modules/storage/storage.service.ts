@@ -3,7 +3,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomBytes } from 'node:crypto';
 import { extname, join } from 'node:path';
@@ -25,6 +25,7 @@ import {
   describePublicReadResult,
   WARN_NO_PUBLIC_URL,
   STORAGE_SITE_KEYS,
+  isQiniuEndpoint,
   type StorageEnvLike,
   type StorageResolvedConfig,
   type StorageSourceMap,
@@ -106,6 +107,10 @@ export class StorageService implements OnModuleInit {
           accessKeyId: cfg.accessKey,
           secretAccessKey: cfg.secretKey,
         },
+        // 兼容七牛 Kodo 等第三方 S3：AWS SDK ≥3.729 默认给 PutObject 加 CRC32 校验头
+        // （x-amz-checksum-*），部分兼容实现会直接 400。改为「仅在协议要求时计算/校验」。
+        requestChecksumCalculation: 'WHEN_REQUIRED',
+        responseChecksumValidation: 'WHEN_REQUIRED',
       });
       this.logger.log(
         `Object storage ready (endpoint=${cfg.endpoint} bucket=${cfg.bucket} pathStyle=${cfg.forcePathStyle})`,
@@ -189,6 +194,14 @@ export class StorageService implements OnModuleInit {
       };
     }
     if (!this.client) throw new Error('S3 client not ready');
+    // 七牛：S3 域名需要签名、不能匿名读。没填 CDN 域名（或错填成 *.qiniucs.com）时，
+    // 上传能成功但返回的 URL 一定打不开——直接拒绝，避免站内出现一批裂图。
+    const pub = this.resolved!.publicUrl;
+    if (isQiniuEndpoint(this.resolved!.endpoint) && (!pub || /qiniucs\.com/i.test(pub))) {
+      throw new BadRequestException(
+        '七牛云已启用，但访问域名（Public URL）未配置或填成了 S3 API 域名。请到「后台 → 存储」填写该空间的 CDN 加速域名（空间需公开读）后再上传。',
+      );
+    }
     await this.client.send(
       new PutObjectCommand({
         Bucket: this.resolved!.bucket,

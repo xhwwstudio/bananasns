@@ -32,7 +32,7 @@ BananaSNS reads configuration from process environment variables (copy `server-n
 | `CLIENT_DIST` | `client/dist` (relative to the build) | Path to the built frontend (`client/dist`) served as the SPA. |
 | `UPLOADS_DIR` | `uploads` (relative to the build) | Directory where uploaded media is stored (served at `/uploads`). |
 | `STORAGE_DRIVER` | auto (`s3` if S3 keys present, else `local`) | Storage backend: `local` (write to `UPLOADS_DIR`) or `s3`. |
-| `S3_ENDPOINT` / `S3_BUCKET` / `S3_ACCESS_KEY` / `S3_SECRET_KEY` / `S3_REGION` / `S3_FORCE_PATH_STYLE` / `S3_PUBLIC_URL` | — | S3-compatible object storage settings, used when `STORAGE_DRIVER=s3` (works with AWS S3, MinIO, rustfs, etc.). |
+| `S3_ENDPOINT` / `S3_BUCKET` / `S3_ACCESS_KEY` / `S3_SECRET_KEY` / `S3_REGION` / `S3_FORCE_PATH_STYLE` / `S3_PUBLIC_URL` | — | S3-compatible object storage settings, used when `STORAGE_DRIVER=s3` (works with AWS S3, MinIO, rustfs, Qiniu Kodo, etc.). **Qiniu Kodo:** endpoint must be `https://s3.<region>.qiniucs.com` (dot, e.g. `https://s3.cn-east-1.qiniucs.com`), `S3_REGION` must match that region, `S3_BUCKET` is the **S3 bucket name** shown in the Kodo console (it may differ from the display name), `S3_PUBLIC_URL` must be the bucket's CDN domain (the bucket has to allow public read), and `S3_FORCE_PATH_STYLE=true` is recommended. Qiniu's S3 endpoint does not allow anonymous reads, so uploads are refused when no CDN domain is configured. |
 | `ANTHROPIC_API_KEY` | — | Optional. Enables the AI assistant; without it the assistant runs in a demo/placeholder mode. |
 | `AVATAR_PROVIDER` | — | Optional. Unset = new users get a locally rendered initial-and-gradient avatar (no external request). Set `pravatar` to go back to `i.pravatar.cc` random avatars. |
 

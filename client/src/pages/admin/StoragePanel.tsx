@@ -41,6 +41,18 @@ const TEST_STYLE: Record<TestLevel, { title: string; bg: string; fg: string }> =
   fail: { title: '测试没过', bg: 'var(--like-soft)', fg: 'var(--like)' },
 };
 
+// 七牛 Kodo 官方 S3 兼容区域（Endpoint 规则：https://s3.<region>.qiniucs.com）
+const QINIU_REGIONS = [
+  { id: 'cn-east-1', label: '华东-浙江' },
+  { id: 'cn-east-2', label: '华东-浙江 2' },
+  { id: 'cn-north-1', label: '华北-河北' },
+  { id: 'cn-south-1', label: '华南-广东' },
+  { id: 'us-north-1', label: '北美-洛杉矶' },
+  { id: 'ap-southeast-1', label: '亚太-新加坡' },
+  { id: 'ap-southeast-2', label: '亚太-河内' },
+  { id: 'ap-southeast-3', label: '亚太-胡志明' },
+];
+
 /** 来源徽标：让站长一眼看出这个值是自己填的、.env 带进来的，还是内置兜底 */
 function SourceTag({ source }: { source?: Source }) {
   if (!source) return null;
@@ -82,6 +94,7 @@ export default function StoragePanel() {
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [clearing, setClearing] = useState(false);
+  const [qiniuRegion, setQiniuRegion] = useState('cn-east-1');
   const [testWarnings, setTestWarnings] = useState<string[]>([]);
   const [testResult, setTestResult] = useState<{ level: TestLevel; message: string } | null>(null);
   const loadStatus = () =>
@@ -94,6 +107,20 @@ export default function StoragePanel() {
     loadStatus();
   }, []);
   const setK = (k: string, v: string) => setCfg((c) => ({ ...(c || {}), [k]: v }));
+  // 已保存的区域如果是七牛官方区域，选中它；否则保留默认 cn-east-1
+  useEffect(() => {
+    const r = String(cfg?.s3_region || '').trim();
+    if (QINIU_REGIONS.some((x) => x.id === r)) setQiniuRegion(r);
+  }, [cfg?.s3_region]);
+  // 一键填入七牛标准配置：S3 驱动 + 官方 Endpoint + 区域 + path-style。
+  // Bucket 用「空间概览」里的 S3 空间名（不一定等于空间显示名），Public URL 用 CDN 加速域名。
+  const applyQiniuPreset = () => {
+    setK('storage_driver', 's3');
+    setK('s3_region', qiniuRegion);
+    setK('s3_endpoint', `https://s3.${qiniuRegion}.qiniucs.com`);
+    setK('s3_force_path_style', '1');
+    toast.ok('已填入七牛标准配置；请补全 Bucket / AK / SK / CDN 域名后点「保存存储配置」');
+  };
   const save = async () => {
     setSaving(true);
     try {
@@ -213,7 +240,22 @@ export default function StoragePanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>对象存储</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>
-          支持 S3 兼容网关（含七牛 Kodo：endpoint 如 https://s3-cn-east-1.qiniucs.com，public_url 填 CDN 域名）。凭据仅后台可见且掩码，绝不进入公开站点配置。留空密钥 = 保留原值。未配时回退环境变量。
+          支持 S3 兼容网关（含七牛 Kodo：Endpoint 为 https://s3.&lt;区域&gt;.qiniucs.com，注意 s3 与区域之间是点）。凭据仅后台可见且掩码，绝不进入公开站点配置。留空密钥 = 保留原值。未配时回退环境变量。
+        </div>
+        <div style={{ marginTop: 12, padding: 12, borderRadius: 8, background: 'var(--surface-2)' }}>
+          <div style={{ fontWeight: 700, fontSize: 13 }}>七牛云 Kodo 快速配置</div>
+          <div className="faint" style={{ fontSize: 12, marginTop: 3, lineHeight: 1.65 }}>
+            选择空间所在区域后点「填入七牛标准配置」。Bucket 填空间概览里的「S3 空间名」（不一定等于空间显示名），
+            Public URL 填该空间的 CDN 加速域名；空间需设为公开读，七牛 S3 域名本身不支持匿名访问。
+          </div>
+          <div className="row gap-8" style={{ marginTop: 8, flexWrap: 'wrap' }}>
+            <select className="banana-inp" style={{ maxWidth: 220 }} value={qiniuRegion} onChange={(e) => setQiniuRegion(e.target.value)}>
+              {QINIU_REGIONS.map((r) => (
+                <option key={r.id} value={r.id}>{r.label}（{r.id}）</option>
+              ))}
+            </select>
+            <Button type="button" size="sm" variant="bordered" className="banana-btn-app" onClick={applyQiniuPreset}>填入七牛标准配置</Button>
+          </div>
         </div>
         <div className="sec-grid" style={{ marginTop: 14 }}>
           <label className="sec-field">
@@ -225,24 +267,24 @@ export default function StoragePanel() {
           </label>
           <label className="sec-field">
             <span className="sec-label">S3 Endpoint</span>
-            <Input className="banana-inp" value={cfg.s3_endpoint ?? ''} onChange={(e: any) => setK('s3_endpoint', e.target.value)} placeholder={envHint('endpoint', status?.endpoint) || 'https://s3-cn-east-1.qiniucs.com'} />
+            <Input className="banana-inp" value={cfg.s3_endpoint ?? ''} onChange={(e: any) => setK('s3_endpoint', e.target.value)} placeholder={envHint('endpoint', status?.endpoint) || 'https://s3.cn-east-1.qiniucs.com'} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Bucket</span>
+            <span className="sec-label">Bucket（七牛：S3 空间名）</span>
             <Input className="banana-inp" value={cfg.s3_bucket ?? ''} onChange={(e: any) => setK('s3_bucket', e.target.value)} placeholder={envHint('bucket', status?.bucket) || 'bananasns'} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Region</span>
+            <span className="sec-label">Region（七牛：cn-east-1）</span>
             <Input className="banana-inp" value={cfg.s3_region ?? ''} onChange={(e: any) => setK('s3_region', e.target.value)} placeholder={envHint('region', status?.region) || 'cn-east-1'} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Public URL（CDN）</span>
+            <span className="sec-label">Public URL（七牛：CDN 加速域名）</span>
             <Input className="banana-inp" value={cfg.s3_public_url ?? ''} onChange={(e: any) => setK('s3_public_url', e.target.value)} placeholder={envHint('publicUrl', status?.publicUrl) || 'https://cdn.example.com'} />
           </label>
           <label className="sec-field row gap-8" style={{ flexDirection: 'row', alignItems: 'center' }}>
             {/* 生效默认开（后端 env 未设时按 true）：仅显式 '0' 显示关；保存时未配置键不落库（undefined 不入 JSON），用户勾选后才是显式选择 */}
             <input type="checkbox" checked={cfg.s3_force_path_style !== '0'} onChange={(e) => setK('s3_force_path_style', e.target.checked ? '1' : '0')} />
-            <span className="sec-label" style={{ margin: 0 }}>Force path style（部分 MinIO 需要；七牛通常关）</span>
+            <span className="sec-label" style={{ margin: 0 }}>Force path style（七牛 / MinIO 建议开启）</span>
           </label>
           <label className="sec-field">
             <span className="sec-label">Access Key {secrets.s3_access_key ? '（已配置）' : ''}</span>

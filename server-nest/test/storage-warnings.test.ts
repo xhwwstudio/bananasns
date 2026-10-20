@@ -1,6 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import {
   storageConfigWarnings,
+  resolveStorageConfig,
   describeStorageError,
   describePublicReadResult,
 } from '../src/modules/storage/storage-config';
@@ -104,6 +105,61 @@ describe('storageConfigWarnings 配置缺陷预警', () => {
     expect(
       storageConfigWarnings(base, { S3_ACCESS_KEY: 'ak', S3_SECRET_KEY: 'sk' }),
     ).toEqual([]);
+  });
+
+  // 七牛 Kodo：官方 Endpoint 是 s3.<region>.qiniucs.com，旧教程常见的 s3-<region> 要能自动纠正
+  test('七牛旧写法 s3-<region> 自动归一为 s3.<region>，并按 Endpoint 推导 region', () => {
+    const cfg = resolveStorageConfig(
+      {
+        ...KEYS,
+        storage_driver: 's3',
+        s3_endpoint: 'https://s3-cn-east-1.qiniucs.com/',
+        s3_region: 'us-east-1',
+        s3_public_url: 'https://cdn.example.com',
+      },
+      {},
+    );
+    expect(cfg.endpoint).toBe('https://s3.cn-east-1.qiniucs.com');
+    expect(cfg.region).toBe('cn-east-1');
+    expect(storageConfigWarnings({ ...KEYS, storage_driver: 's3', s3_endpoint: cfg.endpoint, s3_public_url: 'https://cdn.example.com' }, {})).toEqual([]);
+  });
+
+  test('七牛填了配置但驱动仍是本地 → 明确预警不会进七牛', () => {
+    const w = storageConfigWarnings(
+      {
+        ...KEYS,
+        storage_driver: 'local',
+        s3_endpoint: 'https://s3.cn-east-1.qiniucs.com',
+        s3_public_url: 'https://cdn.example.com',
+      },
+      {},
+    );
+    expect(w.join()).toContain('不会进入七牛云');
+  });
+
+  test('七牛缺 CDN 域名 / Public URL 填成 S3 域名 → 专属预警', () => {
+    const base = {
+      ...KEYS,
+      storage_driver: 's3',
+      s3_endpoint: 'https://s3.cn-east-1.qiniucs.com',
+    };
+    expect(storageConfigWarnings(base, {}).join()).toContain('不支持匿名读取');
+    expect(
+      storageConfigWarnings({ ...base, s3_public_url: 'https://s3.cn-east-1.qiniucs.com' }, {}).join(),
+    ).toContain('CDN 加速域名');
+  });
+
+  test('七牛 Endpoint 缺少区域 → 提示标准格式', () => {
+    const w = storageConfigWarnings(
+      {
+        ...KEYS,
+        storage_driver: 's3',
+        s3_endpoint: 'https://s3.qiniucs.com',
+        s3_public_url: 'https://cdn.example.com',
+      },
+      {},
+    );
+    expect(w.join()).toContain('s3.<区域>.qiniucs.com');
   });
 });
 

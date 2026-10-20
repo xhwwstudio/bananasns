@@ -2,6 +2,13 @@
 
 > 本文件由 `npm run changelog:gen` 从 `client/src/pages/Changelog.tsx` 自动生成，请勿手动编辑。
 
+## v0.1.2 — 2026-10-20 14:32:44
+
+- **[新增]** 后台「存储」新增「七牛云 Kodo 快速配置」：选择空间所在区域后一键填入官方 Endpoint、Region 与 path-style；Bucket（S3 空间名）与 Public URL（CDN 加速域名）字段补充了七牛专属说明。
+- **[修复]** 修正七牛 S3 Endpoint 规则：官方是 https://s3.<区域>.qiniucs.com（s3 与区域之间是点），旧示例/教程里的 s3-<区域> 写法会失败；旧写法现在会自动纠正，并按 Endpoint 推导签名 Region，避免 SignatureDoesNotMatch。
+- **[改进]** 七牛上传兼容与防裂图：AWS SDK 的 CRC32 校验头改为仅在协议要求时发送，兼容七牛 S3 层；未配置 CDN 域名（或错填成 *.qiniucs.com）时上传直接返回 400，不再产生打不开的文件地址。上传仍统一走对象存储，不回退本地。
+- **[docs]** .env.example / INSTALL / CONFIGURATION 同步七牛标准配置与公开读要求。
+
 ## v0.1.1 — 2026-10-20 13:42:53
 
 - **[变更]** 项目正式更名为 BananaSNS（中文主题名「香蕉」），版本号重置为 0.1.1：界面文案、默认站点名、包名、Docker 镜像/容器/数据卷、数据库标识与文档统一改为新品牌；后续小版本按 0.0.1 递增。

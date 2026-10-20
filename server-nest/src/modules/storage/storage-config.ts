@@ -46,6 +46,50 @@ export function isSecretPlaceholder(val: unknown): boolean {
 }
 
 /**
+ * 七牛云 Kodo 的 S3 兼容区域与官方 Endpoint 规则（2026-09 官方文档）：
+ *   Endpoint = https://s3.<Region ID>.qiniucs.com   ← s3 与区域之间是「点」，不是横线
+ * 旧文档/教程里常见的 s3-cn-east-1 写法是错的，会导致 DNS/签名失败；resolveStorageConfig 会自动纠正。
+ */
+export const QINIU_REGIONS = [
+  { id: 'cn-east-1', label: '华东-浙江' },
+  { id: 'cn-east-2', label: '华东-浙江 2' },
+  { id: 'cn-north-1', label: '华北-河北' },
+  { id: 'cn-south-1', label: '华南-广东' },
+  { id: 'us-north-1', label: '北美-洛杉矶' },
+  { id: 'ap-southeast-1', label: '亚太-新加坡' },
+  { id: 'ap-southeast-2', label: '亚太-河内' },
+  { id: 'ap-southeast-3', label: '亚太-胡志明' },
+] as const;
+
+/** 是否为七牛 S3 兼容域名（含历史上错误的 s3-<region> 写法）。 */
+export function isQiniuEndpoint(endpoint: string | null | undefined): boolean {
+  return /(^|\.)qiniucs\.com$/i.test(String(endpoint || '').replace(/^https?:\/\//i, '').replace(/\/.*$/, ''));
+}
+
+/** 从七牛 Endpoint 提取区域；不是七牛 Endpoint 或缺少区域时返回 null。 */
+export function regionFromQiniuEndpoint(endpoint: string | null | undefined): string | null {
+  const m = /^https?:\/\/s3[.-]([a-z0-9-]+)\.qiniucs\.com\/?$/i.exec(String(endpoint || '').trim());
+  return m ? m[1].toLowerCase() : null;
+}
+
+/** 七牛标准 Endpoint（后台「七牛快速配置」用）。 */
+export function qiniuEndpointForRegion(region: string): string {
+  return `https://s3.${String(region || '').trim()}.qiniucs.com`;
+}
+
+/**
+ * 纠正七牛旧写法：s3-cn-east-1.qiniucs.com → s3.cn-east-1.qiniucs.com，并去掉结尾斜杠。
+ * 只处理 http(s) 且 host 完全匹配的七牛域名，不影响 AWS/MinIO 等其它 Endpoint。
+ */
+export function normalizeQiniuEndpoint(endpoint: string): string {
+  const s = String(endpoint || '').trim().replace(/\/+$/, '');
+  return s.replace(
+    /^(https?:\/\/)s3-([a-z0-9-]+)\.qiniucs\.com$/i,
+    '$1s3.$2.qiniucs.com',
+  );
+}
+
+/**
  * 从 site_config map + env 解析存储配置。
  * site 键优先；空串视为未配置 → 回退 env。
  */
@@ -61,10 +105,15 @@ export function resolveStorageConfig(
 
   const accessKey = pick('s3_access_key', env.S3_ACCESS_KEY, '');
   const secretKey = pick('s3_secret_key', env.S3_SECRET_KEY, '');
-  const endpoint = pick('s3_endpoint', env.S3_ENDPOINT, 'http://127.0.0.1:9000');
+  let endpoint = normalizeQiniuEndpoint(pick('s3_endpoint', env.S3_ENDPOINT, 'http://127.0.0.1:9000'));
   const bucket = pick('s3_bucket', env.S3_BUCKET, 'bananasns');
-  const region = pick('s3_region', env.S3_REGION, 'us-east-1');
+  let region = pick('s3_region', env.S3_REGION, 'us-east-1');
   const publicUrl = pick('s3_public_url', env.S3_PUBLIC_URL, '');
+
+  // 七牛：签名区域必须与 Endpoint 的 <region> 一致。以 Endpoint 为准推导 region，
+  // 避免站长只改 Endpoint、Region 还留着默认 us-east-1 → SignatureDoesNotMatch。
+  const qiniuRegion = regionFromQiniuEndpoint(endpoint);
+  if (qiniuRegion) region = qiniuRegion;
 
   let forcePathStyle: boolean;
   if (site.s3_force_path_style === '1' || site.s3_force_path_style === '0') {
@@ -102,6 +151,10 @@ export function resolveStorageConfig(
 export const WARN_NO_PUBLIC_URL =
   '未配置访问域名（Public URL）。七牛云等私有桶生成的文件地址无法公开访问，请填写 CDN 或桶绑定域名。';
 
+/** 七牛专属：S3 兼容域名不支持匿名读取，必须走 CDN 加速域名。 */
+export const WARN_QINIU_NO_PUBLIC_URL =
+  '七牛云 S3 访问域名不支持匿名读取：请在 Public URL 填写该空间的 CDN 加速域名（空间需设为公开读），否则上传成功但图片全部打不开。';
+
 /**
  * 配置缺陷预警（driver=s3 时的静默隐患），供后台「测试连接」展示。
  * 纯函数，无 I/O；入参与 resolveStorageConfig 相同，保证驱动判定口径一致。
@@ -111,11 +164,20 @@ export function storageConfigWarnings(
   env: StorageEnvLike = {},
 ): string[] {
   const cfg = resolveStorageConfig(site, env);
-  if (cfg.driver !== 's3') return [];
   const warnings: string[] = [];
-  const siteEndpoint = site.s3_endpoint;
+  const endpointConfigured = site.s3_endpoint || env.S3_ENDPOINT;
+  const qiniuConfigured = isQiniuEndpoint(endpointConfigured) || isQiniuEndpoint(cfg.endpoint);
+
+  if (cfg.driver !== 's3') {
+    // 已经填了七牛配置却仍是本地驱动：上传会静默落在磁盘，站长以为进了七牛。
+    if (qiniuConfigured) {
+      warnings.push('已填写七牛云对象存储配置，但当前存储驱动是「本地磁盘」，上传不会进入七牛云。请把驱动改为「S3 兼容」并保存。');
+    }
+    return warnings;
+  }
+
   const endpointSet =
-    (siteEndpoint != null && String(siteEndpoint).length > 0) || !!env.S3_ENDPOINT;
+    (site.s3_endpoint != null && String(site.s3_endpoint).length > 0) || !!env.S3_ENDPOINT;
   if (!endpointSet) {
     warnings.push('未配置 S3 Endpoint，正在使用默认地址 http://127.0.0.1:9000，仅供本地 MinIO 调试用。');
   } else if (!/^https?:\/\//i.test(cfg.endpoint)) {
@@ -124,13 +186,29 @@ export function storageConfigWarnings(
   } else if (/^https?:\/\/[^/]+\/./i.test(cfg.endpoint)) {
     warnings.push('S3 Endpoint 里带了路径，一般只填到域名为止，桶名请填到 Bucket 那一栏。');
   }
+
+  const qiniu = isQiniuEndpoint(cfg.endpoint);
+  if (qiniu) {
+    const region = regionFromQiniuEndpoint(cfg.endpoint);
+    if (!region) {
+      warnings.push('七牛 Endpoint 格式应为 https://s3.<区域>.qiniucs.com（注意是 s3.cn-east-1，不是 s3-cn-east-1）。');
+    } else if (!QINIU_REGIONS.some((r) => r.id === region)) {
+      warnings.push(`七牛区域「${region}」不在官方列表（cn-east-1 / cn-north-1 / cn-south-1 等），请核对空间所在区域。`);
+    }
+    if (!cfg.forcePathStyle) {
+      warnings.push('七牛建议开启 Force path style：虚拟主机风格需要桶域名证书支持，部分网络下会握手失败。');
+    }
+  }
+
   if (!cfg.accessKey || !cfg.secretKey) {
     warnings.push('已选对象存储，但 Access Key / Secret Key 没填全，上传会直接失败。');
   }
   if (!cfg.publicUrl) {
-    warnings.push(WARN_NO_PUBLIC_URL);
+    warnings.push(qiniu ? WARN_QINIU_NO_PUBLIC_URL : WARN_NO_PUBLIC_URL);
   } else if (!/^https?:\/\//i.test(cfg.publicUrl)) {
     warnings.push('访问域名（Public URL）没带 http:// 或 https://，拼出来的文件地址打不开。');
+  } else if (qiniu && /qiniucs\.com/i.test(cfg.publicUrl)) {
+    warnings.push('Public URL 填的是七牛 S3 API 域名（*.qiniucs.com），它需要签名、不能匿名访问；请改填该空间的 CDN 加速域名。');
   }
   return warnings;
 }
