@@ -27,6 +27,12 @@ const FB_STATUS: Record<string, { label: string; color: string }> = {
 
 const RELEASES = [
   {
+    ver: 'v0.1.3', date: '2026-10-20 15:03:23', items: [
+      ['fix', '修复后台左侧导航错位：导航项多于视口高度时，侧栏内容溢出到页面背景上（深色主题下表现为底部黑块、导航悬空）。侧栏改为内部纵向滚动，active 项在当前栏内滚到可见处，不再带动整个页面滚动。'],
+      ['improve', '后台移动端（≤820px）横向导航保持原有横滑，同时显式禁止纵向溢出，避免出现第二条滚动条。'],
+    ],
+  },
+  {
     ver: 'v0.1.2', date: '2026-10-20 14:32:44', items: [
       ['new', '后台「存储」新增「七牛云 Kodo 快速配置」：选择空间所在区域后一键填入官方 Endpoint、Region 与 path-style；Bucket（S3 空间名）与 Public URL（CDN 加速域名）字段补充了七牛专属说明。'],
       ['fix', '修正七牛 S3 Endpoint 规则：官方是 https://s3.<区域>.qiniucs.com（s3 与区域之间是点），旧示例/教程里的 s3-<区域> 写法会失败；旧写法现在会自动纠正，并按 Endpoint 推导签名 Region，避免 SignatureDoesNotMatch。'],
