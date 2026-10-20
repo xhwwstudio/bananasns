@@ -80,7 +80,7 @@ export default function About() {
         <p className="about-hero-sub">轻社交 · 轻论坛 · 轻社区 —— 一站式开源社区系统</p>
         <div className="row gap-10" style={{ justifyContent: 'center', marginTop: 26, flexWrap: 'wrap' }}>
           <Link to="/" className="banana-btn-app banana-btn-app--primary banana-btn-app--lg">立即体验</Link>
-          <a href="https://github.com/xhwwstudio/bananasecret" target="_blank" rel="noreferrer" className="banana-btn-app banana-btn-app--outline banana-btn-app--lg"><Icon name="book" size={16} /> 开源仓库</a>
+          <a href="https://github.com/xhwwstudio/bananasns" target="_blank" rel="noreferrer" className="banana-btn-app banana-btn-app--outline banana-btn-app--lg"><Icon name="book" size={16} /> 开源仓库</a>
         </div>
       </section>
 
@@ -162,8 +162,8 @@ export default function About() {
         <p>立即上手体验，或拉取开源代码，几步即可自行部署一套属于你的社区</p>
         <div className="row gap-10" style={{ justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
           <Link to="/" className="banana-btn-app banana-btn-app--lg about-cta-btn">立即体验</Link>
-          <a href="https://github.com/xhwwstudio/bananasecret#-快速开始" target="_blank" rel="noreferrer" className="banana-btn-app banana-btn-app--outline banana-btn-app--lg about-cta-ghost"><Icon name="grid" size={16} /> 免费部署教程</a>
-          <a href="https://github.com/xhwwstudio/bananasecret" target="_blank" rel="noreferrer" className="banana-btn-app banana-btn-app--outline banana-btn-app--lg about-cta-ghost"><Icon name="book" size={16} /> 查看源码</a>
+          <a href="https://github.com/xhwwstudio/bananasns#-快速开始" target="_blank" rel="noreferrer" className="banana-btn-app banana-btn-app--outline banana-btn-app--lg about-cta-ghost"><Icon name="grid" size={16} /> 免费部署教程</a>
+          <a href="https://github.com/xhwwstudio/bananasns" target="_blank" rel="noreferrer" className="banana-btn-app banana-btn-app--outline banana-btn-app--lg about-cta-ghost"><Icon name="book" size={16} /> 查看源码</a>
         </div>
       </section>
 

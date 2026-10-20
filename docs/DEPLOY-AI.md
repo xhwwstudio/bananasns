@@ -81,7 +81,7 @@ docker --version && docker compose version && git --version
 
 ```bash
 cd /opt        # 或 /www/wwwroot（宝塔）等
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns && cd bananasns
 ```
 ✅ `ls docker-compose.yml .env.example Dockerfile` 三个文件都在 → 通过。
 

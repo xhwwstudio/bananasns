@@ -11,7 +11,7 @@ import { buildDeployChecks, summarizeDeployChecks } from './deploy-check';
 
 const pexec = promisify(exec);
 
-const REPO = process.env.UPGRADE_REPO || 'xhwwstudio/bananasecret';
+const REPO = process.env.UPGRADE_REPO || 'xhwwstudio/bananasns';
 const BRANCH = process.env.UPGRADE_BRANCH || 'main';
 // 仓库根目录：默认取 server-nest 的上一级（git-clone 部署时即仓库根）。可用 REPO_DIR 覆盖。
 const REPO_DIR = process.env.REPO_DIR || join(process.cwd(), '..');

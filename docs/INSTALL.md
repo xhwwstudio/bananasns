@@ -49,7 +49,7 @@
 
 ```bash
 # 用 git 拉取（推荐）
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns
 cd bananasns
 
 # 或：上传 / 解压发布包到服务器某个目录，例如 /opt/bananasns

@@ -39,7 +39,7 @@ curl http://127.0.0.1:4000/api/health   # {"ok":true,"app":"BananaSNS"}
 
 ### 2. 构建
 ```bash
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns && cd bananasns
 npm run install:all          # 装 server-nest + client 依赖
 npm run build                # 构建前端(client/dist) + 编译后端(server-nest/dist)
 ```

@@ -19,7 +19,7 @@ BananaSNS 后端是 `server-nest`（NestJS + TypeORM + **MariaDB** + **Redis**�
 > 完全没碰过命令行也能装完。前提：一台服务器 + 已装宝塔面板。
 
 1. **装 Docker**：宝塔「软件商店」搜 `Docker` → 安装（会一并装好 Docker Compose）。
-2. **把代码放上去**：宝塔「文件」进到 `/www/wwwroot`，用「远程下载」拉发布包解压、或直接在「终端」里 `git clone https://github.com/xhwwstudio/bananasecret.git bananasns`，得到一个 `bananasns` 文件夹。
+2. **把代码放上去**：宝塔「文件」进到 `/www/wwwroot`，用「远程下载」拉发布包解压、或直接在「终端」里 `git clone https://github.com/xhwwstudio/bananasns.git bananasns`，得到一个 `bananasns` 文件夹。
 3. **填 2 个密码**：宝塔「文件」里打开 `bananasns/.env`，把 `JWT_SECRET` 和 `DB_PASSWORD` 各改成一长串随机字母数字（随便敲长一点、别人猜不到即可）。〔**大陆服务器**：再把 `NPM_REGISTRY=https://registry.npmmirror.com` 那行前面的 `#` 删掉。〕
 4. **一键起**：宝塔「Docker → 编排 → 创建编排」，目录选 `/www/wwwroot/bananasns`（里面有 `docker-compose.yml`），点构建并启动。等几分钟，浏览器访问 `你的服务器IP:4000` 就能看到站点。
 
@@ -40,7 +40,7 @@ BananaSNS 后端是 `server-nest`（NestJS + TypeORM + **MariaDB** + **Redis**�
 宝塔「终端」：
 ```bash
 cd /www/wwwroot
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns && cd bananasns
 cp .env.example .env
 # 编辑 .env：JWT_SECRET 和 DB_PASSWORD 都改成强随机串
 #   node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"

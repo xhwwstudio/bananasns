@@ -26,7 +26,7 @@
 
 ```bash
 cd /opt        # 放哪都行
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns && cd bananasns
 
 cp .env.example .env
 # 编辑 .env：JWT_SECRET 和 DB_PASSWORD 都改成强随机串（生成命令见下）

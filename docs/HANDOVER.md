@@ -176,7 +176,7 @@ Spinner / Tabs / Modal / 输入框 124 处 / 按钮 194 处；`.ui-spinner`、`.
 
 - `spec/LOOP-PROMPT.md` = 执行 agent 的完整工作指令（8 步流程 + 6 道质量门 + 红线 + 停止条件），
   直接投喂即可开循环；`spec/README.md` 优先级表是唯一选项来源（spec/ 本身 gitignored）。
-- 硬红线速记：仓库公开（github.com/xhwwstudio/bananasecret）；HeroUI 单轨；颜色一律语义 token
+- 硬红线速记：仓库公开（github.com/xhwwstudio/bananasns）；HeroUI 单轨；颜色一律语义 token
   （`client/src/styles/tokens.css`，6 皮肤 + 暗色）；文案规范见 `spec/02-copy-guide.md`；
   线上 `DB_SYNCHRONIZE=false`，**改表结构必须先停下向人类说明方案**（见 §5 迁移遗留）。
 - **`.admin-shell` 是固定浅色的 B 端主题**（`client/src/styles/pages.css`），刻意不随前台明暗。

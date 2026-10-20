@@ -22,7 +22,7 @@
 ## 二、获取代码与安装依赖
 
 ```bash
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns
 cd bananasns
 ```
 

@@ -162,7 +162,7 @@ BananaSNS 想解决的问题很简单：很多团队既想要「朋友圈式」�
 ### 方式 A：Docker 一键起全栈（推荐）
 
 ```bash
-git clone https://github.com/xhwwstudio/bananasecret.git bananasns && cd bananasns
+git clone https://github.com/xhwwstudio/bananasns.git bananasns && cd bananasns
 cp .env.example .env      # 填 JWT_SECRET、DB_PASSWORD（可选填 SEED_ADMIN_USER/SEED_ADMIN_PASSWORD 首启自动建管理员）
 docker compose up -d --build
 # → http://localhost:4000  （app + mariadb + redis 一并起好，app 首启自动建表）
