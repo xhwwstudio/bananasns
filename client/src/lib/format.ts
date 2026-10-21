@@ -97,6 +97,8 @@ export function parseBlocks(text = ''): RichBlock[] {
 
 export const VIS_LABELS: Record<string, { label: string; icon: string }> = {
   public: { label: '公开', icon: '🌐' },
+  followers: { label: '仅关注我', icon: '👥' },
+  login: { label: '登录用户可见', icon: '🔐' },
   private: { label: '私密', icon: '🔒' },
   password: { label: '密码', icon: '🔑' },
   paid: { label: '付费', icon: '💎' },

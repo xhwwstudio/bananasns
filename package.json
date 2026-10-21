@@ -1,6 +1,6 @@
 {
   "name": "bananasns",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "BananaSNS — 轻社交 · 轻论坛 · 轻社区, an original lightweight social-community platform (NestJS + React)",
   "engines": {

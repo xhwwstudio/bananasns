@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Block,
   Bookmark,
+  Follow,
   Like,
   Order,
   Poll,
@@ -30,6 +31,7 @@ import { SiteModule } from '../site/site.module';
       Like,
       Bookmark,
       Block,
+      Follow,
       Topic,
       TopicFollow,
       Purchase,

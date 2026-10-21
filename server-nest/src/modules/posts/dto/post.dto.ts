@@ -68,6 +68,17 @@ export class CreatePostDto {
   @IsString()
   device?: string;
 
+  // 信息来源（可选）：来源地址必须是 http(s) URL；原作者最长 100。
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  sourceUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  sourceAuthor?: string;
+
   @IsOptional()
   @IsString()
   topic?: string;
@@ -98,6 +109,16 @@ export class UpdatePostDto {
 
   @IsOptional()
   price?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  sourceUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  sourceAuthor?: string;
 }
 
 export class VoteDto {

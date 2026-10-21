@@ -151,15 +151,15 @@ Feed, single posts, polls, likes, shares, paid/password unlock, rewards, pins, b
 ### `GET /api/posts`
 Paginated feed. **Auth:** Public (personalized when authed).
 - Query: `filter` (`all` default, `following`, `video`, `samecity`, `recommend`), `limit` (1–30, default 12), `offset`.
-- Response: `{ posts: [...], hasMore }`. Blocked users are filtered out.
+- Response: `{ posts: [...], hasMore }`. Blocked users are filtered out. Visibility is enforced per viewer: guests never see `private` / `followers` / `login`; logged-in users see `login`, while `followers` is limited to the author and users who follow the author.
 
 ### `GET /api/posts/:id`
 Single post (increments view count). **Auth:** Public.
-- Response: `{ post }`. Private post not owned → `403`; missing → `404`.
+- Response: `{ post }`. Not visible → `403` (private / followers-only / login-only); missing → `404`.
 
 ### `GET /api/posts/:id/related`
 Related posts (same topic, then same author). **Auth:** Public.
-- Response: `{ posts: [...] }` (up to 5).
+- Response: `{ posts: [...] }` (up to 5), filtered by the same visibility rules.
 
 ### `GET /api/posts/:id/siblings`
 Previous/next post by the same author (timeline nav). **Auth:** Public.
@@ -167,8 +167,8 @@ Previous/next post by the same author (timeline nav). **Auth:** Public.
 
 ### `POST /api/posts`
 Create a post. **Auth:** Auth.
-- Body: `content`, `media` (array), `mediaType` (`text`/`image`/`video`, default `text`), `visibility` (`public`/`paid`/`password`/`private`/`anonymous`), `password` (for password posts), `price` (for paid posts), `location`, `device` (default `电脑端`), `topic` (name; also parsed from `#...#` in content), `circleId` (must be a circle the user joined), `poll` (`{ options: [], multi, days }`; 2–6 options).
-- Response: `{ post }`.
+- Body: `content`, `media` (array), `mediaType` (`text`/`image`/`video`, default `text`), `visibility` (`public`/`followers`/`login`/`paid`/`password`/`private`/`anonymous`), `password` (for password posts), `price` (for paid posts), `location`, `device` (default `电脑端`), `topic` (name; also parsed from `#...#` in content), `circleId` (must be a circle the user joined), `poll` (`{ options: [], multi, days }`; 2–6 options), `sourceUrl` (optional, `http(s)://`), `sourceAuthor` (optional, requires `sourceUrl`).
+- Response: `{ post }`; a source is returned as `source: { url, author }` or `null`.
 
 ### `POST /api/posts/:id/vote`
 Vote on the post's attached poll. **Auth:** Auth.

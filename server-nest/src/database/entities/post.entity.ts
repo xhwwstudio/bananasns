@@ -42,6 +42,13 @@ export class Post {
   @Column({ type: 'varchar', length: 16, default: '电脑端' })
   device: string;
 
+  // 信息来源（可选）：「来自 原作者」展示，链接到 source_url，新窗口打开。
+  @Column({ name: 'source_url', type: 'varchar', length: 500, default: '' })
+  source_url: string;
+
+  @Column({ name: 'source_author', type: 'varchar', length: 100, default: '' })
+  source_author: string;
+
   @Column({ name: 'topic_id', type: 'int', nullable: true })
   topic_id: number | null;
 

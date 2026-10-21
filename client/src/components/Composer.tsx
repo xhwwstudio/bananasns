@@ -5,6 +5,7 @@ import PollEditor from './composer/PollEditor';
 import RedPacketEditor from './composer/RedPacketEditor';
 import EmojiPanel from './composer/EmojiPanel';
 import AdvancedFields from './composer/AdvancedFields';
+import SourceEditor from './composer/SourceEditor';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useSite } from '../context/SiteContext';
@@ -44,6 +45,7 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
   const [location, setLocation] = useState(() => initialDraft?.location ?? user?.location ?? '');
   const [showLoc, setShowLoc] = useState(() => !!initialDraft?.location);
   const [poll, setPoll] = useState<any>(() => initialDraft?.poll ?? null); // { options: [], multi, days }
+  const [source, setSource] = useState<any>(() => initialDraft?.source ?? null); // { url, author } — 信息来源
   const [redPacket, setRedPacket] = useState<any>(null); // { points, count, blessing } — 不持久化（含积分，避免误恢复）
   const [draftRestored, setDraftRestored] = useState(() => !prefill && hasDraft());
   const [savedHint, setSavedHint] = useState(false);
@@ -53,9 +55,9 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
 
   // persist a structured draft so an unsent post (文本+图片+投票+可见性+位置) survives navigation / reload (防误触丢失)
   useEffect(() => {
-    setSavedHint(saveDraft({ content, media, vis, poll, location }));
-  }, [content, media, vis, poll, location]);
-  const clearDraft = () => { clearDraftStore(); setContent(''); setMedia([]); setPoll(null); setVis('public'); setDraftRestored(false); setSavedHint(false); };
+    setSavedHint(saveDraft({ content, media, vis, poll, location, source }));
+  }, [content, media, vis, poll, location, source]);
+  const clearDraft = () => { clearDraftStore(); setContent(''); setMedia([]); setPoll(null); setSource(null); setVis('public'); setDraftRestored(false); setSavedHint(false); };
 
   if (!user) {
     return (
@@ -100,6 +102,12 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
       if (pts < cnt) return toast.err(`${cnt} 个红包至少需要 ${cnt} 积分`);
       if ((user?.points || 0) < pts) return toast.err('积分不足，发不出这么大的红包');
     }
+    if (source) {
+      const url = String(source.url || '').trim();
+      const author = String(source.author || '').trim();
+      if (url && !/^https?:\/\//i.test(url)) return toast.err('来源地址需以 http:// 或 https:// 开头');
+      if (!url && author) return toast.err('填写原作者时请同时填写来源地址');
+    }
     if (!content.trim() && !media.length && !pollOpts && !redPacket) return toast.err('说点什么或添加图片吧');
     setBusy(true);
     try {
@@ -109,11 +117,13 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
         price: vis === 'paid' ? Math.min(Number(price) || 0, paidPriceMax) : 0,
         password: vis === 'password' ? password : '',
         location: location.trim(), device,
+        sourceUrl: source?.url?.trim() || undefined,
+        sourceAuthor: source?.author?.trim() || undefined,
         ...(circleId ? { circleId } : {}),
         ...(pollOpts ? { poll: { options: pollOpts, multi: poll.multi, days: poll.days } } : {}),
         ...(redPacket ? { redPacket: { points: Number(redPacket.points) || 0, count: Number(redPacket.count) || 0, blessing: redPacket.blessing } } : {}),
       });
-      setContent(''); setMedia([]); setVis('public'); setFocused(false); setShowLoc(false); setPoll(null); setRedPacket(null);
+      setContent(''); setMedia([]); setVis('public'); setFocused(false); setShowLoc(false); setPoll(null); setSource(null); setRedPacket(null);
       clearDraftStore(); setDraftRestored(false);
       if (taRef.current) taRef.current.style.height = 'auto';
       toast.ok('发布成功 🎉');
@@ -160,13 +170,14 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
         </div>
       </div>
 
-      {(focused || content || media.length > 0 || poll || redPacket) && (
+      {(focused || content || media.length > 0 || poll || redPacket || source) && (
         <>
           <AdvancedFields vis={vis} price={price} onPriceChange={setPrice} paidPriceMax={paidPriceMax}
             password={password} onPasswordChange={setPassword}
             showLoc={showLoc} location={location} onLocationChange={setLocation}
             onLocationClear={() => { setLocation(''); setShowLoc(false); }} />
           {poll && <PollEditor value={poll} onChange={setPoll} />}
+          {source && <SourceEditor value={source} onChange={setSource} />}
           {redPacket && <RedPacketEditor value={redPacket} onChange={setRedPacket} userPoints={user?.points ?? 0} />}
           <div className="composer-bar">
             <button className="tool" onClick={() => fileRef.current?.click()} title="图片"><Icon name="image" size={19} /></button>
@@ -180,6 +191,8 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
               {showEmoji && <EmojiPanel onPick={insertEmoji} />}
             </div>
             <button className={`tool${showLoc && location ? ' on' : ''}`} onClick={() => setShowLoc((s) => !s)} title="所在位置" style={showLoc && location ? { color: 'var(--brand)' } : undefined}><Icon name="location" size={19} /></button>
+            <button className={`tool${source ? ' on' : ''}`} title="信息来源" style={source ? { color: 'var(--brand)' } : undefined}
+              onClick={() => setSource((s: any) => s ? null : { url: '', author: '' })}><Icon name="link" size={19} /></button>
             <select className="vis-select" value={vis} onChange={(e) => setVis(e.target.value)} title="可见范围">
               {Object.entries(VIS_LABELS).map(([k, v]) => (
                 <option key={k} value={k}>{(v as any).label}</option>

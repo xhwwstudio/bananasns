@@ -33,6 +33,16 @@ export default function AdvancedFields({ vis, price, onPriceChange, paidPriceMax
             className="banana-inp banana-inp-sm" style={{ width: 170 }} />
         </div>
       )}
+      {vis === 'followers' && (
+        <div className="faint" style={{ marginTop: 10, fontSize: 12.5, lineHeight: 1.6 }}>
+          <Icon name="users" size={14} style={{ color: 'var(--brand)', verticalAlign: -2 }} /> 仅关注你的登录用户可见（你自己始终可见）
+        </div>
+      )}
+      {vis === 'login' && (
+        <div className="faint" style={{ marginTop: 10, fontSize: 12.5, lineHeight: 1.6 }}>
+          <Icon name="lock" size={14} style={{ color: 'var(--brand)', verticalAlign: -2 }} /> 登录用户可见，游客在信息流中看不到这条
+        </div>
+      )}
       {showLoc && (
         <div className="row gap-8" style={{ marginTop: 10, fontSize: 13 }}>
           <Icon name="location" size={15} style={{ color: 'var(--brand)' }} />

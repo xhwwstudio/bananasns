@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import {
   Article,
   Comment,
+  Follow,
   Like,
   Post,
   Thread,
@@ -16,6 +17,7 @@ import {
   User,
 } from '../../database/entities';
 import { HelpersService } from '../../common/helpers.service';
+import { canViewPost } from '../../common/post-visibility';
 import { checkSensitive } from '../../common/sensitive';
 import { CreateCommentDto } from './dto/comment.dto';
 
@@ -29,6 +31,7 @@ export class CommentsService {
   constructor(
     @InjectRepository(Comment) private readonly comments: Repository<Comment>,
     @InjectRepository(Like) private readonly likes: Repository<Like>,
+    @InjectRepository(Follow) private readonly follows: Repository<Follow>,
     @InjectRepository(Post) private readonly posts: Repository<Post>,
     @InjectRepository(Thread) private readonly threads: Repository<Thread>,
     @InjectRepository(ThreadSub)
@@ -37,6 +40,20 @@ export class CommentsService {
     @InjectRepository(User) private readonly users: Repository<User>,
     private readonly helpers: HelpersService,
   ) {}
+
+  /** 评论列表/发评论前校验目标动态的可见范围（私密/仅关注/登录可见）。 */
+  private async assertPostVisible(postId: number, viewerId: number | null): Promise<void> {
+    const post = await this.posts.findOne({ where: { id: postId }, select: ['id', 'user_id', 'visibility'] });
+    if (!post) throw new NotFoundException('动态不存在');
+    let follows = false;
+    if (post.visibility === 'followers' && viewerId && viewerId !== post.user_id) {
+      follows = !!(await this.follows.findOne({
+        where: { follower_id: viewerId, following_id: post.user_id },
+      }));
+    }
+    if (!canViewPost({ visibility: post.visibility, authorId: post.user_id, viewerId, viewerFollowsAuthor: follows }))
+      throw new ForbiddenException('无权查看或评论这条动态');
+  }
 
   private async reactionCounts(id: number): Promise<Record<string, number> | null> {
     const rows = await this.likes.query(
@@ -89,6 +106,7 @@ export class CommentsService {
     const viewerId = viewer?.id || null;
     const id = postId || threadId || articleId;
     if (!id) throw new BadRequestException('缺少目标');
+    if (postId) await this.assertPostVisible(Number(postId), viewerId);
     const where = postId
       ? { post_id: Number(postId) }
       : threadId
@@ -134,6 +152,7 @@ export class CommentsService {
     if (!text) throw new BadRequestException('评论内容不能为空');
     if (!postId && !threadId && !articleId)
       throw new BadRequestException('缺少目标');
+    if (postId) await this.assertPostVisible(Number(postId), user.id);
     if (checkSensitive(text))
       throw new BadRequestException('评论包含敏感信息，请修改后重试');
 

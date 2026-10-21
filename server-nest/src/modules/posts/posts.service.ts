@@ -10,6 +10,7 @@ import { DataSource, Repository } from 'typeorm';
 import {
   Block,
   Bookmark,
+  Follow,
   Like,
   Order,
   Poll,
@@ -27,6 +28,7 @@ import {
 } from '../../database/entities';
 import { HelpersService } from '../../common/helpers.service';
 import { RateLimitService } from '../../common/rate-limit.service';
+import { canViewPost, visibilityWhere } from '../../common/post-visibility';
 import { SiteService } from '../site/site.service';
 import { checkSensitive } from '../../common/sensitive';
 import {
@@ -56,6 +58,7 @@ export class PostsService {
     @InjectRepository(Bookmark)
     private readonly bookmarks: Repository<Bookmark>,
     @InjectRepository(Block) private readonly blocks: Repository<Block>,
+    @InjectRepository(Follow) private readonly follows: Repository<Follow>,
     @InjectRepository(Topic) private readonly topics: Repository<Topic>,
     @InjectRepository(TopicFollow)
     private readonly topicFollows: Repository<TopicFollow>,
@@ -192,6 +195,17 @@ export class PostsService {
     viewerId: number | null,
     { deep = true }: { deep?: boolean } = {},
   ): Promise<any | null> {
+    // 可见范围先判：私密 / 仅关注我 / 登录用户可见。不可见直接 null，避免继续查作者等造成信息泄露。
+    let viewerFollowsAuthor = false;
+    if (row.visibility === 'followers' && viewerId && viewerId !== row.user_id) {
+      viewerFollowsAuthor = !!(await this.follows.findOne({
+        where: { follower_id: viewerId, following_id: row.user_id },
+      }));
+    }
+    if (!canViewPost({ visibility: row.visibility, authorId: row.user_id, viewerId, viewerFollowsAuthor })) {
+      return null;
+    }
+
     const author = await this.helpers.getUser(row.user_id);
     const anon = row.visibility === 'anonymous';
     const isOwner = viewerId === row.user_id;
@@ -209,9 +223,6 @@ export class PostsService {
     if (row.visibility === 'password' && !isOwner) {
       locked = { type: 'password' };
       unlocked = false;
-    }
-    if (row.visibility === 'private' && !isOwner) {
-      return null;
     }
 
     let shared = null;
@@ -244,6 +255,9 @@ export class PostsService {
       price: row.price,
       location: row.location,
       device: row.device,
+      source: row.source_url || row.source_author
+        ? { url: row.source_url || '', author: row.source_author || '' }
+        : null,
       views: row.views,
       likeCount: row.like_count,
       commentCount: row.comment_count,
@@ -302,16 +316,18 @@ export class PostsService {
     // 否则 TypeORM 会再补默认 ASC，生成 `... END) DESC ASC` 在 MySQL 上语法报错(整个 feed 挂)。
     const gp = `(CASE WHEN p.global_pin_until > :now THEN 1 ELSE 0 END)`;
     const now = this.helpers.nowSql();
+    // 可见范围：游客排除 login/followers；登录用户允许 login，followers 需关注关系。
+    const vis = visibilityWhere(viewerId);
     let qb = repo
       .createQueryBuilder('p')
-      .where("p.visibility != 'private'");
+      .where(vis.sql, vis.params);
 
     switch (filter) {
       case 'following': {
         if (!viewerId) return null;
         qb = repo
           .createQueryBuilder('p')
-          .where("p.visibility != 'private'")
+          .where(vis.sql, vis.params)
           .andWhere(
             'p.user_id IN (SELECT following_id FROM follows WHERE follower_id = :viewerId)',
             { viewerId },
@@ -394,10 +410,20 @@ export class PostsService {
   async findOne(id: number, viewer: User | null) {
     const row = await this.posts.findOne({ where: { id } });
     if (!row) throw new NotFoundException('动态不存在');
+    const post = await this.serializePost(row, viewer?.id || null);
+    if (!post) {
+      const msg =
+        row.visibility === 'private'
+          ? '这是一条私密动态'
+          : row.visibility === 'followers'
+            ? '仅关注作者的用户可见'
+            : row.visibility === 'login'
+              ? '请先登录后查看'
+              : '无权查看这条动态';
+      throw new ForbiddenException(msg);
+    }
     await this.posts.increment({ id: row.id }, 'views', 1);
     row.views += 1;
-    const post = await this.serializePost(row, viewer?.id || null);
-    if (!post) throw new ForbiddenException('这是一条私密动态');
     return { post };
   }
 
@@ -405,12 +431,13 @@ export class PostsService {
   async related(id: number, viewer: User | null) {
     const row = await this.posts.findOne({ where: { id } });
     if (!row) return { posts: [] };
+    const vis = visibilityWhere(viewer?.id || null);
     let rows: Post[] = [];
     if (row.topic_id) {
       rows = await this.posts
         .createQueryBuilder('p')
         .where('p.topic_id = :tid AND p.id != :id', { tid: row.topic_id, id })
-        .andWhere("p.visibility IN ('public','paid','password')")
+        .andWhere(vis.sql, vis.params)
         .orderBy('(p.like_count * 3 + p.comment_count * 2)', 'DESC')
         .limit(6)
         .getMany();
@@ -419,7 +446,7 @@ export class PostsService {
       const more = await this.posts
         .createQueryBuilder('p')
         .where('p.user_id = :uid AND p.id != :id', { uid: row.user_id, id })
-        .andWhere("p.visibility IN ('public','paid','password')")
+        .andWhere(vis.sql, vis.params)
         .orderBy('p.created_at', 'DESC')
         .limit(6)
         .getMany();
@@ -482,13 +509,25 @@ export class PostsService {
     let content = (dto.content || '').trim();
     const media = dto.media || [];
     const mediaType = dto.mediaType || 'text';
-    const visibility = dto.visibility || 'public';
+    const visibility = ['public', 'private', 'password', 'paid', 'anonymous', 'followers', 'login'].includes(
+      dto.visibility || '',
+    )
+      ? (dto.visibility as string)
+      : 'public';
     const password = dto.password || '';
     // 付费内容价格上限（后台 paid_price_max，默认 100000），超出即钳制
     const priceMax = Number(await this.site.getConfig('paid_price_max', '100000')) || 100000;
     const price = clampPrice(dto.price, priceMax);
     const location = dto.location || '';
     const device = dto.device || '电脑端';
+    const sourceUrl = (dto.sourceUrl || '').trim();
+    const sourceAuthor = (dto.sourceAuthor || '').trim().slice(0, 100);
+    if (sourceUrl && !/^https?:\/\//i.test(sourceUrl))
+      throw new BadRequestException('来源地址需以 http:// 或 https:// 开头');
+    if (!sourceUrl && sourceAuthor)
+      throw new BadRequestException('填写原作者时请同时填写来源地址');
+    if (sourceAuthor && checkSensitive(sourceAuthor))
+      throw new BadRequestException('原作者包含敏感信息，请修改后重试');
     const poll = dto.poll;
 
     // validate poll up front (2-6 non-empty options)
@@ -577,6 +616,8 @@ export class PostsService {
         price: Number(price) || 0,
         location,
         device,
+        source_url: sourceUrl,
+        source_author: sourceAuthor,
         topic_id: topicId,
         circle_id: circleId2,
         created_at: this.helpers.nowSql(),
@@ -757,6 +798,16 @@ export class PostsService {
 
   // ---- POST /api/posts/:id/vote ----
   async vote(id: number, user: User, dto: VoteDto) {
+    const post = await this.posts.findOne({ where: { id } });
+    if (!post) throw new NotFoundException('动态不存在');
+    let follows = false;
+    if (post.visibility === 'followers' && post.user_id !== user.id) {
+      follows = !!(await this.follows.findOne({
+        where: { follower_id: user.id, following_id: post.user_id },
+      }));
+    }
+    if (!canViewPost({ visibility: post.visibility, authorId: post.user_id, viewerId: user.id, viewerFollowsAuthor: follows }))
+      throw new ForbiddenException('无权参与这条动态的投票');
     const poll = await this.polls.findOne({ where: { post_id: id } });
     if (!poll) throw new NotFoundException('该动态没有投票');
     if (poll.deadline && poll.deadline <= this.helpers.nowSql())
@@ -801,6 +852,14 @@ export class PostsService {
   async share(id: number, user: User, dto: ShareDto) {
     const src = await this.posts.findOne({ where: { id } });
     if (!src) throw new NotFoundException('动态不存在');
+    let follows = false;
+    if (src.visibility === 'followers' && src.user_id !== user.id) {
+      follows = !!(await this.follows.findOne({
+        where: { follower_id: user.id, following_id: src.user_id },
+      }));
+    }
+    if (!canViewPost({ visibility: src.visibility, authorId: src.user_id, viewerId: user.id, viewerFollowsAuthor: follows }))
+      throw new ForbiddenException('无权转发这条动态');
     const content = (dto.content || '').trim();
     const saved = await this.posts.save(
       this.posts.create({
@@ -989,8 +1048,23 @@ export class PostsService {
     const patch: Partial<Post> = { edited: 1 };
     if (dto.content != null) patch.content = dto.content;
     if (dto.media != null) patch.media = JSON.stringify(dto.media);
-    if (dto.visibility != null) patch.visibility = dto.visibility;
+    if (dto.visibility != null) {
+      if (!['public', 'private', 'password', 'paid', 'anonymous', 'followers', 'login'].includes(dto.visibility))
+        throw new BadRequestException('可见范围无效');
+      patch.visibility = dto.visibility;
+    }
     if (dto.price !== undefined) patch.price = Number(dto.price) || 0;
+    if (dto.sourceUrl !== undefined || dto.sourceAuthor !== undefined) {
+      const u = (dto.sourceUrl !== undefined ? dto.sourceUrl : row.source_url || '').trim();
+      const a = (dto.sourceAuthor !== undefined ? dto.sourceAuthor : row.source_author || '').trim().slice(0, 100);
+      if (u && !/^https?:\/\//i.test(u))
+        throw new BadRequestException('来源地址需以 http:// 或 https:// 开头');
+      if (!u && a) throw new BadRequestException('填写原作者时请同时填写来源地址');
+      if (a && checkSensitive(a))
+        throw new BadRequestException('原作者包含敏感信息，请修改后重试');
+      patch.source_url = u;
+      patch.source_author = a;
+    }
     await this.posts.update({ id: row.id }, patch);
     const fresh = await this.posts.findOne({ where: { id: row.id } });
     return { post: await this.serializePost(fresh!, user.id) };
@@ -1087,16 +1161,25 @@ export class PostsService {
     if (!u) throw new NotFoundException('用户不存在');
     const limit = Math.min(30, Math.max(1, Number(rawLimit) || 20));
     const offset = Math.max(0, Number(rawOffset) || 0);
+    const viewerId = viewer?.id || null;
     // 多取一条判断是否还有下一页（个人主页帖子分页）
-    const rows = await this.posts.find({
-      where: { user_id: u.id },
-      order: { pinned: 'DESC', created_at: 'DESC' },
-      take: limit + 1,
-      skip: offset,
-    });
+    const qb = this.posts
+      .createQueryBuilder('p')
+      .where('p.user_id = :uid', { uid: u.id });
+    // 作者本人看自己的全部；其他人按可见范围过滤（私密/仅关注/登录可见）
+    if (viewerId !== u.id) {
+      const vis = visibilityWhere(viewerId);
+      qb.andWhere(vis.sql, vis.params);
+    }
+    const rows = await qb
+      .orderBy('p.pinned', 'DESC')
+      .addOrderBy('p.created_at', 'DESC')
+      .take(limit + 1)
+      .skip(offset)
+      .getMany();
     const hasMore = rows.length > limit;
     const page = hasMore ? rows.slice(0, limit) : rows;
-    return { posts: await this.serializeMany(page, viewer?.id || null), hasMore };
+    return { posts: await this.serializeMany(page, viewerId), hasMore };
   }
 
   // ---- GET /api/posts/liked/:username ----
@@ -1105,6 +1188,7 @@ export class PostsService {
     if (!u) throw new NotFoundException('用户不存在');
     const limit = Math.min(30, Math.max(1, Number(rawLimit) || 20));
     const offset = Math.max(0, Number(rawOffset) || 0);
+    const vis = visibilityWhere(viewer?.id || null);
     const rows: Post[] = await this.posts
       .createQueryBuilder('p')
       .innerJoin(
@@ -1113,7 +1197,8 @@ export class PostsService {
         "l.target_id = p.id AND l.target_type = 'post'",
       )
       .where('l.user_id = :uid', { uid: u.id })
-      .andWhere("p.visibility NOT IN ('private','anonymous')")
+      .andWhere("p.visibility <> 'anonymous'")
+      .andWhere(vis.sql, vis.params)
       .orderBy('l.created_at', 'DESC')
       .limit(limit + 1)
       .offset(offset)
@@ -1127,10 +1212,12 @@ export class PostsService {
   async bookmarkedPosts(user: User, rawLimit?: any, rawOffset?: any) {
     const limit = Math.min(30, Math.max(1, Number(rawLimit) || 20));
     const offset = Math.max(0, Number(rawOffset) || 0);
+    const vis = visibilityWhere(user.id);
     const rows: Post[] = await this.posts
       .createQueryBuilder('p')
       .innerJoin(Bookmark, 'b', 'b.post_id = p.id')
       .where('b.user_id = :uid', { uid: user.id })
+      .andWhere(vis.sql, vis.params)
       .orderBy('b.created_at', 'DESC')
       .limit(limit + 1)
       .offset(offset)

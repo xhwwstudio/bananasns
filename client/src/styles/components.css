@@ -129,6 +129,11 @@
 .post-context { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12.5px; color: var(--ink-4); }
 .post-context .pc { display: inline-flex; align-items: center; gap: 3px; }
 
+/* 信息来源：来自 原作者（链接新窗口打开） */
+.post-source { display: flex; align-items: center; gap: 4px; margin-top: 8px; font-size: 12.5px; color: var(--ink-4); }
+.post-source a { color: var(--brand); font-weight: 600; border-bottom: 1px dashed color-mix(in srgb, var(--brand) 45%, transparent); }
+.post-source a:hover { border-bottom-style: solid; }
+
 /* action bar */
 .post-actions { display: flex; align-items: center; margin-top: 6px; }
 .act {

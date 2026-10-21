@@ -4,6 +4,7 @@ import { Like as TypeOrmLike, Repository } from 'typeorm';
 import { Post, Thread, Topic, User } from '../../database/entities';
 import { HelpersService } from '../../common/helpers.service';
 import { PostsService } from '../posts/posts.service';
+import { visibilityWhere } from '../../common/post-visibility';
 
 /**
  * Ported from server/src/routes/search.js. Trending keywords and a global
@@ -43,10 +44,11 @@ export class SearchService {
       .where('u.nickname LIKE :like OR u.username LIKE :like', { like })
       .limit(10)
       .getMany();
+    const vis = visibilityWhere(viewerId);
     const postRows = await this.posts
       .createQueryBuilder('p')
       .where('p.content LIKE :like', { like })
-      .andWhere("p.visibility IN ('public','paid','password')")
+      .andWhere(vis.sql, vis.params)
       .orderBy('p.created_at', 'DESC')
       .limit(20)
       .getMany();

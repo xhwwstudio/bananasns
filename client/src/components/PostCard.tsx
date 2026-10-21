@@ -30,6 +30,10 @@ import { reportDialog } from './report';
 import { timeAgo, fmtNum, VIS_LABELS } from '../lib/format';
 
 const FOLD_LEN = 220;
+/** 来源没有填原作者时，用域名作为可点击文字（比裸 URL 清爽）。 */
+function sourceHost(url: string): string {
+  try { return new URL(url).hostname.replace(/^www\./i, ''); } catch { return url; }
+}
 
 function emojiBio(bio: any) {
   if (bio?.startsWith('emoji:')) return '';
@@ -273,6 +277,21 @@ export default function PostCard({ post: initial, onDelete, defaultOpenComments 
         <div className="post-context">
           {post.location && <span className="pc"><Icon name="location" size={13} /> {post.location}</span>}
           {post.views > 0 && <span className="pc"><Icon name="eye" size={13} /> {fmtNum(post.views)} 浏览</span>}
+        </div>
+      )}
+
+      {/* 信息来源：来自 原作者 → 新窗口打开来源地址 */}
+      {(post.source?.url || post.source?.author) && (
+        <div className="post-source">
+          <Icon name="link" size={13} />
+          <span>来自 </span>
+          {post.source.url ? (
+            <a href={post.source.url} target="_blank" rel="noopener noreferrer">
+              {post.source.author || sourceHost(post.source.url)}
+            </a>
+          ) : (
+            <span>{post.source.author}</span>
+          )}
         </div>
       )}
 

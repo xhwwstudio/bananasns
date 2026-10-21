@@ -12,13 +12,14 @@ export interface Draft {
   vis?: string;
   poll?: any;
   location?: string;
+  source?: { url: string; author: string };
 }
 
 const BASE_KEY = 'banana_draft';
 const keyOf = (key?: string) => (key ? `${BASE_KEY}_${key}` : BASE_KEY);
 
 function nonEmpty(d: Draft | null): boolean {
-  return !!(d && (d.content?.trim() || d.title?.trim() || (d.media && d.media.length) || d.poll));
+  return !!(d && (d.content?.trim() || d.title?.trim() || (d.media && d.media.length) || d.poll || d.source?.url || d.source?.author));
 }
 
 export function loadDraft(key?: string): Draft | null {

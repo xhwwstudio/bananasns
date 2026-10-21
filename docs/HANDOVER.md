@@ -1,4 +1,4 @@
-# BananaSNS 迭代交接手册（2026-10-20 · v0.1.3）
+# BananaSNS 迭代交接手册（2026-10-20 · v0.1.4）
 
 > 写给下一位接手迭代的人（人类或 agent）。本手册只含可操作事实；凭据一律不在册，
 > 部署脚本（`deploy-nest.sh` / `deploy-sns.sh`，均 gitignored、内含 SSH 凭据）在仓库根。
@@ -10,11 +10,11 @@
 
 | 项 | 值 |
 |---|---|
-| 线上版本 | **v0.1.3**（唯一版本源：`client/src/version.ts`；后续按 0.0.1 递增） |
+| 线上版本 | **v0.1.4**（唯一版本源：`client/src/version.ts`；后续按 0.0.1 递增） |
 | 环境 | 以实际部署环境为准（Docker Compose / systemd，见 `docs/DEPLOY.md`） |
 | 环境变量在哪 | 按部署方式写入 `server-nest/.env` / systemd `EnvironmentFile` / compose `env_file` |
 | 代码形态 | React 19 + HeroUI v3 前端；NestJS + MariaDB + Redis 后端（`server-nest/`） |
-| 测试基线 | `cd server-nest && npx vitest run` → **31 文件 / 295 用例全绿**（只增不减） |
+| 测试基线 | `cd server-nest && npx vitest run` → **32 文件 / 302 用例全绿**（只增不减） |
 | 主分支 | `main`，两环境部署均以其为准；env2 靠 `git pull` 取码 |
 
 **健康自查**：`curl --noproxy '*' -fsS <环境>/api/health` 应返回 `{"ok":true}`；
