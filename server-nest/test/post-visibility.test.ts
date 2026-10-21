@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { canViewPost, visibilityWhere } from '../src/common/post-visibility';
+import { canViewPost, visibilityWhere, feedVisibilityWhere } from '../src/common/post-visibility';
 
 describe('canViewPost 动态可见范围', () => {
   const base = { visibility: 'public', authorId: 1, viewerId: null as number | null };
@@ -48,5 +48,13 @@ describe('visibilityWhere 列表 SQL 条件', () => {
     expect(w.sql).toContain("p.visibility <> 'private'");
     expect(w.sql).toContain('following_id');
     expect(w.params).toEqual({ viewerId: 7 });
+  });
+
+  test('信息流游客：保留 login 做登录引导 teaser，仍排除 private/followers', () => {
+    const w = feedVisibilityWhere(null);
+    expect(w.sql).toBe("p.visibility NOT IN ('private','followers')");
+    expect(w.params).toEqual({});
+    // 登录用户的信息流条件与普通列表一致
+    expect(feedVisibilityWhere(7)).toEqual(visibilityWhere(7));
   });
 });

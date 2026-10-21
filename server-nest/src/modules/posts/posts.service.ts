@@ -28,7 +28,7 @@ import {
 } from '../../database/entities';
 import { HelpersService } from '../../common/helpers.service';
 import { RateLimitService } from '../../common/rate-limit.service';
-import { canViewPost, visibilityWhere } from '../../common/post-visibility';
+import { canViewPost, visibilityWhere, feedVisibilityWhere } from '../../common/post-visibility';
 import { SiteService } from '../site/site.service';
 import { checkSensitive } from '../../common/sensitive';
 import {
@@ -203,7 +203,8 @@ export class PostsService {
       }));
     }
     if (!canViewPost({ visibility: row.visibility, authorId: row.user_id, viewerId, viewerFollowsAuthor })) {
-      return null;
+      // 游客看「登录用户可见」：不返回 null，而是降级为 teaser（正文/媒体锁定），用于引导登录。
+      if (row.visibility !== 'login' || viewerId != null) return null;
     }
 
     const author = await this.helpers.getUser(row.user_id);
@@ -224,10 +225,17 @@ export class PostsService {
       locked = { type: 'password' };
       unlocked = false;
     }
+    // 游客看「登录用户可见」：帖子出现在信息流里，但正文/媒体/投票/来源全部锁住，
+    // 只保留作者与计数，前端展示「此条动态仅登录可见」+ 登录按钮。
+    const loginLocked = row.visibility === 'login' && viewerId == null;
+    if (loginLocked) {
+      unlocked = false;
+      locked = { type: 'login' };
+    }
 
     let shared = null;
     let sharedDeleted = false; // 转发帖：原帖已被删（share_of 还在但取不到源）→ 前端显「原动态已删除」占位而非凭空少一块
-    if (row.share_of && deep) {
+    if (row.share_of && deep && !loginLocked) {
       const src = await this.posts.findOne({ where: { id: row.share_of } });
       if (src) shared = await this.serializePost(src, viewerId, { deep: false });
       else sharedDeleted = true;
@@ -248,14 +256,14 @@ export class PostsService {
 
     return {
       id: row.id,
-      content: unlocked ? row.content : (row.content || '').slice(0, 40),
-      media: unlocked ? JSON.parse(row.media || '[]') : [],
+      content: loginLocked ? '' : unlocked ? row.content : (row.content || '').slice(0, 40),
+      media: loginLocked ? [] : unlocked ? JSON.parse(row.media || '[]') : [],
       mediaType: row.media_type,
       visibility: row.visibility,
       price: row.price,
       location: row.location,
       device: row.device,
-      source: row.source_url || row.source_author
+      source: !loginLocked && (row.source_url || row.source_author)
         ? { url: row.source_url || '', author: row.source_author || '' }
         : null,
       views: row.views,
@@ -316,8 +324,9 @@ export class PostsService {
     // 否则 TypeORM 会再补默认 ASC，生成 `... END) DESC ASC` 在 MySQL 上语法报错(整个 feed 挂)。
     const gp = `(CASE WHEN p.global_pin_until > :now THEN 1 ELSE 0 END)`;
     const now = this.helpers.nowSql();
-    // 可见范围：游客排除 login/followers；登录用户允许 login，followers 需关注关系。
-    const vis = visibilityWhere(viewerId);
+    // 信息流：游客也展示「登录用户可见」的帖子，但只给 teaser（内容在 serializePost 里锁住），
+    // 用来引导登录/注册；私密与仅关注仍然直接排除。
+    const vis = feedVisibilityWhere(viewerId);
     let qb = repo
       .createQueryBuilder('p')
       .where(vis.sql, vis.params);

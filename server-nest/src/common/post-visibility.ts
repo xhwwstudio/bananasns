@@ -54,3 +54,17 @@ export function visibilityWhere(viewerId: number | null): { sql: string; params:
     params: { viewerId },
   };
 }
+
+/**
+ * 信息流专用：游客也保留 login 帖子（serializePost 会把它降级成「仅登录可见」teaser），
+ * 用来引导注册/登录；private 与 followers 仍然完全排除。
+ */
+export function feedVisibilityWhere(viewerId: number | null): { sql: string; params: Record<string, any> } {
+  if (viewerId == null) {
+    return {
+      sql: "p.visibility NOT IN ('private','followers')",
+      params: {},
+    };
+  }
+  return visibilityWhere(viewerId);
+}

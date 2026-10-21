@@ -249,7 +249,12 @@ export default function PostCard({ post: initial, onDelete, defaultOpenComments 
       {post.locked ? (
         <div className="locked-box">
           <div className="lk-ico"><Icon name={post.locked.type === 'paid' ? 'coin' : 'lock'} size={22} /></div>
-          {post.locked.type === 'paid' ? (
+          {post.locked.type === 'login' ? (
+            <>
+              <div className="lk-text">此条动态仅登录可见</div>
+              <Button size="sm" color="primary" className="banana-btn-app" onClick={() => setAuthOpen(true)}>登录 / 注册</Button>
+            </>
+          ) : post.locked.type === 'paid' ? (
             <>
               <div className="lk-text">这是付费内容，{post.locked.price} 积分解锁查看</div>
               <Button size="sm" color="primary" className="banana-btn-app" onClick={unlock}>支付 {post.locked.price} 积分解锁</Button>
@@ -298,7 +303,7 @@ export default function PostCard({ post: initial, onDelete, defaultOpenComments 
       <div className="divider" style={{ margin: '14px 0 4px' }} />
       <div className="post-actions">
         <Reactions id={post.id} initialReaction={post.myReaction ?? (liked ? 'like' : null)} initialCount={likeCount} initialReactions={post.reactions} />
-        <button className="act act-comment" onClick={() => setShowComments((s: boolean) => !s)}>
+        <button className="act act-comment" onClick={() => { if (post.locked?.type === 'login') return setAuthOpen(true); setShowComments((s: boolean) => !s); }}>
           <Icon name="comment" size={18} className="ico" /> {commentCount > 0 ? fmtNum(commentCount) : '评论'}
         </button>
         <button className="act share" onClick={() => (requireLogin() ? null : setShareOpen(true))}>

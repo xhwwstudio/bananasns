@@ -151,7 +151,7 @@ Feed, single posts, polls, likes, shares, paid/password unlock, rewards, pins, b
 ### `GET /api/posts`
 Paginated feed. **Auth:** Public (personalized when authed).
 - Query: `filter` (`all` default, `following`, `video`, `samecity`, `recommend`), `limit` (1–30, default 12), `offset`.
-- Response: `{ posts: [...], hasMore }`. Blocked users are filtered out. Visibility is enforced per viewer: guests never see `private` / `followers` / `login`; logged-in users see `login`, while `followers` is limited to the author and users who follow the author.
+- Response: `{ posts: [...], hasMore }`. Blocked users are filtered out. Visibility is enforced per viewer: guests never see `private` / `followers`; `login` posts appear in the guest feed as a **locked teaser** (`content: ''`, `locked: { type: 'login' }`) that prompts sign-in. Logged-in users see `login` content; `followers` is limited to the author and users who follow the author.
 
 ### `GET /api/posts/:id`
 Single post (increments view count). **Auth:** Public.
