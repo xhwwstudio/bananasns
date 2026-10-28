@@ -285,6 +285,7 @@ export class StorageService implements OnModuleInit {
    */
   async status(): Promise<{
     driver: 'local' | 's3';
+    provider: 'generic' | 'qiniu' | 'tencent' | 'aliyun' | 'aws';
     sources: StorageSourceMap;
     endpoint: string;
     bucket: string;
@@ -313,6 +314,7 @@ export class StorageService implements OnModuleInit {
         : { referenced: local.names.length, orphans: 0, scanned: true };
     return {
       driver: cfg.driver,
+      provider: cfg.provider,
       sources,
       endpoint: cfg.endpoint,
       bucket: cfg.bucket,

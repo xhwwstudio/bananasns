@@ -19,25 +19,25 @@ const S3_CFG = {
 };
 
 describe('StorageService 配置缓存', () => {
-  test('TTL 内多次 refresh 只读一次库（8 键），force 绕过缓存', async () => {
+  test('TTL 内多次 refresh 只读一次库（9 键），force 绕过缓存', async () => {
     const { svc, getConfig } = makeService(S3_CFG);
     await svc.refreshFromSite();
-    expect(getConfig.mock.calls.length).toBe(8); // storage_driver + 7 个 s3_*
+    expect(getConfig.mock.calls.length).toBe(9); // storage_driver + storage_provider + 7 个 s3_*
     // TTL 内再刷两次 → 命中缓存，无新的 DB 读
     await svc.refreshFromSite();
     await svc.refreshFromSite();
-    expect(getConfig.mock.calls.length).toBe(8);
+    expect(getConfig.mock.calls.length).toBe(9);
     // force=true → 强制重读
     await svc.refreshFromSite(true);
-    expect(getConfig.mock.calls.length).toBe(16);
+    expect(getConfig.mock.calls.length).toBe(18);
   });
 
   test('一次 uploadMany（多文件）不再每文件都读库', async () => {
     const { svc, getConfig } = makeService(S3_CFG);
     // 预热一次（模拟 upload 前的 refresh），随后同批 8 个文件各自 refresh 都应命中缓存
     await svc.refreshFromSite();
-    const base = getConfig.mock.calls.length; // 8
+    const base = getConfig.mock.calls.length; // 9
     for (let i = 0; i < 8; i++) await svc.refreshFromSite();
-    expect(getConfig.mock.calls.length).toBe(base); // 仍是 8，未随文件数线性增长
+    expect(getConfig.mock.calls.length).toBe(base); // 仍是 9，未随文件数线性增长
   });
 });

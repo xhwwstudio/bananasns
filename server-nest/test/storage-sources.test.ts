@@ -12,6 +12,7 @@ describe('resolveStorageSources 配置来源判定', () => {
     const s = resolveStorageSources({}, {});
     expect(s).toEqual({
       driver: 'default',
+      provider: 'default',
       endpoint: 'default',
       bucket: 'default',
       region: 'default',
@@ -83,6 +84,7 @@ describe('resolveStorageSources 配置来源判定', () => {
 describe('STORAGE_SITE_KEYS 覆盖全部可后台配置项', () => {
   const FULL_SITE: Record<string, string> = {
     storage_driver: 's3',
+    storage_provider: 'tencent',
     s3_endpoint: 'https://site.example.com',
     s3_bucket: 'site-bucket',
     s3_region: 'site-region',

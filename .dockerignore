@@ -8,3 +8,7 @@ server/uploads
 **/*.db
 **/*.db-wal
 **/*.db-shm
+
+# 本地密钥目录：绝不进入构建上下文/镜像
+KEY/
+key/

@@ -87,12 +87,14 @@ FLUSH PRIVILEGES;
 
 不配置就默认存本地磁盘（`UPLOADS_DIR`），部署阶段可以先跳过这一节。要把上传媒体放到 S3 兼容存储（AWS S3、MinIO、七牛 Kodo、阿里云 OSS、腾讯云 COS 等），先建好 Bucket 与访问密钥，然后二选一：
 
-- **后台配置（推荐，不用重启）**：站点跑起来后进「管理后台 → 系统 → 存储」，填 Endpoint / Bucket / Region / Access Key / Secret Key，再填 **Public URL**（CDN 或桶绑定域名——私有桶不填这项，图片地址打不开），点「测试连接」验证。保存即时生效。
+- **后台配置（推荐，不用重启）**：站点跑起来后进「管理后台 → 系统 → 存储」，在「对象存储服务商」选择腾讯云 COS / 阿里云 OSS / 七牛云 Kodo / AWS S3 / 通用 S3，再选区域、点「填入标准配置」，补全 Bucket、密钥和 **Public URL**（CDN 或桶绑定域名——私有桶不填这项，图片地址打不开），点「测试连接」验证。保存即时生效。
 - **环境变量**：注入 `STORAGE_DRIVER=s3` 与一组 `S3_*`（见下一节），适合用 `.env` 统一管理配置的场景。
 
 两者可以混用：**后台填了的字段优先，留空的沿用环境变量**。后台「存储」页顶部的「当前生效」会逐项标出每个值来自后台还是环境变量，并给出一个示例文件地址，便于核对。
 
-> **七牛云 Kodo 标准配置**：Endpoint 用 `https://s3.<区域>.qiniucs.com`（例如 `https://s3.cn-east-1.qiniucs.com`，注意 s3 与区域之间是**点**，不是横线），Region 填同一区域（`cn-east-1` 等），Bucket 填空间概览里的 **S3 空间名**（不一定等于空间显示名），Public URL 填该空间的 **CDN 加速域名**（空间需设为公开读），Force path style 保持开启。七牛 S3 域名不支持匿名访问，未填 CDN 域名时上传会被直接拒绝；后台「存储 → 七牛云 Kodo 快速配置」可一键填入标准值。
+> **腾讯云 COS 标准配置**：服务商选「腾讯云 COS」，Endpoint 为 `https://cos.<地域>.myqcloud.com`（如 `https://cos.ap-guangzhou.myqcloud.com`），Region 填同一地域（`ap-guangzhou` 等），Bucket 必须填**带 APPID 后缀的完整存储桶名**（如 `uploads-1250000000`，不是只填 `uploads`），Force path style 保持关闭。Public URL 填该桶的 **CDN 加速域名**或 `https://<bucket>.cos.<region>.myqcloud.com`；存储桶需设为**公有读**，否则私有桶的图片地址需要签名、站内会裂图。
+>
+> **其他服务商**：阿里云 OSS 用 `https://s3.oss-<地域>.aliyuncs.com`（如 `https://s3.oss-cn-hangzhou.aliyuncs.com`）；七牛 Kodo 用 `https://s3.<区域>.qiniucs.com`（注意 s3 与区域之间是**点**，不是横线），Bucket 填空间概览里的 **S3 空间名**，Public URL 必须是 CDN 域名，Force path style 保持开启；AWS S3 用 `https://s3.<region>.amazonaws.com`。后台选择服务商后会自动填入对应 Endpoint 与 path-style，也可以手动改。
 
 「测试连接」跑的是三步：**写入探针文件 → 按公开地址回读 → 删除**，三步都过才算通过。只有写入通过、回读失败时会报「部分通过」——这一步专门用来抓私有桶、CDN 没绑对这类「后台看着正常、发帖全是裂图」的情况。连接失败会直接说该改哪个字段（桶不存在、密钥无效、签名不匹配、Region 不对、域名解析不了……），原始报错附在括号里备查。
 

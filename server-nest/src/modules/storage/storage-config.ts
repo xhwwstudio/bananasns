@@ -5,8 +5,38 @@
 
 export type StorageDriver = 'local' | 's3';
 
+/**
+ * 对象存储服务商：决定后台字段提示、Endpoint 规则与默认 path-style。
+ * 实际传输仍统一走 S3 兼容协议（腾讯 COS / 阿里 OSS / 七牛 / AWS 都提供 S3 兼容入口）。
+ */
+export type StorageProvider = 'generic' | 'qiniu' | 'tencent' | 'aliyun' | 'aws';
+
+export const STORAGE_PROVIDERS: { id: StorageProvider; label: string }[] = [
+  { id: 'tencent', label: '腾讯云 COS' },
+  { id: 'aliyun', label: '阿里云 OSS' },
+  { id: 'qiniu', label: '七牛云 Kodo' },
+  { id: 'aws', label: 'AWS S3' },
+  { id: 'generic', label: 'S3 兼容 / MinIO / 其他' },
+];
+
+export function normalizeStorageProvider(v: unknown): StorageProvider | null {
+  const s = String(v || '').trim().toLowerCase();
+  return STORAGE_PROVIDERS.some((p) => p.id === s) ? (s as StorageProvider) : null;
+}
+
+export function inferStorageProvider(endpoint: string | null | undefined): StorageProvider {
+  const host = String(endpoint || '').replace(/^https?:\/\//i, '').replace(/\/.*$/, '').toLowerCase();
+  if (!host) return 'generic';
+  if (host.endsWith('.qiniucs.com')) return 'qiniu';
+  if (host.endsWith('.myqcloud.com')) return 'tencent';
+  if (host.endsWith('.aliyuncs.com')) return 'aliyun';
+  if (/(^|\.)amazonaws\.com(\.cn)?$/.test(host)) return 'aws';
+  return 'generic';
+}
+
 export interface StorageResolvedConfig {
   driver: StorageDriver;
+  provider: StorageProvider;
   endpoint: string;
   bucket: string;
   region: string;
@@ -32,7 +62,7 @@ export interface StorageEnvLike {
  * 避免各自维护一份列表后漂移（漏一个键就会出现「清了还生效」的幽灵配置）。
  */
 export const STORAGE_SITE_KEYS = [
-  'storage_driver', 's3_endpoint', 's3_bucket', 's3_region',
+  'storage_driver', 'storage_provider', 's3_endpoint', 's3_bucket', 's3_region',
   's3_public_url', 's3_force_path_style', 's3_access_key', 's3_secret_key',
 ] as const;
 
@@ -89,6 +119,57 @@ export function normalizeQiniuEndpoint(endpoint: string): string {
   );
 }
 
+/** 各服务商标准 S3 兼容 Endpoint（区域 ID 由后台选择）。 */
+export function providerEndpoint(provider: StorageProvider, region: string): string {
+  const r = String(region || '').trim();
+  switch (provider) {
+    case 'qiniu':
+      return qiniuEndpointForRegion(r);
+    case 'tencent':
+      return `https://cos.${r}.myqcloud.com`;
+    case 'aliyun':
+      return `https://s3.oss-${r}.aliyuncs.com`;
+    case 'aws':
+      return r.startsWith('cn-')
+        ? `https://s3.${r}.amazonaws.com.cn`
+        : `https://s3.${r}.amazonaws.com`;
+    default:
+      return '';
+  }
+}
+
+/** 从服务商 Endpoint 反推区域；用于「只改 Endpoint、Region 忘了改」时自动纠正签名区域。 */
+export function regionFromProviderEndpoint(
+  provider: StorageProvider,
+  endpoint: string | null | undefined,
+): string | null {
+  const s = String(endpoint || '').trim();
+  let m: RegExpExecArray | null = null;
+  switch (provider) {
+    case 'qiniu':
+      return regionFromQiniuEndpoint(s);
+    case 'tencent':
+      m = /^https?:\/\/cos\.([a-z0-9-]+)\.myqcloud\.com\/?$/i.exec(s);
+      break;
+    case 'aliyun':
+      m = /^https?:\/\/s3\.oss-([a-z0-9-]+)(?:-internal)?\.aliyuncs\.com\/?$/i.exec(s);
+      break;
+    case 'aws':
+      m = /^https?:\/\/s3(?:[.-]([a-z0-9-]+))?\.amazonaws\.com(?:\.cn)?\/?$/i.exec(s);
+      if (m) return (m[1] || 'us-east-1').toLowerCase();
+      break;
+    default:
+      return null;
+  }
+  return m ? m[1].toLowerCase() : null;
+}
+
+/** 统一去尾斜杠；七牛额外纠正旧的 s3-<region> 写法。 */
+export function normalizeProviderEndpoint(provider: StorageProvider, endpoint: string): string {
+  const s = String(endpoint || '').trim().replace(/\/+$/, '');
+  return provider === 'qiniu' ? normalizeQiniuEndpoint(s) : s;
+}
+
 /**
  * 从 site_config map + env 解析存储配置。
  * site 键优先；空串视为未配置 → 回退 env。
@@ -105,21 +186,29 @@ export function resolveStorageConfig(
 
   const accessKey = pick('s3_access_key', env.S3_ACCESS_KEY, '');
   const secretKey = pick('s3_secret_key', env.S3_SECRET_KEY, '');
-  let endpoint = normalizeQiniuEndpoint(pick('s3_endpoint', env.S3_ENDPOINT, 'http://127.0.0.1:9000'));
   const bucket = pick('s3_bucket', env.S3_BUCKET, 'bananasns');
   let region = pick('s3_region', env.S3_REGION, 'us-east-1');
   const publicUrl = pick('s3_public_url', env.S3_PUBLIC_URL, '');
 
-  // 七牛：签名区域必须与 Endpoint 的 <region> 一致。以 Endpoint 为准推导 region，
-  // 避免站长只改 Endpoint、Region 还留着默认 us-east-1 → SignatureDoesNotMatch。
-  const qiniuRegion = regionFromQiniuEndpoint(endpoint);
-  if (qiniuRegion) region = qiniuRegion;
+  // 服务商：后台显式选择 > 从 Endpoint 推断（兼容老配置）。
+  const rawEndpoint = pick('s3_endpoint', env.S3_ENDPOINT, '');
+  const provider = normalizeStorageProvider(site.storage_provider) || inferStorageProvider(rawEndpoint);
+  let endpoint = rawEndpoint;
+  if (!endpoint && provider !== 'generic') endpoint = providerEndpoint(provider, region);
+  endpoint = normalizeProviderEndpoint(provider, endpoint);
+  // Endpoint 里的区域优先于表单 Region，避免「只改 Endpoint、Region 没改」导致签名失败。
+  const derivedRegion = regionFromProviderEndpoint(provider, endpoint);
+  if (derivedRegion) region = derivedRegion;
+  if (!endpoint) endpoint = 'http://127.0.0.1:9000';
 
   let forcePathStyle: boolean;
   if (site.s3_force_path_style === '1' || site.s3_force_path_style === '0') {
     forcePathStyle = site.s3_force_path_style === '1';
+  } else if (env.S3_FORCE_PATH_STYLE != null && env.S3_FORCE_PATH_STYLE !== '') {
+    forcePathStyle = env.S3_FORCE_PATH_STYLE === 'true';
   } else {
-    forcePathStyle = (env.S3_FORCE_PATH_STYLE || 'true') === 'true';
+    // 腾讯 COS / 阿里 OSS / AWS 默认 virtual-hosted；七牛与通用/ MinIO 默认 path-style。
+    forcePathStyle = !['tencent', 'aliyun', 'aws'].includes(provider);
   }
 
   let driver: StorageDriver;
@@ -134,6 +223,7 @@ export function resolveStorageConfig(
 
   return {
     driver,
+    provider,
     endpoint,
     bucket,
     region,
@@ -166,12 +256,13 @@ export function storageConfigWarnings(
   const cfg = resolveStorageConfig(site, env);
   const warnings: string[] = [];
   const endpointConfigured = site.s3_endpoint || env.S3_ENDPOINT;
-  const qiniuConfigured = isQiniuEndpoint(endpointConfigured) || isQiniuEndpoint(cfg.endpoint);
+  const providerConfigured = !!normalizeStorageProvider(site.storage_provider);
+  const providerLabel = STORAGE_PROVIDERS.find((p) => p.id === cfg.provider)?.label || '对象存储';
 
   if (cfg.driver !== 's3') {
-    // 已经填了七牛配置却仍是本地驱动：上传会静默落在磁盘，站长以为进了七牛。
-    if (qiniuConfigured) {
-      warnings.push('已填写七牛云对象存储配置，但当前存储驱动是「本地磁盘」，上传不会进入七牛云。请把驱动改为「S3 兼容」并保存。');
+    // 已经填了对象存储配置却仍是本地驱动：上传会静默落在磁盘，站长以为进了云。
+    if (providerConfigured || endpointConfigured) {
+      warnings.push(`已填写${providerLabel}配置，但当前存储驱动是「本地磁盘」，上传不会进入对象存储。请把驱动改为「S3 兼容」并保存。`);
     }
     return warnings;
   }
@@ -179,7 +270,9 @@ export function storageConfigWarnings(
   const endpointSet =
     (site.s3_endpoint != null && String(site.s3_endpoint).length > 0) || !!env.S3_ENDPOINT;
   if (!endpointSet) {
-    warnings.push('未配置 S3 Endpoint，正在使用默认地址 http://127.0.0.1:9000，仅供本地 MinIO 调试用。');
+    if (cfg.provider === 'generic') {
+      warnings.push('未配置 S3 Endpoint，正在使用默认地址 http://127.0.0.1:9000，仅供本地 MinIO 调试用。');
+    }
   } else if (!/^https?:\/\//i.test(cfg.endpoint)) {
     // 从控制台复制地址时最常见的两种手滑：漏掉协议头、把桶名一起粘进来
     warnings.push('S3 Endpoint 没带 http:// 或 https://，连接会直接失败。');
@@ -187,9 +280,9 @@ export function storageConfigWarnings(
     warnings.push('S3 Endpoint 里带了路径，一般只填到域名为止，桶名请填到 Bucket 那一栏。');
   }
 
-  const qiniu = isQiniuEndpoint(cfg.endpoint);
+  const qiniu = cfg.provider === 'qiniu';
   if (qiniu) {
-    const region = regionFromQiniuEndpoint(cfg.endpoint);
+    const region = regionFromProviderEndpoint('qiniu', cfg.endpoint);
     if (!region) {
       warnings.push('七牛 Endpoint 格式应为 https://s3.<区域>.qiniucs.com（注意是 s3.cn-east-1，不是 s3-cn-east-1）。');
     } else if (!QINIU_REGIONS.some((r) => r.id === region)) {
@@ -200,11 +293,42 @@ export function storageConfigWarnings(
     }
   }
 
+  if (cfg.provider === 'tencent') {
+    if (!regionFromProviderEndpoint('tencent', cfg.endpoint)) {
+      warnings.push('腾讯云 COS Endpoint 格式应为 https://cos.<地域>.myqcloud.com，例如 https://cos.ap-guangzhou.myqcloud.com。');
+    }
+    if (!/-\d{5,}$/.test(cfg.bucket)) {
+      warnings.push('腾讯云 COS 的 Bucket 必须带 APPID 后缀（如 uploads-1250000000），只填存储桶名称会报 NoSuchBucket。');
+    }
+    if (cfg.forcePathStyle) {
+      warnings.push('腾讯云 COS 使用虚拟主机风格，请关闭 Force path style（否则会 404 / 签名失败）。');
+    }
+  }
+
+  if (cfg.provider === 'aliyun') {
+    if (!regionFromProviderEndpoint('aliyun', cfg.endpoint)) {
+      warnings.push('阿里云 OSS Endpoint 格式应为 https://s3.oss-<地域>.aliyuncs.com，例如 https://s3.oss-cn-hangzhou.aliyuncs.com。');
+    }
+  }
+
+  if (cfg.provider === 'aws') {
+    if (!regionFromProviderEndpoint('aws', cfg.endpoint)) {
+      warnings.push('AWS S3 Endpoint 格式应为 https://s3.<region>.amazonaws.com（中国区为 amazonaws.com.cn）。');
+    }
+  }
+
   if (!cfg.accessKey || !cfg.secretKey) {
     warnings.push('已选对象存储，但 Access Key / Secret Key 没填全，上传会直接失败。');
   }
   if (!cfg.publicUrl) {
-    warnings.push(qiniu ? WARN_QINIU_NO_PUBLIC_URL : WARN_NO_PUBLIC_URL);
+    if (qiniu) warnings.push(WARN_QINIU_NO_PUBLIC_URL);
+    else if (cfg.provider === 'tencent')
+      warnings.push('腾讯云 COS 私有桶的文件地址需要签名：请填写该存储桶的 CDN 加速域名或默认访问域名，并把存储桶设为公有读，否则图片打不开。');
+    else if (cfg.provider === 'aliyun')
+      warnings.push('阿里云 OSS 私有桶的文件地址需要签名：请填写该 Bucket 的 CDN 域名或默认访问域名，并把 Bucket 设为公共读，否则图片打不开。');
+    else if (cfg.provider === 'aws')
+      warnings.push('未配置 Public URL：AWS S3 默认域名直链要求对象/桶允许公开读；如有 CDN 请填写 CDN 域名。');
+    else warnings.push(WARN_NO_PUBLIC_URL);
   } else if (!/^https?:\/\//i.test(cfg.publicUrl)) {
     warnings.push('访问域名（Public URL）没带 http:// 或 https://，拼出来的文件地址打不开。');
   } else if (qiniu && /qiniucs\.com/i.test(cfg.publicUrl)) {
@@ -276,6 +400,7 @@ export type StorageConfigSource = 'site' | 'env' | 'default';
 
 export interface StorageSourceMap {
   driver: StorageConfigSource;
+  provider: StorageConfigSource;
   endpoint: StorageConfigSource;
   bucket: StorageConfigSource;
   region: StorageConfigSource;
@@ -313,6 +438,7 @@ export function resolveStorageSources(
 
   return {
     driver,
+    provider: pick('storage_provider', undefined),
     endpoint: pick('s3_endpoint', env.S3_ENDPOINT),
     bucket: pick('s3_bucket', env.S3_BUCKET),
     region: pick('s3_region', env.S3_REGION),
@@ -326,7 +452,7 @@ export function resolveStorageSources(
 /** 配置指纹：变化时重建 S3Client */
 export function storageConfigHash(c: StorageResolvedConfig): string {
   return [
-    c.driver, c.endpoint, c.bucket, c.region, c.publicUrl,
+    c.driver, c.provider, c.endpoint, c.bucket, c.region, c.publicUrl,
     c.forcePathStyle ? '1' : '0', c.accessKey, c.secretKey,
   ].join('|');
 }

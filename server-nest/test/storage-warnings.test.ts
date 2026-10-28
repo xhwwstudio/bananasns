@@ -134,7 +134,72 @@ describe('storageConfigWarnings 配置缺陷预警', () => {
       },
       {},
     );
-    expect(w.join()).toContain('不会进入七牛云');
+    expect(w.join()).toContain('不会进入对象存储');
+  });
+
+  test('腾讯云 COS 标准配置 → 无预警；Bucket 缺 APPID / Endpoint 不标准 → 预警', () => {
+    const base = {
+      ...KEYS,
+      storage_driver: 's3',
+      storage_provider: 'tencent',
+      s3_endpoint: 'https://cos.ap-guangzhou.myqcloud.com',
+      s3_bucket: 'uploads-1250000000',
+      s3_public_url: 'https://cdn.example.com',
+    };
+    expect(storageConfigWarnings(base, {})).toEqual([]);
+    const cfg = resolveStorageConfig(base, {});
+    expect(cfg.region).toBe('ap-guangzhou');
+    expect(cfg.forcePathStyle).toBe(false);
+
+    expect(storageConfigWarnings({ ...base, s3_bucket: 'uploads' }, {}).join()).toContain('APPID');
+    expect(
+      storageConfigWarnings({ ...base, s3_endpoint: 'https://cos.ap-guangzhou.myqcloud.com/' }, {}),
+    ).toEqual([]);
+    expect(
+      storageConfigWarnings({ ...base, s3_endpoint: 'https://s3.example.com' }, {}).join(),
+    ).toContain('cos.<地域>.myqcloud.com');
+  });
+
+  test('阿里云 OSS 标准配置 → 无预警，Endpoint 自动映射区域', () => {
+    const base = {
+      ...KEYS,
+      storage_driver: 's3',
+      storage_provider: 'aliyun',
+      s3_endpoint: 'https://s3.oss-cn-hangzhou.aliyuncs.com',
+      s3_bucket: 'bananasns',
+      s3_public_url: 'https://cdn.example.com',
+    };
+    expect(storageConfigWarnings(base, {})).toEqual([]);
+    const cfg = resolveStorageConfig(base, {});
+    expect(cfg.region).toBe('cn-hangzhou');
+    expect(cfg.forcePathStyle).toBe(false);
+    expect(
+      storageConfigWarnings({ ...base, s3_endpoint: 'https://oss-cn-hangzhou.aliyuncs.com' }, {}).join(),
+    ).toContain('s3.oss-<地域>.aliyuncs.com');
+  });
+
+  test('未显式选服务商时按 Endpoint 自动识别，并套用各家的 path-style 默认值', () => {
+    const tencent = resolveStorageConfig({ s3_endpoint: 'https://cos.ap-shanghai.myqcloud.com', s3_region: 'us-east-1' }, {});
+    expect(tencent.provider).toBe('tencent');
+    expect(tencent.region).toBe('ap-shanghai');
+    expect(tencent.forcePathStyle).toBe(false);
+
+    const aliyun = resolveStorageConfig({ s3_endpoint: 'https://s3.oss-cn-beijing.aliyuncs.com' }, {});
+    expect(aliyun.provider).toBe('aliyun');
+    expect(aliyun.region).toBe('cn-beijing');
+    expect(aliyun.forcePathStyle).toBe(false);
+
+    const qiniu = resolveStorageConfig({ s3_endpoint: 'https://s3.cn-east-1.qiniucs.com' }, {});
+    expect(qiniu.provider).toBe('qiniu');
+    expect(qiniu.forcePathStyle).toBe(true);
+  });
+
+  test('存储驱动为本地但选了腾讯云 → 提示不会进对象存储', () => {
+    const w = storageConfigWarnings(
+      { ...KEYS, storage_driver: 'local', storage_provider: 'tencent', s3_endpoint: 'https://cos.ap-guangzhou.myqcloud.com' },
+      {},
+    );
+    expect(w.join()).toContain('不会进入对象存储');
   });
 
   test('七牛缺 CDN 域名 / Public URL 填成 S3 域名 → 专属预警', () => {

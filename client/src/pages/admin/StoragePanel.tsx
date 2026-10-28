@@ -10,6 +10,7 @@ type Source = 'site' | 'env' | 'default';
 type TestLevel = 'ok' | 'warn' | 'fail';
 type Status = {
   driver: 'local' | 's3';
+  provider: 'generic' | 'qiniu' | 'tencent' | 'aliyun' | 'aws';
   sources: Record<string, Source>;
   endpoint: string;
   bucket: string;
@@ -41,17 +42,99 @@ const TEST_STYLE: Record<TestLevel, { title: string; bg: string; fg: string }> =
   fail: { title: '测试没过', bg: 'var(--like-soft)', fg: 'var(--like)' },
 };
 
-// 七牛 Kodo 官方 S3 兼容区域（Endpoint 规则：https://s3.<region>.qiniucs.com）
-const QINIU_REGIONS = [
-  { id: 'cn-east-1', label: '华东-浙江' },
-  { id: 'cn-east-2', label: '华东-浙江 2' },
-  { id: 'cn-north-1', label: '华北-河北' },
-  { id: 'cn-south-1', label: '华南-广东' },
-  { id: 'us-north-1', label: '北美-洛杉矶' },
-  { id: 'ap-southeast-1', label: '亚太-新加坡' },
-  { id: 'ap-southeast-2', label: '亚太-河内' },
-  { id: 'ap-southeast-3', label: '亚太-胡志明' },
+const PROVIDERS = [
+  { id: 'tencent', label: '腾讯云 COS' },
+  { id: 'aliyun', label: '阿里云 OSS' },
+  { id: 'qiniu', label: '七牛云 Kodo' },
+  { id: 'aws', label: 'AWS S3' },
+  { id: 'generic', label: 'S3 兼容 / MinIO / 其他' },
 ];
+
+// 各服务商的常用区域（仍可手填；Endpoint 由区域按官方规则生成）
+const PROVIDER_REGIONS: Record<string, { id: string; label: string }[]> = {
+  tencent: [
+    { id: 'ap-guangzhou', label: '广州' }, { id: 'ap-shanghai', label: '上海' },
+    { id: 'ap-beijing', label: '北京' }, { id: 'ap-chengdu', label: '成都' },
+    { id: 'ap-chongqing', label: '重庆' }, { id: 'ap-nanjing', label: '南京' },
+    { id: 'ap-hongkong', label: '香港' }, { id: 'ap-singapore', label: '新加坡' },
+    { id: 'ap-jakarta', label: '雅加达' }, { id: 'ap-bangkok', label: '曼谷' },
+    { id: 'na-siliconvalley', label: '硅谷' }, { id: 'na-ashburn', label: '弗吉尼亚' },
+    { id: 'eu-frankfurt', label: '法兰克福' }, { id: 'eu-moscow', label: '莫斯科' },
+    { id: 'sa-saopaulo', label: '圣保罗' },
+  ],
+  aliyun: [
+    { id: 'cn-hangzhou', label: '杭州' }, { id: 'cn-shanghai', label: '上海' },
+    { id: 'cn-beijing', label: '北京' }, { id: 'cn-shenzhen', label: '深圳' },
+    { id: 'cn-chengdu', label: '成都' }, { id: 'cn-zhangjiakou', label: '张家口' },
+    { id: 'cn-qingdao', label: '青岛' }, { id: 'cn-hongkong', label: '香港' },
+    { id: 'ap-southeast-1', label: '新加坡' }, { id: 'ap-northeast-1', label: '东京' },
+    { id: 'eu-central-1', label: '法兰克福' }, { id: 'us-west-1', label: '硅谷' },
+  ],
+  qiniu: [
+    { id: 'cn-east-1', label: '华东-浙江' }, { id: 'cn-east-2', label: '华东-浙江 2' },
+    { id: 'cn-north-1', label: '华北-河北' }, { id: 'cn-south-1', label: '华南-广东' },
+    { id: 'us-north-1', label: '北美-洛杉矶' }, { id: 'ap-southeast-1', label: '亚太-新加坡' },
+    { id: 'ap-southeast-2', label: '亚太-河内' }, { id: 'ap-southeast-3', label: '亚太-胡志明' },
+  ],
+  aws: [
+    { id: 'us-east-1', label: '弗吉尼亚' }, { id: 'us-west-2', label: '俄勒冈' },
+    { id: 'ap-northeast-1', label: '东京' }, { id: 'ap-southeast-1', label: '新加坡' },
+    { id: 'eu-west-1', label: '爱尔兰' }, { id: 'eu-central-1', label: '法兰克福' },
+    { id: 'cn-north-1', label: '北京（中国区）' }, { id: 'cn-northwest-1', label: '宁夏（中国区）' },
+  ],
+  generic: [],
+};
+
+const DEFAULT_REGION: Record<string, string> = {
+  tencent: 'ap-guangzhou', aliyun: 'cn-hangzhou', qiniu: 'cn-east-1', aws: 'us-east-1', generic: '',
+};
+
+function providerLabel(id?: string): string {
+  return PROVIDERS.find((p) => p.id === id)?.label || 'S3 兼容';
+}
+
+function providerEndpoint(provider: string, region: string): string {
+  const r = region.trim();
+  if (provider === 'tencent') return `https://cos.${r}.myqcloud.com`;
+  if (provider === 'aliyun') return `https://s3.oss-${r}.aliyuncs.com`;
+  if (provider === 'qiniu') return `https://s3.${r}.qiniucs.com`;
+  if (provider === 'aws') return r.startsWith('cn-') ? `https://s3.${r}.amazonaws.com.cn` : `https://s3.${r}.amazonaws.com`;
+  return '';
+}
+
+function inferProvider(endpoint?: string): string {
+  const host = String(endpoint || '').replace(/^https?:\/\//i, '').replace(/\/.*$/, '').toLowerCase();
+  if (host.endsWith('.myqcloud.com')) return 'tencent';
+  if (host.endsWith('.aliyuncs.com')) return 'aliyun';
+  if (host.endsWith('.qiniucs.com')) return 'qiniu';
+  if (/(^|\.)amazonaws\.com(\.cn)?$/.test(host)) return 'aws';
+  return 'generic';
+}
+
+function providerHint(p: string): string {
+  if (p === 'tencent')
+    return '腾讯云 COS：Bucket 必须带 APPID 后缀（如 uploads-1250000000），Region 选存储桶所在地域。Public URL 填 CDN 加速域名或 COS 默认域名；存储桶需设为公有读，私有桶的应用无法直接展示图片。';
+  if (p === 'aliyun')
+    return '阿里云 OSS：Endpoint 使用 S3 兼容格式 s3.oss-<地域>.aliyuncs.com，Region 与 Bucket 所在地域一致。Public URL 填 CDN 或 Bucket 默认域名；Bucket 需公共读。';
+  if (p === 'qiniu')
+    return '七牛云 Kodo：Bucket 填空间概览里的 S3 空间名，Public URL 必须填 CDN 加速域名；空间需公开读，七牛 S3 域名不支持匿名访问。';
+  if (p === 'aws')
+    return 'AWS S3：Region 与桶一致；Public URL 可填 CloudFront/CDN 域名，或使用允许公开读的 S3 默认域名。';
+  return '通用 S3 兼容存储（MinIO、R2、自建网关等）：自行填写 Endpoint / Region；MinIO 通常开启 path-style。';
+}
+
+function bucketLabel(p: string): string {
+  if (p === 'tencent') return 'Bucket（COS 存储桶，含 APPID）';
+  if (p === 'qiniu') return 'Bucket（七牛：S3 空间名）';
+  if (p === 'aliyun') return 'Bucket（OSS Bucket 名称）';
+  return 'Bucket';
+}
+
+function keyLabels(p: string): { ak: string; sk: string } {
+  if (p === 'tencent') return { ak: 'SecretId', sk: 'SecretKey' };
+  if (p === 'aliyun') return { ak: 'AccessKey ID', sk: 'AccessKey Secret' };
+  return { ak: 'Access Key', sk: 'Secret Key' };
+}
 
 /** 来源徽标：让站长一眼看出这个值是自己填的、.env 带进来的，还是内置兜底 */
 function SourceTag({ source }: { source?: Source }) {
@@ -94,7 +177,8 @@ export default function StoragePanel() {
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [clearing, setClearing] = useState(false);
-  const [qiniuRegion, setQiniuRegion] = useState('cn-east-1');
+  const [provider, setProvider] = useState('tencent');
+  const [presetRegion, setPresetRegion] = useState('ap-guangzhou');
   const [testWarnings, setTestWarnings] = useState<string[]>([]);
   const [testResult, setTestResult] = useState<{ level: TestLevel; message: string } | null>(null);
   const loadStatus = () =>
@@ -107,19 +191,43 @@ export default function StoragePanel() {
     loadStatus();
   }, []);
   const setK = (k: string, v: string) => setCfg((c) => ({ ...(c || {}), [k]: v }));
-  // 已保存的区域如果是七牛官方区域，选中它；否则保留默认 cn-east-1
+  // 当前服务商：后台显式保存 > 后台 Endpoint 推断 > 环境变量/状态推断 > 默认腾讯云 COS
+  useEffect(() => {
+    const saved = String(cfg?.storage_provider || '').toLowerCase();
+    if (PROVIDERS.some((p) => p.id === saved)) { setProvider(saved); return; }
+    if (cfg?.s3_endpoint) { setProvider(inferProvider(cfg.s3_endpoint)); return; }
+    if (status?.driver === 's3' && status.provider) { setProvider(status.provider); return; }
+    setProvider('tencent');
+  }, [cfg?.storage_provider, cfg?.s3_endpoint, status?.driver, status?.provider]);
+  // 已保存的区域如果在当前服务商的常用列表里，选中它；否则保留该服务商默认区域
   useEffect(() => {
     const r = String(cfg?.s3_region || '').trim();
-    if (QINIU_REGIONS.some((x) => x.id === r)) setQiniuRegion(r);
-  }, [cfg?.s3_region]);
-  // 一键填入七牛标准配置：S3 驱动 + 官方 Endpoint + 区域 + path-style。
-  // Bucket 用「空间概览」里的 S3 空间名（不一定等于空间显示名），Public URL 用 CDN 加速域名。
-  const applyQiniuPreset = () => {
+    const list = PROVIDER_REGIONS[provider] || [];
+    if (list.some((x) => x.id === r)) setPresetRegion(r);
+    else if (!r && DEFAULT_REGION[provider]) setPresetRegion(DEFAULT_REGION[provider]);
+  }, [cfg?.s3_region, provider]);
+  const changeProvider = (p: string) => {
+    setProvider(p);
+    setK('storage_provider', p);
+    if (p !== 'generic') {
+      const r = DEFAULT_REGION[p] || '';
+      setPresetRegion(r);
+      setK('storage_driver', 's3');
+      setK('s3_region', r);
+      setK('s3_endpoint', providerEndpoint(p, r));
+      setK('s3_force_path_style', p === 'qiniu' ? '1' : '0');
+    }
+  };
+  // 按当前服务商 + 区域填入标准 Endpoint / Region / path-style。
+  const applyPreset = () => {
     setK('storage_driver', 's3');
-    setK('s3_region', qiniuRegion);
-    setK('s3_endpoint', `https://s3.${qiniuRegion}.qiniucs.com`);
-    setK('s3_force_path_style', '1');
-    toast.ok('已填入七牛标准配置；请补全 Bucket / AK / SK / CDN 域名后点「保存存储配置」');
+    setK('storage_provider', provider);
+    if (provider !== 'generic') {
+      setK('s3_region', presetRegion);
+      setK('s3_endpoint', providerEndpoint(provider, presetRegion));
+      setK('s3_force_path_style', provider === 'qiniu' ? '1' : '0');
+    }
+    toast.ok(`已填入${providerLabel(provider)}标准配置；请补全 Bucket / AK / SK / 访问域名后点「保存存储配置」`);
   };
   const save = async () => {
     setSaving(true);
@@ -209,6 +317,7 @@ export default function StoragePanel() {
           </div>
           {status.driver === 's3' ? (
             <>
+              <StatusRow label="服务商" value={providerLabel(status.provider)} source={src.provider} />
               <StatusRow label="Endpoint" value={status.endpoint} source={src.endpoint} />
               <StatusRow label="Bucket" value={status.bucket} source={src.bucket} />
               <StatusRow label="Region" value={status.region} source={src.region} />
@@ -240,21 +349,25 @@ export default function StoragePanel() {
       <div className="ui-card" style={{ padding: 18 }}>
         <div style={{ fontWeight: 700, fontSize: 14.5 }}>对象存储</div>
         <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>
-          支持 S3 兼容网关（含七牛 Kodo：Endpoint 为 https://s3.&lt;区域&gt;.qiniucs.com，注意 s3 与区域之间是点）。凭据仅后台可见且掩码，绝不进入公开站点配置。留空密钥 = 保留原值。未配时回退环境变量。
+          支持腾讯云 COS / 阿里云 OSS / 七牛云 Kodo / AWS S3 / 通用 S3 兼容（MinIO 等）。选择服务商后会自动填入对应 Endpoint 与 path-style；凭据仅后台可见且掩码，绝不进入公开站点配置。留空密钥 = 保留原值。
         </div>
         <div style={{ marginTop: 12, padding: 12, borderRadius: 8, background: 'var(--surface-2)' }}>
-          <div style={{ fontWeight: 700, fontSize: 13 }}>七牛云 Kodo 快速配置</div>
-          <div className="faint" style={{ fontSize: 12, marginTop: 3, lineHeight: 1.65 }}>
-            选择空间所在区域后点「填入七牛标准配置」。Bucket 填空间概览里的「S3 空间名」（不一定等于空间显示名），
-            Public URL 填该空间的 CDN 加速域名；空间需设为公开读，七牛 S3 域名本身不支持匿名访问。
-          </div>
+          <div style={{ fontWeight: 700, fontSize: 13 }}>对象存储服务商</div>
+          <div className="faint" style={{ fontSize: 12, marginTop: 3, lineHeight: 1.65 }}>{providerHint(provider)}</div>
           <div className="row gap-8" style={{ marginTop: 8, flexWrap: 'wrap' }}>
-            <select className="banana-inp" style={{ maxWidth: 220 }} value={qiniuRegion} onChange={(e) => setQiniuRegion(e.target.value)}>
-              {QINIU_REGIONS.map((r) => (
-                <option key={r.id} value={r.id}>{r.label}（{r.id}）</option>
+            <select className="banana-inp" style={{ maxWidth: 220 }} value={provider} onChange={(e) => changeProvider(e.target.value)}>
+              {PROVIDERS.map((p) => (
+                <option key={p.id} value={p.id}>{p.label}</option>
               ))}
             </select>
-            <Button type="button" size="sm" variant="bordered" className="banana-btn-app" onClick={applyQiniuPreset}>填入七牛标准配置</Button>
+            {(PROVIDER_REGIONS[provider] || []).length > 0 && (
+              <select className="banana-inp" style={{ maxWidth: 220 }} value={presetRegion} onChange={(e) => setPresetRegion(e.target.value)}>
+                {(PROVIDER_REGIONS[provider] || []).map((r) => (
+                  <option key={r.id} value={r.id}>{r.label}（{r.id}）</option>
+                ))}
+              </select>
+            )}
+            <Button type="button" size="sm" variant="bordered" className="banana-btn-app" onClick={applyPreset}>填入标准配置</Button>
           </div>
         </div>
         <div className="sec-grid" style={{ marginTop: 14 }}>
@@ -267,36 +380,37 @@ export default function StoragePanel() {
           </label>
           <label className="sec-field">
             <span className="sec-label">S3 Endpoint</span>
-            <Input className="banana-inp" value={cfg.s3_endpoint ?? ''} onChange={(e: any) => setK('s3_endpoint', e.target.value)} placeholder={envHint('endpoint', status?.endpoint) || 'https://s3.cn-east-1.qiniucs.com'} />
+            <Input className="banana-inp" value={cfg.s3_endpoint ?? ''} onChange={(e: any) => setK('s3_endpoint', e.target.value)} placeholder={envHint('endpoint', status?.endpoint) || providerEndpoint(provider, presetRegion) || 'https://s3.example.com'} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Bucket（七牛：S3 空间名）</span>
-            <Input className="banana-inp" value={cfg.s3_bucket ?? ''} onChange={(e: any) => setK('s3_bucket', e.target.value)} placeholder={envHint('bucket', status?.bucket) || 'bananasns'} />
+            <span className="sec-label">{bucketLabel(provider)}</span>
+            <Input className="banana-inp" value={cfg.s3_bucket ?? ''} onChange={(e: any) => setK('s3_bucket', e.target.value)} placeholder={envHint('bucket', status?.bucket) || (provider === 'tencent' ? 'uploads-1250000000' : 'bananasns')} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Region（七牛：cn-east-1）</span>
-            <Input className="banana-inp" value={cfg.s3_region ?? ''} onChange={(e: any) => setK('s3_region', e.target.value)} placeholder={envHint('region', status?.region) || 'cn-east-1'} />
+            <span className="sec-label">Region（{presetRegion || '自定义'}）</span>
+            <Input className="banana-inp" value={cfg.s3_region ?? ''} onChange={(e: any) => setK('s3_region', e.target.value)} placeholder={envHint('region', status?.region) || presetRegion || 'us-east-1'} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Public URL（七牛：CDN 加速域名）</span>
+            <span className="sec-label">Public URL（访问域名）</span>
             <Input className="banana-inp" value={cfg.s3_public_url ?? ''} onChange={(e: any) => setK('s3_public_url', e.target.value)} placeholder={envHint('publicUrl', status?.publicUrl) || 'https://cdn.example.com'} />
           </label>
           <label className="sec-field row gap-8" style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {/* 生效默认开（后端 env 未设时按 true）：仅显式 '0' 显示关；保存时未配置键不落库（undefined 不入 JSON），用户勾选后才是显式选择 */}
-            <input type="checkbox" checked={cfg.s3_force_path_style !== '0'} onChange={(e) => setK('s3_force_path_style', e.target.checked ? '1' : '0')} />
+            {/* 腾讯/阿里/AWS 默认 virtual-hosted（不勾）；七牛/通用默认 path-style */}
+            <input type="checkbox" checked={(cfg.s3_force_path_style ?? (status?.forcePathStyle ? '1' : '0')) === '1'}
+              onChange={(e) => setK('s3_force_path_style', e.target.checked ? '1' : '0')} />
             <span className="sec-label" style={{ margin: 0 }}>Force path style（七牛 / MinIO 建议开启）</span>
           </label>
           <label className="sec-field">
-            <span className="sec-label">Access Key {secrets.s3_access_key ? '（已配置）' : ''}</span>
+            <span className="sec-label">{keyLabels(provider).ak} {secrets.s3_access_key ? '（已配置）' : ''}</span>
             <Input className="banana-inp" type="password" autoComplete="new-password"
               value={cfg.s3_access_key ?? ''} onChange={(e: any) => setK('s3_access_key', e.target.value)}
-              placeholder={secrets.s3_access_key ? '••••（留空保留）' : src.accessKey === 'env' ? '已由环境变量提供' : 'Access Key'} />
+              placeholder={secrets.s3_access_key ? '••••（留空保留）' : src.accessKey === 'env' ? '已由环境变量提供' : keyLabels(provider).ak} />
           </label>
           <label className="sec-field">
-            <span className="sec-label">Secret Key {secrets.s3_secret_key ? '（已配置）' : ''}</span>
+            <span className="sec-label">{keyLabels(provider).sk} {secrets.s3_secret_key ? '（已配置）' : ''}</span>
             <Input className="banana-inp" type="password" autoComplete="new-password"
               value={cfg.s3_secret_key ?? ''} onChange={(e: any) => setK('s3_secret_key', e.target.value)}
-              placeholder={secrets.s3_secret_key ? '••••（留空保留）' : src.secretKey === 'env' ? '已由环境变量提供' : 'Secret Key'} />
+              placeholder={secrets.s3_secret_key ? '••••（留空保留）' : src.secretKey === 'env' ? '已由环境变量提供' : keyLabels(provider).sk} />
           </label>
         </div>
         {/* 切到 S3 后本地目录里还躺着老文件——不提示的话站长会以为「切完就完事了」，

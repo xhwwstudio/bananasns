@@ -27,6 +27,13 @@ const FB_STATUS: Record<string, { label: string; color: string }> = {
 
 const RELEASES = [
   {
+    ver: 'v0.1.6', date: '2026-10-28 23:24:56', items: [
+      ['new', '后台对象存储支持服务商选择：腾讯云 COS（默认）、阿里云 OSS、七牛云 Kodo、AWS S3、通用 S3 / MinIO。选择服务商和区域后自动填入 Endpoint、Region 与 path-style，并按服务商切换 Bucket / 密钥字段标签和校验提示。'],
+      ['improve', '腾讯云 COS：Endpoint 使用 https://cos.<地域>.myqcloud.com，Bucket 必须带 APPID 后缀，虚拟主机风格（关闭 Force path style）；阿里云 OSS 使用 https://s3.oss-<地域>.aliyuncs.com；七牛继续使用 path-style + CDN 域名提示；AWS 与中国区 Endpoint 分别适配。新增 storage_provider 配置项，纳入「来源标记」与「清除后台设置」。'],
+      ['improve', '后台存储页顶部「当前生效」新增服务商一行；默认服务商改为腾讯云 COS，切到本地存储时仍保留原有配置便于回切。'],
+    ],
+  },
+  {
     ver: 'v0.1.5', date: '2026-10-21 17:42:26', items: [
       ['improve', '「登录用户可见」改为注册引导：游客在信息流里能看到这条动态（作者、时间、互动数），但正文、图片、投票、来源全部锁住，显示「此条动态仅登录可见」与「登录 / 注册」按钮；直接打开详情同样是锁定态。'],
       ['improve', '锁定态下点赞、评论、转发、收藏都会直接打开登录/注册弹窗，不再报「请先登录」错误；私密与仅关注我仍保持完全不出现在游客信息流。'],

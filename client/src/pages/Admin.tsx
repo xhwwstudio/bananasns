@@ -55,7 +55,7 @@ const TABS = [
   { k: 'layout', l: '布局', icon: 'compass', d: '各页面布局（三栏 / 宽屏 / 居中）' },
   { k: 'appearance', l: '外观', icon: 'image', d: '站点品牌、Logo 与自定义 CSS' },
   { k: 'pages', l: '页面内容', icon: 'book', d: '关于 / 路线图 / 更新日志 可编辑与开关' },
-  { k: 'storage', l: '存储', icon: 'image', d: '本地 / S3 兼容对象存储（七牛等）' },
+  { k: 'storage', l: '存储', icon: 'image', d: '本地 / 对象存储（腾讯 COS、阿里 OSS、七牛、S3）' },
   { k: 'audit', l: '日志', icon: 'book', d: '管理操作审计记录' },
   { k: 'system', l: '系统更新', icon: 'rocket', d: '版本检测与一键升级' },
 ];

@@ -110,7 +110,7 @@ const STR_KEYS: Record<string, number> = {
   pay_wechat_appid: 64, pay_wechat_mchid: 64, pay_wechat_key: 200, pay_wechat_private_key: 4000, pay_wechat_serial: 80,
   pay_epay_pid: 64, pay_epay_key: 200, pay_epay_url: 200,
   // 对象存储（后台可配；凭据进 SECRET_KEYS，绝不进 getSite）
-  storage_driver: 16, s3_endpoint: 300, s3_bucket: 120, s3_region: 64, s3_public_url: 300,
+  storage_driver: 16, storage_provider: 16, s3_endpoint: 300, s3_bucket: 120, s3_region: 64, s3_public_url: 300,
   s3_access_key: 200, s3_secret_key: 200,
   // 页面内容 markdown（空=回退内置；开关见 page_*_on）
   about_content: 20000, roadmap_content: 20000, changelog_content: 20000,

@@ -23,6 +23,10 @@ skills-lock.json
 deploy-nest.sh
 deploy-sns.sh
 
+# 本地密钥目录（腾讯 COS SecretId/Key、SSH 私钥等）——绝不提交/上传
+KEY/
+key/
+
 # upgrade.sh 运行时产物 / 本地配置
 upgrade.env
 upgrade.log
