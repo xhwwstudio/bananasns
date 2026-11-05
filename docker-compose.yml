@@ -36,6 +36,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:?请在 .env 里设置 DB_PASSWORD}
       DB_NAME: bananasns
       DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-true}   # 首次启动自动建表；数据稳定后在 .env 设 DB_SYNCHRONIZE=false 走迁移
+      DB_MIGRATIONS_RUN: ${DB_MIGRATIONS_RUN:-false}   # 已有库升级：设 true 并配合 DB_SYNCHRONIZE=false，启动时执行版本化迁移
       REDIS_URL: redis://redis:6379
       CLIENT_DIST: /app/client/dist
       UPLOADS_DIR: /app/uploads
