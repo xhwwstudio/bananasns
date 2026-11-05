@@ -30,6 +30,7 @@ import {
   type StorageResolvedConfig,
   type StorageSourceMap,
 } from './storage-config';
+import { buildObjectKey } from './storage-key';
 
 /**
  * 「测试连接」结果。ok 只表示写入这一步过了；
@@ -153,6 +154,9 @@ export class StorageService implements OnModuleInit {
   }
 
   private buildKey(originalName: string): string {
+    // 对象存储：uploads/YYYY/MM/ 分层，避免所有文件堆在桶根目录。
+    // 本地磁盘保持原来的扁平文件名，已有 /uploads/xxx 链接不受影响。
+    if (this.driver === 's3') return buildObjectKey(originalName);
     const ext = extname(originalName || '') || '';
     const stamp = Date.now();
     const rand = randomBytes(6).toString('hex');

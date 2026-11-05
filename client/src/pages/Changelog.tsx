@@ -27,6 +27,12 @@ const FB_STATUS: Record<string, { label: string; color: string }> = {
 
 const RELEASES = [
   {
+    ver: 'v0.1.7', date: '2026-11-05 16:17:38', items: [
+      ['improve', '对象存储上传改为分层目录：腾讯 COS / S3 的对象键统一为 uploads/YYYY/MM/<时间戳>-<随机串><扩展名>，按上海时区切月，避免所有文件堆在存储桶根目录。本地磁盘存储保持原扁平结构，已有 /uploads 链接不受影响。'],
+      ['improve', '旧文件不自动搬家：已经在 COS 根目录或本地磁盘的历史文件继续按原 URL 访问；新上传才进入年月目录。'],
+    ],
+  },
+  {
     ver: 'v0.1.6', date: '2026-10-28 23:24:56', items: [
       ['new', '后台对象存储支持服务商选择：腾讯云 COS（默认）、阿里云 OSS、七牛云 Kodo、AWS S3、通用 S3 / MinIO。选择服务商和区域后自动填入 Endpoint、Region 与 path-style，并按服务商切换 Bucket / 密钥字段标签和校验提示。'],
       ['improve', '腾讯云 COS：Endpoint 使用 https://cos.<地域>.myqcloud.com，Bucket 必须带 APPID 后缀，虚拟主机风格（关闭 Force path style）；阿里云 OSS 使用 https://s3.oss-<地域>.aliyuncs.com；七牛继续使用 path-style + CDN 域名提示；AWS 与中国区 Endpoint 分别适配。新增 storage_provider 配置项，纳入「来源标记」与「清除后台设置」。'],
