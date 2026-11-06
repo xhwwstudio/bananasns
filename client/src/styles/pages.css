@@ -428,7 +428,10 @@ h3.aimd-h { font-size: 16px; } h4.aimd-h { font-size: 15px; } h5.aimd-h, h6.aimd
 /* photo viewer */
 .lightbox { position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,.92); display: block; padding: 0; animation: lb-fade .22s var(--ease-out) both; }
 @keyframes lb-fade { from { opacity: 0; } to { opacity: 1; } }
-.lb-stage { position: absolute; inset: 64px 72px 56px; overflow: auto; display: flex; align-items: center; justify-content: center; overscroll-behavior: contain; }
+.lb-stage { position: absolute; inset: 64px 72px 56px; overflow: auto; display: flex; align-items: center; justify-content: center; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.42) rgba(255,255,255,.06); }
+.lb-stage::-webkit-scrollbar { width: 10px; height: 10px; }
+.lb-stage::-webkit-scrollbar-thumb { background: rgba(255,255,255,.42); border-radius: 999px; }
+.lb-stage::-webkit-scrollbar-track { background: rgba(255,255,255,.06); }
 .lb-stage.zoomed { display: block; }
 .lb-stage img { display: block; flex: none; max-width: none; max-height: none; border-radius: var(--r-sm); background: #111; cursor: zoom-in; user-select: none; -webkit-user-drag: none; }
 .lb-stage.zoomed img { margin: 0 auto; }
