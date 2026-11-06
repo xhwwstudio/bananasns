@@ -9,6 +9,54 @@ import { parseCustomThemes, validateThemePackage, type ThemePackage } from '../.
 import { Toggle } from './ui';
 
 // 站点外观自定义 (W)：站名 / 副标题 / Logo / 全站自定义 CSS。类 WP 的二开能力，升级不覆盖。
+// 很多 PNG LOGO 四周带大片透明留白：直接按高度显示时图形实际很小。
+// 上传前在 canvas 里裁掉 alpha=0 的边缘，让图形尽量占满导航高度（不改变宽高比）。
+async function trimLogoPadding(file: File): Promise<File> {
+  if (!/^image\/(png|webp)$/.test(file.type)) return file;
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = reject;
+      el.src = url;
+    });
+    const w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return file;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return file;
+    ctx.drawImage(img, 0, 0);
+    const data = ctx.getImageData(0, 0, w, h).data;
+    let minX = w, minY = h, maxX = -1, maxY = -1;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (data[(y * w + x) * 4 + 3] > 8) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX < 0 || (minX === 0 && minY === 0 && maxX === w - 1 && maxY === h - 1)) return file;
+    const pad = Math.max(2, Math.round(Math.min(w, h) * 0.015));
+    const sx = Math.max(0, minX - pad), sy = Math.max(0, minY - pad);
+    const sw = Math.min(w, maxX + pad + 1) - sx, sh = Math.min(h, maxY + pad + 1) - sy;
+    const out = document.createElement('canvas');
+    out.width = sw; out.height = sh;
+    out.getContext('2d')!.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+    const blob = await new Promise<Blob | null>((resolve) => out.toBlob(resolve, 'image/png'));
+    if (!blob) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.png', { type: 'image/png' });
+  } catch {
+    return file;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 export default function AppearancePanel() {
   const toast = useToast();
   const [cfg, setCfg] = useState<Record<string, string> | null>(null);
@@ -20,7 +68,8 @@ export default function AppearancePanel() {
   const uploadBrand = async (k: string, e: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const fd = new FormData(); fd.append('files', file);
+    const upload = k === 'site_logo' ? await trimLogoPadding(file) : file;
+    const fd = new FormData(); fd.append('files', upload);
     try {
       const { data } = await api.post('/upload', fd);
       const url = data.files?.[0]?.url;

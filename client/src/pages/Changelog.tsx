@@ -27,6 +27,11 @@ const FB_STATUS: Record<string, { label: string; color: string }> = {
 
 const RELEASES = [
   {
+    ver: 'v0.1.9', date: '2026-11-06 13:28:01', items: [
+      ['improve', 'Logo 上传时自动裁掉透明留白（PNG/WebP），避免图片本身带大片透明边导致导航栏里看起来很小；本次也把线上现有 Logo 重新裁边并更新（显示高度保持 72px）。'],
+    ],
+  },
+  {
     ver: 'v0.1.8', date: '2026-11-06 13:21:46', items: [
       ['new', '敏感词文件词库：后台支持一次上传多个 .txt/.dic/.csv/.list 文件，逐个列队展示词条数并单独启停/删除；上传文件默认停用，确认后开启。过滤引擎改为 Aho-Corasick 自动机，兼容 sensitive-stop-words 的逗号分隔与每行一词格式，旧内置词/手动补充词继续生效。'],
       ['new', '注册验证：后台新增手机号验证（腾讯云短信 SendSms）与邮箱验证（SMTP）开关；开启后注册必须完成对应验证码。手机号仅用于合规验证和账号找回，publicUser 与个人资料页均不返回手机号/邮箱。短信/邮件配置在后台加密掩码保存，支持分文件启停。'],
