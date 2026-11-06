@@ -426,17 +426,33 @@ h3.aimd-h { font-size: 16px; } h4.aimd-h { font-size: 15px; } h5.aimd-h, h6.aimd
 .auth-switch button { color: var(--brand); font-weight: 700; }
 
 /* photo viewer */
-.lightbox { position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,.9); display: grid; place-items: center; padding: 30px; animation: lb-fade .22s var(--ease-out) both; }
+.lightbox { position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,.92); display: block; padding: 0; animation: lb-fade .22s var(--ease-out) both; }
 @keyframes lb-fade { from { opacity: 0; } to { opacity: 1; } }
-.lightbox img { max-width: 100%; max-height: 100%; border-radius: var(--r-sm); animation: lb-zoom .28s cubic-bezier(.2,.8,.3,1) both; }
-@keyframes lb-zoom { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
-.lightbox .lb-close { position: absolute; top: 18px; right: 18px; color: #fff; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.14); display: grid; place-items: center; z-index: 2; transition: background var(--dur-fast); }
+.lb-stage { position: absolute; inset: 64px 72px 56px; overflow: auto; display: flex; align-items: center; justify-content: center; overscroll-behavior: contain; }
+.lb-stage.zoomed { display: block; }
+.lb-stage img { display: block; flex: none; max-width: none; max-height: none; border-radius: var(--r-sm); background: #111; cursor: zoom-in; user-select: none; -webkit-user-drag: none; }
+.lb-stage.zoomed img { margin: 0 auto; }
+.lb-toolbar { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: var(--r-pill); background: rgba(20,20,22,.72); border: 1px solid rgba(255,255,255,.16); color: #fff; backdrop-filter: blur(10px); }
+.lb-toolbar button { min-width: 34px; height: 30px; padding: 0 8px; border-radius: 8px; color: #fff; font-size: 18px; line-height: 1; background: rgba(255,255,255,.1); }
+.lb-toolbar button:hover:not(:disabled) { background: rgba(255,255,255,.22); }
+.lb-toolbar button:disabled { opacity: .35; cursor: default; }
+.lb-toolbar span { min-width: 52px; text-align: center; font-size: 12.5px; font-family: var(--font-num); color: #fff; }
+.lb-toolbar .lb-fit { font-size: 12px; min-width: 48px; }
+.lightbox .lb-close { position: absolute; top: 18px; right: 18px; color: #fff; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.14); display: grid; place-items: center; z-index: 4; transition: background var(--dur-fast); }
 .lightbox .lb-close:hover { background: rgba(255,255,255,.26); }
-.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.14); color: #fff; line-height: 1; display: grid; place-items: center; transition: background var(--dur-fast); }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.14); color: #fff; line-height: 1; display: grid; place-items: center; transition: background var(--dur-fast); z-index: 3; }
 .lb-nav:hover { background: rgba(255,255,255,.26); }
 .lb-prev { left: 20px; } .lb-next { right: 20px; }
-.lb-counter { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 13px; background: rgba(0,0,0,.5); padding: 4px 12px; border-radius: var(--r-pill); font-family: var(--font-num); }
-@media (max-width: 880px) { .lb-nav { width: 40px; height: 40px; font-size: 26px; } .lb-prev { left: 8px; } .lb-next { right: 8px; } }
+.lb-counter { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 13px; background: rgba(0,0,0,.5); padding: 4px 12px; border-radius: var(--r-pill); font-family: var(--font-num); z-index: 3; }
+@media (max-width: 880px) {
+  .lb-stage { inset: 58px 8px 48px; }
+  .lb-toolbar { top: 10px; gap: 3px; padding: 4px 6px; }
+  .lb-toolbar button { min-width: 30px; height: 28px; padding: 0 6px; }
+  .lb-toolbar span { min-width: 44px; }
+  .lightbox .lb-close { top: 8px; right: 8px; width: 36px; height: 36px; }
+  .lb-nav { width: 40px; height: 40px; font-size: 26px; }
+  .lb-prev { left: 8px; } .lb-next { right: 8px; }
+}
 
 /* page title bar */
 .page-title { padding: 18px 20px; font-size: 19px; font-weight: 800; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }

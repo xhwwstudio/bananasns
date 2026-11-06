@@ -72,8 +72,9 @@
 .media-grid.n4 { max-width: 360px; margin-inline: auto; }
 .media-grid.n3, .media-grid.n5, .media-grid.n6, .media-grid.n7, .media-grid.n8, .media-grid.n9 { grid-template-columns: repeat(3, 1fr); }
 .media-cell { position: relative; aspect-ratio: 1; background: var(--surface-2); cursor: zoom-in; overflow: hidden; }
-.media-grid.n1 .media-cell { aspect-ratio: 4/3; }
-.media-cell img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.media-grid.n1 .media-cell { aspect-ratio: auto; max-height: 560px; display: flex; align-items: center; justify-content: center; }
+.media-cell img { width: 100%; height: 100%; object-fit: contain; transition: transform .4s ease; }
+.media-grid.n1 .media-cell img { width: auto; max-width: 100%; height: auto; max-height: 560px; margin: 0 auto; }
 .media-cell:hover img { transform: scale(1.04); }
 /* 破图优雅降级：图片 404 时显示柔和占位(图标)而非浏览器破图/空白灰块 */
 .media-cell-broken { cursor: default; }

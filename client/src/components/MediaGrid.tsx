@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Icon from './Icon';
 
@@ -15,8 +15,45 @@ interface MediaItem {
 export default function MediaGrid({ media = [] }: { media?: MediaItem[] }) {
   const [idx, setIdx] = useState<number | null>(null); // open image index, or null
   const [broken, setBroken] = useState<Set<number>>(new Set()); // cells whose image 404'd
+  const [zoom, setZoom] = useState(1);
+  const [nat, setNat] = useState({ w: 0, h: 0 });
+  const [stage, setStage] = useState({ w: 0, h: 0 });
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const imgsAll = media.filter((m) => m.type === 'image');
   const touchX = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (idx === null) return;
+    // 打开大图时锁住背景滚动；关闭后恢复
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [idx]);
+
+  useEffect(() => {
+    if (idx === null) return;
+    const el = stageRef.current;
+    if (!el) return;
+    const measure = () => setStage({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener('resize', measure);
+    return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
+  }, [idx]);
+
+  useEffect(() => {
+    setZoom(1);
+    setNat({ w: 0, h: 0 });
+  }, [idx]);
+
+  // 缩放后把滚动位置放到图片中心，长图/宽图都能从中间开始浏览
+  useLayoutEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    el.scrollLeft = Math.max(0, (el.scrollWidth - el.clientWidth) / 2);
+    el.scrollTop = Math.max(0, (el.scrollHeight - el.clientHeight) / 2);
+  }, [zoom, nat.w, nat.h, stage.w, stage.h, idx]);
 
   useEffect(() => {
     if (idx === null) return;
@@ -63,6 +100,7 @@ export default function MediaGrid({ media = [] }: { media?: MediaItem[] }) {
 
   const n = Math.min(images.length, 9);
   const go = (e: React.MouseEvent, d: number) => { e.stopPropagation(); setIdx((i) => ((i as number) + d + imgsAll.length) % imgsAll.length); };
+  const zoomBy = (d: number) => setZoom((z) => Math.max(1, Math.min(4, Math.round((z + d) * 100) / 100)));
   const onTouchStart = (e: React.TouchEvent) => { touchX.current = e.changedTouches[0].clientX; };
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchX.current == null) return;
@@ -70,6 +108,11 @@ export default function MediaGrid({ media = [] }: { media?: MediaItem[] }) {
     touchX.current = null;
     if (Math.abs(dx) > 45 && imgsAll.length > 1) setIdx((i) => ((i as number) + (dx < 0 ? 1 : -1) + imgsAll.length) % imgsAll.length);
   };
+  const fit = nat.w && stage.w && stage.h
+    ? Math.min(stage.w / nat.w, stage.h / nat.h)
+    : 1;
+  const imgW = nat.w ? Math.max(1, Math.round(nat.w * fit * zoom)) : undefined;
+  const imgH = nat.h ? Math.max(1, Math.round(nat.h * fit * zoom)) : undefined;
   return (
     <>
       <div className={`media-grid n${n}`} onClick={(e) => e.stopPropagation()}>
@@ -87,8 +130,25 @@ export default function MediaGrid({ media = [] }: { media?: MediaItem[] }) {
       {idx !== null && createPortal(
         <div className="lightbox" onClick={() => setIdx(null)}>
           <button className="lb-close" aria-label="关闭" onClick={() => setIdx(null)}><Icon name="close" size={22} /></button>
+          <div className="lb-toolbar" onClick={(e) => e.stopPropagation()}>
+            <button type="button" onClick={() => zoomBy(-0.25)} aria-label="缩小" disabled={zoom <= 1}>−</button>
+            <span>{Math.round(zoom * 100)}%</span>
+            <button type="button" onClick={() => zoomBy(0.25)} aria-label="放大" disabled={zoom >= 4}>+</button>
+            <button type="button" className="lb-fit" onClick={() => setZoom(1)}>适应</button>
+          </div>
+          <div className={`lb-stage${zoom > 1 ? ' zoomed' : ''}`} ref={stageRef} onClick={(e) => e.stopPropagation()}>
+            <img
+              src={imgsAll[idx]?.url}
+              alt=""
+              draggable={false}
+              onLoad={(e) => setNat({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+              onDoubleClick={() => setZoom((z) => (z > 1 ? 1 : 2))}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              style={imgW && imgH ? { width: imgW, height: imgH } : undefined}
+            />
+          </div>
           {imgsAll.length > 1 && <button className="lb-nav lb-prev" aria-label="上一张" onClick={(e) => go(e, -1)}><Icon name="back" size={24} /></button>}
-          <img src={imgsAll[idx]?.url} alt="" onClick={(e) => e.stopPropagation()} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} />
           {imgsAll.length > 1 && <button className="lb-nav lb-next" aria-label="下一张" onClick={(e) => go(e, 1)}><Icon name="back" size={24} style={{ transform: 'rotate(180deg)' }} /></button>}
           {imgsAll.length > 1 && <div className="lb-counter">{idx + 1} / {imgsAll.length}</div>}
         </div>,
