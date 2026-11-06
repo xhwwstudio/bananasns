@@ -22,7 +22,7 @@
 /* 自定义 Logo 图片：高度可调（site_logo_height），宽度 auto 保持比例，去掉方形锁定 */
 .brand-mark-img {
   background: none; box-shadow: none; object-fit: contain; padding: 0;
-  width: auto !important; height: var(--brand-logo-h, 33px); max-height: 64px;
+  width: auto !important; height: var(--brand-logo-h, 33px); max-height: 72px;
   border-radius: 10px;
 }
 .brand-name b { color: var(--ink); }
@@ -178,6 +178,8 @@
   .col-right { display: none; }
 }
 @media (max-width: 880px) {
+  :root { --nav-h: 62px; }
+  .brand-mark-img { max-height: 48px; }
   .shell { grid-template-columns: minmax(0,1fr); padding: 14px 12px 80px; }
   .col-left { display: none; }
   .nav-links { display: none; }

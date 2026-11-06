@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useSite } from '../context/SiteContext';
 import { BrandMark, BrandName, logoHeightOf, showBrandText } from '../components/Navbar';
+import RegisterVerifyFields from '../components/RegisterVerify';
 import Icon from '../components/Icon';
 import { showAuthAboutLink } from '../lib/pageEntries';
 import { APP_VERSION } from '../version';
@@ -19,7 +20,7 @@ export default function AuthLanding() {
   const { login, register, enterGuest } = useAuth();
   const toast = useToast();
   const [mode, setMode] = useState('login');
-  const [form, setForm] = useState({ username: '', password: '', nickname: '', inviteCode: '' });
+  const [form, setForm] = useState({ username: '', password: '', nickname: '', inviteCode: '', phone: '', phoneCode: '', email: '', emailCode: '' });
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -37,7 +38,7 @@ export default function AuthLanding() {
         const u = await login(form.username.trim(), form.password);
         toast.ok(`欢迎回来，${u.nickname}`);
       } else {
-        const u = await register({ username: form.username.trim(), password: form.password, nickname: form.nickname.trim(), inviteCode: form.inviteCode.trim() || undefined });
+        const u = await register({ username: form.username.trim(), password: form.password, nickname: form.nickname.trim(), inviteCode: form.inviteCode.trim() || undefined, phone: form.phone.trim() || undefined, phoneCode: form.phoneCode.trim() || undefined, email: form.email.trim() || undefined, emailCode: form.emailCode.trim() || undefined });
         toast.ok(`注册成功，欢迎加入，${u.nickname}！`);
       }
     } catch (e: any) { setErr(e.message); }
@@ -99,13 +100,19 @@ export default function AuthLanding() {
             )}
             <Input label="用户名" labelPlacement="outside" variant="bordered" radius="md" autoFocus
               value={form.username} onValueChange={set('username')} placeholder="字母、数字、下划线或中文" />
-            <Input label="密码" labelPlacement="outside" variant="bordered" radius="md"
+              <Input label="密码" labelPlacement="outside" variant="bordered" radius="md"
               type={showPw ? 'text' : 'password'} value={form.password} onValueChange={set('password')} placeholder="至少 6 位"
               endContent={
                 <button type="button" className="text-default-400 hover:text-default-600" onClick={() => setShowPw((s) => !s)} aria-label="显示密码">
                   <Icon name="eye" size={18} />
                 </button>
               } />
+            {mode === 'register' && (
+              <RegisterVerifyFields
+                value={form}
+                onChange={(k, v) => setForm((f) => ({ ...f, [k]: v }))}
+              />
+            )}
             {mode === 'login' && (
               <div style={{ textAlign: 'right', marginTop: -6 }}>
                 <button type="button" onClick={() => setShowForgot((s) => !s)} style={{ fontSize: 12.5, color: 'var(--ink-4)', background: 'none', border: 0, cursor: 'pointer', padding: 0 }}>忘记密码？</button>
@@ -145,8 +152,8 @@ export default function AuthLanding() {
             <><Link to="/about" className="auth-about-link">了解功能</Link> · </>
           )}
           {site.footerText || `© 2026 ${site.name} · 轻社交社区`} · <span className="num">{APP_VERSION}</span>
+          {site.icpBeian && <> · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>{site.icpBeian}</a></>}
         </div>
-        {site.icpBeian && <div className="faint" style={{ fontSize: 12, textAlign: 'center', marginTop: 6 }}><a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>{site.icpBeian}</a></div>}
       </div>
     </div>
   );

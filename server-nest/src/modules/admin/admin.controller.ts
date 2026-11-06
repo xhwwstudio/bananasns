@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,11 +8,16 @@ import {
   Post,
   Put,
   Query,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { User } from '../../database/entities';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { AdminGuard } from '../../common/guards/jwt-auth.guard';
+import { SensitiveService } from '../../common/sensitive.service';
 import { AdminService } from './admin.service';
 import { StorageService } from '../storage/storage.service';
 import {
@@ -33,6 +39,7 @@ export class AdminController {
   constructor(
     private readonly admin: AdminService,
     private readonly storage: StorageService,
+    private readonly sensitive: SensitiveService,
   ) {}
 
   @Get('overview')
@@ -74,6 +81,40 @@ export class AdminController {
   @Delete('storage/site-config')
   clearStorageSiteConfig(@CurrentUser() user: User) {
     return this.admin.clearStorageSiteConfig(user.id);
+  }
+
+  // ---- 敏感词文件队列 ----
+  @Get('sensitive/files')
+  listSensitiveFiles() {
+    return this.sensitive.listFiles();
+  }
+
+  @Post('sensitive/files')
+  @UseInterceptors(
+    FilesInterceptor('files', 20, {
+      storage: memoryStorage(),
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (_req, file, cb) => {
+        const ok = /\.(txt|dic|csv|list)$/i.test(file.originalname || '');
+        cb(ok ? null : new BadRequestException('仅支持 .txt / .dic / .csv / .list 文本词库'), ok);
+      },
+    }),
+  )
+  uploadSensitiveFiles(@UploadedFiles() files: Express.Multer.File[]) {
+    return this.sensitive.addFiles(files || []);
+  }
+
+  @Put('sensitive/files/:id')
+  setSensitiveFileEnabled(
+    @Param('id') id: string,
+    @Body('enabled') enabled: any,
+  ) {
+    return this.sensitive.setFileEnabled(Number(id), enabled === true || enabled === 1 || enabled === '1');
+  }
+
+  @Delete('sensitive/files/:id')
+  deleteSensitiveFile(@Param('id') id: string) {
+    return this.sensitive.deleteFile(Number(id));
   }
 
   @Get('users')

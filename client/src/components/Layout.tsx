@@ -70,6 +70,7 @@ const TITLES: [RegExp, TitleLabel][] = [
   [/^\/checkin/, '每日签到'],
   [/^\/lottery/, '幸运抽奖'],
   [/^\/leaderboard/, '排行榜'],
+  [/^\/privacy/, '隐私政策'],
   [/^\/changelog/, '更新日志'],
   [/^\/forum\/[^/]+/, '板块'],
   [/^\/forum/, '社区论坛'],
@@ -129,12 +130,6 @@ export default function Layout() {
           <Suspense fallback={<div className="center" style={{ padding: 48 }}><Spinner /></div>}><Outlet /></Suspense>
         </ErrorBoundary>
       )}
-      {/* 全局 ICP 条：移动端/无右栏页也能看到备案号；空值不占位 */}
-      {site.icpBeian ? (
-        <div className="site-icp-bar">
-          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener">{site.icpBeian}</a>
-        </div>
-      ) : null}
       <TabBar />
       <AuthModal />
       <BackToTop />

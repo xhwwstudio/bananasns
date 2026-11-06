@@ -9,7 +9,7 @@ export interface SiteConfig {
   slogan: string;
   logo: string;
   logoOnly: boolean;  // 有 logo 时只显图隐藏站名；默认 false
-  logoHeight: number; // LOGO 高度 px，默认 33，范围 [24,64]
+  logoHeight: number; // LOGO 高度 px，默认 33，范围 [24,72]
   favicon: string;   // 浏览器标签图标 URL（走对象存储 / 图床）；留空用 index.html 内置 SVG
   customCss: string;
   footerText: string; // 页脚版权文案；空 = 用内置默认
@@ -18,6 +18,8 @@ export interface SiteConfig {
   reportReasons: string; // 举报理由（换行分隔）；空 = 用内置默认
   registrationEnabled: boolean; // 注册开关；默认 true
   inviteRequired: boolean;      // 邀请码必填；默认 false
+  phoneVerifyRequired: boolean; // 注册需手机号验证；默认 false
+  emailVerifyRequired: boolean; // 注册需邮箱验证；默认 false
   allowGuest: boolean;          // 游客浏览；默认 false
   showLanding: boolean;         // 显示欢迎登录页；默认 true；关闭后访客直接进站（游客只读）
   guestFeedLimit: number;       // 游客信息流上限（注册墙）；0=不限，默认 8
@@ -52,7 +54,7 @@ export interface SiteConfig {
 const DEFAULTS: SiteConfig = {
   name: 'BananaSNS', slogan: '轻社交社区', logo: '', logoOnly: false, logoHeight: 33,
   favicon: '', customCss: '', footerText: '', icpBeian: '', rechargeTiers: '', reportReasons: '',
-  registrationEnabled: true, inviteRequired: false, allowGuest: false, showLanding: true, guestFeedLimit: 8,
+  registrationEnabled: true, inviteRequired: false, phoneVerifyRequired: false, emailVerifyRequired: false, allowGuest: false, showLanding: true, guestFeedLimit: 8,
   aboutContent: '', roadmapContent: '', changelogContent: '',
   pageAboutOn: true, pageRoadmapOn: true, pageChangelogOn: true,
   feedLayout: 'list', customThemes: '',

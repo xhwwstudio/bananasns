@@ -106,8 +106,8 @@ export default function AppearancePanel() {
             <span className="sec-label" style={{ margin: 0 }}>仅显示 Logo（隐藏站名文字；需已设 Logo）</span>
           </label>
           <label className="sec-field">
-            <span className="sec-label">Logo 高度（px，24–64，默认 33）</span>
-            <Input className="banana-inp" type="number" min={24} max={64} value={cfg.site_logo_height ?? '33'}
+            <span className="sec-label">Logo 高度（px，24–72，默认 33）</span>
+            <Input className="banana-inp" type="number" min={24} max={72} value={cfg.site_logo_height ?? '33'}
               onChange={(e: any) => setK('site_logo_height', e.target.value)} />
           </label>
         </div>

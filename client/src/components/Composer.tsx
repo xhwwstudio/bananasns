@@ -41,7 +41,7 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
   const [password, setPassword] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [focused, setFocused] = useState(embedded);
+  const [focused, setFocused] = useState(true);
   const [location, setLocation] = useState(() => initialDraft?.location ?? user?.location ?? '');
   const [showLoc, setShowLoc] = useState(() => !!initialDraft?.location);
   const [poll, setPoll] = useState<any>(() => initialDraft?.poll ?? null); // { options: [], multi, days }
@@ -123,7 +123,7 @@ export default function Composer({ onPosted, compact = false, prefill = '', embe
         ...(pollOpts ? { poll: { options: pollOpts, multi: poll.multi, days: poll.days } } : {}),
         ...(redPacket ? { redPacket: { points: Number(redPacket.points) || 0, count: Number(redPacket.count) || 0, blessing: redPacket.blessing } } : {}),
       });
-      setContent(''); setMedia([]); setVis('public'); setFocused(false); setShowLoc(false); setPoll(null); setSource(null); setRedPacket(null);
+      setContent(''); setMedia([]); setVis('public'); setFocused(true); setShowLoc(false); setPoll(null); setSource(null); setRedPacket(null);
       clearDraftStore(); setDraftRestored(false);
       if (taRef.current) taRef.current.style.height = 'auto';
       toast.ok('发布成功 🎉');

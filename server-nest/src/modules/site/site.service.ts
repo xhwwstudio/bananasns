@@ -69,7 +69,7 @@ export class SiteService {
       slogan: cfg.get('site_slogan') || '轻社交社区',
       logo: cfg.get('site_logo') || '',
       logoOnly: cfg.get('site_logo_only') === '1',
-      logoHeight: Math.max(24, Math.min(64, Number(cfg.get('site_logo_height')) || 33)),
+      logoHeight: Math.max(24, Math.min(72, Number(cfg.get('site_logo_height')) || 33)),
       favicon: cfg.get('site_favicon') || '',
       customCss: cfg.get('site_custom_css') || '',
       footerText: cfg.get('footer_text') || '',
@@ -78,6 +78,8 @@ export class SiteService {
       reportReasons: cfg.get('report_reasons') || '',
       registrationEnabled: (cfg.get('registration_enabled') ?? '1') !== '0',
       inviteRequired: cfg.get('invite_required') === '1',
+      phoneVerifyRequired: cfg.get('register_phone_verify') === '1',
+      emailVerifyRequired: cfg.get('register_email_verify') === '1',
       allowGuest: cfg.get('allow_guest') === '1',
       // 欢迎登录页开关：默认开（保持旧行为）；关闭后未登录访客直接进入站点（游客只读）
       showLanding: (cfg.get('show_landing') ?? '1') !== '0',

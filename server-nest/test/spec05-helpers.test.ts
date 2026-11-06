@@ -94,9 +94,11 @@ describe('secret placeholder / write', () => {
     expect(resolveSecretWrite('new-key', 'old')).toBe('new-key');
   });
 
-  test('SECRET_KEYS 含 s3 凭据', () => {
+  test('SECRET_KEYS 含 s3 / 短信 / SMTP 凭据', () => {
     expect(SECRET_KEYS.has('s3_access_key')).toBe(true);
     expect(SECRET_KEYS.has('s3_secret_key')).toBe(true);
+    expect(SECRET_KEYS.has('sms_secret_key')).toBe(true);
+    expect(SECRET_KEYS.has('smtp_pass')).toBe(true);
   });
 
   test('公开 site 禁止键清单含 s3 与支付密钥', () => {
@@ -190,7 +192,7 @@ describe('logo helpers', () => {
   test('logoHeightOf clamp', () => {
     expect(logoHeightOf(undefined)).toBe(33);
     expect(logoHeightOf(10)).toBe(24);
-    expect(logoHeightOf(100)).toBe(64);
+    expect(logoHeightOf(100)).toBe(72);
     expect(logoHeightOf(40)).toBe(40);
   });
   test('showBrandText', () => {
@@ -220,34 +222,36 @@ describe('page entry gating (About / Changelog / Footer)', () => {
     expect(pageChangelogRouteOpen({})).toBe(true);
     expect(showAuthAboutLink({})).toBe(true);
     const labels = footerLinksOf({}).map((l) => l.label);
-    expect(labels).toEqual(['更新日志', '开发计划', '问题反馈', '关于']);
+    expect(labels).toEqual(['关于我们', '隐私', '问题反馈']);
   });
 
-  test('pageAboutOn=false → 登录页「了解功能」与页脚「关于」隐藏', () => {
+  test('pageAboutOn=false → 登录页「了解功能」与页脚「关于我们」隐藏', () => {
     const flags = { pageAboutOn: false, pageChangelogOn: true, pageRoadmapOn: true };
     expect(pageAboutOpen(flags)).toBe(false);
     expect(showAuthAboutLink(flags)).toBe(false);
     const labels = footerLinksOf(flags).map((l) => l.label);
-    expect(labels).not.toContain('关于');
+    expect(labels).not.toContain('关于我们');
+    expect(labels).toContain('隐私');
     expect(labels).toContain('问题反馈');
   });
 
-  test('changelog+roadmap 都关 → 路由关、问题反馈入口消失', () => {
+  test('changelog+roadmap 都关 → 路由关、问题反馈入口消失，但隐私仍在', () => {
     const flags = { pageAboutOn: true, pageChangelogOn: false, pageRoadmapOn: false };
     expect(pageChangelogRouteOpen(flags)).toBe(false);
     const labels = footerLinksOf(flags).map((l) => l.label);
     expect(labels).not.toContain('问题反馈');
     expect(labels).not.toContain('更新日志');
     expect(labels).not.toContain('开发计划');
-    expect(labels).toContain('关于');
+    expect(labels).toContain('关于我们');
+    expect(labels).toContain('隐私');
   });
 
-  test('仅 roadmap 开 → 仍可进 changelog 路由与反馈', () => {
+  test('仅 roadmap 开 → 仍可进 changelog 路由与反馈，但页脚不再显示开发计划/更新日志', () => {
     const flags = { pageChangelogOn: false, pageRoadmapOn: true };
     expect(pageChangelogRouteOpen(flags)).toBe(true);
     const labels = footerLinksOf(flags).map((l) => l.label);
     expect(labels).toContain('问题反馈');
-    expect(labels).toContain('开发计划');
+    expect(labels).not.toContain('开发计划');
     expect(labels).not.toContain('更新日志');
   });
 });

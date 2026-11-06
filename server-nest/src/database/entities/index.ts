@@ -38,6 +38,7 @@ import { Collection, CollectionItem } from './collection.entity';
 import { CircleMessage } from './circle-message.entity';
 import { UserNavLink } from './user-nav-link.entity';
 import { PaymentOrder } from './payment-order.entity';
+import { SensitiveWordFile } from './sensitive-word-file.entity';
 
 export {
   SiteConfig,
@@ -96,6 +97,7 @@ export {
   Thread,
   AiConversation,
   AiMessage,
+  SensitiveWordFile,
 };
 
 /**
@@ -159,4 +161,5 @@ export const entities = [
   CircleMessage,
   UserNavLink,
   PaymentOrder,
+  SensitiveWordFile,
 ];

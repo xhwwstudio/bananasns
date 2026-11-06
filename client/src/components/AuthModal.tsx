@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import Modal from './Modal';
 import { Button } from './heroui';
+import RegisterVerifyFields, { type RegisterVerifyValue } from './RegisterVerify';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useSite } from '../context/SiteContext';
 
-interface AuthForm {
+interface AuthForm extends RegisterVerifyValue {
   username: string;
   password: string;
   nickname: string;
@@ -18,7 +19,7 @@ export default function AuthModal() {
   const site = useSite();
   const regClosed = !site.registrationEnabled;
   const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [form, setForm] = useState<AuthForm>({ username: '', password: '', nickname: '', inviteCode: '' });
+  const [form, setForm] = useState<AuthForm>({ username: '', password: '', nickname: '', inviteCode: '', phone: '', phoneCode: '', email: '', emailCode: '' });
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
@@ -43,7 +44,7 @@ export default function AuthModal() {
         const u = await login(form.username.trim(), form.password);
         toast.ok(`欢迎回来，${u.nickname}`);
       } else {
-        const u = await register({ username: form.username.trim(), password: form.password, nickname: form.nickname.trim(), inviteCode: form.inviteCode.trim() || undefined });
+        const u = await register({ username: form.username.trim(), password: form.password, nickname: form.nickname.trim(), inviteCode: form.inviteCode.trim() || undefined, phone: form.phone.trim() || undefined, phoneCode: form.phoneCode.trim() || undefined, email: form.email.trim() || undefined, emailCode: form.emailCode.trim() || undefined });
         toast.ok(`注册成功，欢迎加入，${u.nickname}！`);
       }
     } catch (e: any) { setErr(e.message); }
@@ -73,6 +74,12 @@ export default function AuthModal() {
             <label>密码</label>
             <input type="password" value={form.password} onChange={set('password')} placeholder="至少 6 位" />
           </div>
+          {mode === 'register' && (
+            <RegisterVerifyFields
+              value={form}
+              onChange={(k, v) => setForm((f) => ({ ...f, [k]: v }))}
+            />
+          )}
           {mode === 'login' && (
             <div style={{ textAlign: 'right', marginTop: -6, marginBottom: showForgot ? 8 : 10 }}>
               <button type="button" onClick={() => setShowForgot((s) => !s)} style={{ fontSize: 12.5, color: 'var(--ink-4)', background: 'none', border: 0, cursor: 'pointer', padding: 0 }}>忘记密码？</button>

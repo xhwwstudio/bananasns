@@ -13,7 +13,7 @@ BananaSNS is a NestJS + MySQL/MariaDB social network backend. This document cove
   - **Public** — no token required (a token, if present, may personalize the response, e.g. `liked`/`isFollowing` flags).
   - **Auth** — a valid token is required; otherwise `401 { "error": "请先登录" }`.
   - **Admin** — requires a valid token whose user has `role === 'admin'`; otherwise `403`. Some modules gate inline (`req.user.role !== 'admin'`); the `admin` module gates its whole router via `requireAuth` + `requireAdmin`.
-- **User object:** Endpoints returning a user emit a `publicUser` shape: `id, username, nickname, avatar, cover, bio, gender, location, verified, verifiedNote, vip, role, banned, title, avatarFrame, points, experience, balance, level, levelProgress, checkinStreak, lastCheckin, createdAt, followers, following, postCount, isFollowing`. The password hash is never exposed.
+- **User object:** Endpoints returning a user emit a `publicUser` shape: `id, username, nickname, avatar, cover, bio, gender, location, verified, verifiedNote, vip, role, banned, title, avatarFrame, points, experience, balance, level, levelProgress, checkinStreak, lastCheckin, createdAt, followers, following, postCount, isFollowing`. The password hash, phone, and email are never exposed publicly.
 - **Errors:** Non-2xx responses are `{ "error": "<message>" }` (messages are in Chinese). Common codes: `400` invalid input, `401` not logged in, `402` insufficient points, `403` forbidden, `404` not found, `409` conflict.
 - **Health check:** `GET /api/health` → `{ ok: true, app: "BananaSNS" }` (Public).
 - **Static files:** uploaded media is served from `/uploads/<filename>` (outside `/api`).
@@ -54,8 +54,20 @@ User accounts, sessions, sign-in, and account-card actions.
 
 ### `POST /api/auth/register`
 Create an account and return a session token. **Auth:** Public.
-- Body: `username` (required, 2–20 chars of letters/digits/underscore/Chinese), `password` (required, ≥6 chars), `nickname` (optional, defaults to username).
-- Response: `{ token, user }`. Existing username → `409`.
+- Body: `username` (required, 2–20 chars of letters/digits/underscore/Chinese), `password` (required, ≥6 chars), `nickname` (optional, defaults to username), `inviteCode` (optional inviter username).
+- When **手机号验证** is enabled in the admin panel: `phone` + `phoneCode` are required; when **邮箱验证** is enabled: `email` + `emailCode` are required. Phone is stored for compliance only and is **never returned by `publicUser` or shown on profiles**.
+- Response: `{ token, user }`. Existing username / verified phone / verified email → `409`.
+
+### `POST /api/auth/sms/send`
+Send a Tencent Cloud SMS registration code. **Auth:** Public.
+- Body: `phone` (mainland China mobile). Enabled only when `register_phone_verify=1`.
+- Rate limits: 60s cooldown per phone, 5/hour per phone, 10/day per IP.
+- Response: `{ ok: true, expiresIn: 300 }`. Missing SMS credentials → `503`.
+
+### `POST /api/auth/email/send`
+Send an SMTP registration code. **Auth:** Public.
+- Body: `email`. Enabled only when `register_email_verify=1`.
+- Response: `{ ok: true, expiresIn: 600 }`. Missing SMTP config → `503`.
 
 ### `POST /api/auth/login`
 Authenticate and return a session token. **Auth:** Public.

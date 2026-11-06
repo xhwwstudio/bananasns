@@ -36,6 +36,7 @@ import {
 // 布尔开关：前端传 '1'/'0'（注意 '0' 在 JS 里是 truthy，必须显式判定 true/1/'1'）
 const TOGGLE_KEYS = [
   'rate_limit_enabled', 'anti_bulk_reg_enabled', 'require_email_verify', 'email_verify_enabled',
+  'register_phone_verify', 'register_email_verify', 'smtp_secure',
   'perm_enabled', 'perm_comment_require_vip', 'perm_dm_require_vip', 'perm_upload_require_vip',
   'perm_post_require_vip', 'perm_thread_require_vip',
   'sensitive_enabled',
@@ -101,6 +102,10 @@ const STR_KEYS: Record<string, number> = {
   nav_labels: 600, // 导航项改名（波D）：每行「/路径|新名称」，覆盖内置导航标签
   username_pattern: 200, username_hint: 100, // 用户名正则 + 提示文案；空=用内置默认
   landing_title: 80, landing_subtitle: 60, // 登录落地页主标题/副标题；空=用内置默认
+  // 注册验证：腾讯云短信 / SMTP 邮件凭据（密钥在 SECRET_KEYS 中掩码）
+  sms_secret_id: 200, sms_secret_key: 200, sms_sdk_app_id: 64, sms_sign_name: 100,
+  sms_template_id: 64, sms_region: 64,
+  smtp_host: 200, smtp_port: 10, smtp_user: 200, smtp_pass: 200, smtp_from: 200,
   vip1_name: 40, vip2_name: 40, vip3_name: 40, // VIP 各档位名称；空=用内置默认（青铜/黄金/黑钻会员）
   vip1_tagline: 60, vip2_tagline: 60, vip3_tagline: 60, // VIP 各档位标语；空=用内置默认
   vip1_perks: 600, vip2_perks: 600, vip3_perks: 600, // VIP 各档位权益（每行一条）；空=用内置默认
@@ -121,11 +126,13 @@ const STR_KEYS: Record<string, number> = {
 export const SECRET_KEYS = new Set([
   'pay_alipay_key', 'pay_wechat_key', 'pay_wechat_private_key', 'pay_epay_key',
   's3_access_key', 's3_secret_key',
+  'sms_secret_key', 'smtp_pass',
 ]);
 /** 公开 getSite 绝不可出现的键（测试锁死） */
 export const PUBLIC_SITE_FORBIDDEN_KEYS = [
   's3_access_key', 's3_secret_key', 'pay_alipay_key', 'pay_wechat_key',
   'pay_wechat_private_key', 'pay_epay_key',
+  'sms_secret_key', 'smtp_pass',
 ];
 // 布局型（按页面）：key=layout_<page>，值只允许 default|wide|narrow（枚举校验）
 const LAYOUT_KEYS = LAYOUT_PAGES.map((k) => `layout_${k}`);

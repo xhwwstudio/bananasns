@@ -17,6 +17,7 @@ import { defaultAvatar } from '../../common/default-avatar';
 import { HelpersService, vipMultiplier } from '../../common/helpers.service';
 import { RateLimitService } from '../../common/rate-limit.service';
 import { SiteService } from '../site/site.service';
+import { VerificationService } from './verification.service';
 import { checkSensitive } from '../../common/sensitive';
 import {
   ChangePasswordDto,
@@ -41,6 +42,7 @@ export class AuthService implements OnApplicationBootstrap {
     private readonly config: ConfigService,
     private readonly site: SiteService,
     private readonly rateLimit: RateLimitService,
+    private readonly verification: VerificationService,
   ) {}
 
   /**
@@ -150,6 +152,26 @@ export class AuthService implements OnApplicationBootstrap {
     if ((await this.site.getConfig('invite_required', '0')) === '1' && !inviter)
       throw new BadRequestException('本站需要有效邀请码才能注册');
 
+    // 注册验证（后台开关）：手机号默认仅用于合规验证，不进入 publicUser / 资料页。
+    const phoneRequired = await this.verification.phoneRequired();
+    const emailRequired = await this.verification.emailRequired();
+    let phone: string | null = null;
+    let email: string | null = null;
+    if (phoneRequired) {
+      if (!dto.phone || !dto.phoneCode)
+        throw new BadRequestException('请填写手机号并获取验证码');
+      phone = await this.verification.assertPhoneCode(dto.phone, dto.phoneCode);
+      if (await this.users.findOne({ where: { phone } }))
+        throw new ConflictException('该手机号已被绑定');
+    }
+    if (emailRequired) {
+      if (!dto.email || !dto.emailCode)
+        throw new BadRequestException('请填写邮箱并获取验证码');
+      email = await this.verification.assertEmailCode(dto.email, dto.emailCode);
+      if (await this.users.findOne({ where: { email } }))
+        throw new ConflictException('该邮箱已被绑定');
+    }
+
     const hash = bcrypt.hashSync(password, 10);
     // 后台可设新用户默认头像（default_avatar）；空则沿用按昵称渲染的本地渐变头像
     const avatar = (await this.site.getConfig('default_avatar', '')) || defaultAvatar(username);
@@ -159,6 +181,10 @@ export class AuthService implements OnApplicationBootstrap {
       password_hash: hash,
       bio: '',
       avatar,
+      email,
+      phone,
+      phone_verified: phone ? 1 : 0,
+      email_verified: email ? 1 : 0,
       experience: 20,
       // 受邀注册：新人额外 +30 积分见面礼（基础 100）
       points: inviter ? 130 : 100,
@@ -168,6 +194,8 @@ export class AuthService implements OnApplicationBootstrap {
       updated_at: this.helpers.nowSql(),
     });
     const user = await this.users.save(inserted);
+    if (phone) await this.verification.consumePhoneCode(phone);
+    if (email) await this.verification.consumeEmailCode(email);
 
     // welcome notification (actorId null => not skipped because userId !== null)
     await this.helpers.notify({

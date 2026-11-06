@@ -24,14 +24,13 @@ export function pageChangelogRouteOpen(flags: PageFlags | null | undefined): boo
 
 export type FooterLink = { to: string; label: string };
 
-/** 页脚链接列表：关页不出现入口 */
+/** 页脚链接列表：只保留关于我们 / 隐私 / 问题反馈；更新日志、开发计划不再出现在右栏。 */
 export function footerLinksOf(flags: PageFlags | null | undefined): FooterLink[] {
   const links: FooterLink[] = [];
-  if (flags?.pageChangelogOn !== false) links.push({ to: '/changelog', label: '更新日志' });
-  if (flags?.pageRoadmapOn !== false) links.push({ to: '/changelog', label: '开发计划' });
+  if (pageAboutOpen(flags)) links.push({ to: '/about', label: '关于我们' });
+  links.push({ to: '/privacy', label: '隐私' });
   // 问题反馈挂在 /changelog；路由关时入口也必须消失
-  if (pageChangelogRouteOpen(flags)) links.push({ to: '/changelog', label: '问题反馈' });
-  if (pageAboutOpen(flags)) links.push({ to: '/about', label: '关于' });
+  if (pageChangelogRouteOpen(flags)) links.push({ to: '/changelog?tab=feedback', label: '问题反馈' });
   return links;
 }
 

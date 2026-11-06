@@ -32,11 +32,11 @@ export function BrandName({ name }: { name: string }) {
   return <span className="brand-name"><b>{name}</b></span>;
 }
 
-/** LOGO 高度 clamp 到 [24,64]，缺省 33。纯函数便于单测。 */
+/** LOGO 高度 clamp 到 [24,72]，缺省 33。 */
 export function logoHeightOf(h?: number | null): number {
   const n = Number(h);
   if (!Number.isFinite(n)) return 33;
-  return Math.max(24, Math.min(64, Math.round(n)));
+  return Math.max(24, Math.min(72, Math.round(n)));
 }
 
 /** 有 logo 且 logoOnly 时只显图；否则 LOGO+文字。 */

@@ -27,6 +27,14 @@ const FB_STATUS: Record<string, { label: string; color: string }> = {
 
 const RELEASES = [
   {
+    ver: 'v0.1.8', date: '2026-11-06 13:21:46', items: [
+      ['new', '敏感词文件词库：后台支持一次上传多个 .txt/.dic/.csv/.list 文件，逐个列队展示词条数并单独启停/删除；上传文件默认停用，确认后开启。过滤引擎改为 Aho-Corasick 自动机，兼容 sensitive-stop-words 的逗号分隔与每行一词格式，旧内置词/手动补充词继续生效。'],
+      ['new', '注册验证：后台新增手机号验证（腾讯云短信 SendSms）与邮箱验证（SMTP）开关；开启后注册必须完成对应验证码。手机号仅用于合规验证和账号找回，publicUser 与个人资料页均不返回手机号/邮箱。短信/邮件配置在后台加密掩码保存，支持分文件启停。'],
+      ['improve', 'ICP 备案号从全站底栏移到右栏版权区域（移动端放进侧边菜单），右栏只保留关于我们 / 隐私 / 问题反馈，并新增隐私政策页；更新日志、开发计划不再出现在右栏。'],
+      ['improve', '图片 LOGO 高度上限从 64 提到 72px，导航栏高度同步加到 76px（移动端仍为紧凑高度）；登录后的首页发布框默认展开，不再折叠。'],
+    ],
+  },
+  {
     ver: 'v0.1.7', date: '2026-11-05 16:17:38', items: [
       ['improve', '对象存储上传改为分层目录：腾讯 COS / S3 的对象键统一为 uploads/YYYY/MM/<时间戳>-<随机串><扩展名>，按上海时区切月，避免所有文件堆在存储桶根目录。本地磁盘存储保持原扁平结构，已有 /uploads 链接不受影响。'],
       ['improve', '旧文件不自动搬家：已经在 COS 根目录或本地磁盘的历史文件继续按原 URL 访问；新上传才进入年月目录。'],
@@ -134,6 +142,7 @@ export default function Changelog() {
   const showRoadmap = site.pageRoadmapOn !== false;
   const customLog = (site.changelogContent || '').trim();
   const customRoadmap = (site.roadmapContent || '').trim();
+  const initialTab = new URLSearchParams(window.location.search).get('tab') === 'feedback' ? 'feedback' : 'log';
 
   return (
     <Shell layout={layout}>
@@ -146,7 +155,7 @@ export default function Changelog() {
         </CardBody>
       </Card>
 
-      <Tabs aria-label="更新与反馈" color="primary" variant="solid" radius="lg" fullWidth size="lg">
+      <Tabs aria-label="更新与反馈" color="primary" variant="solid" radius="lg" fullWidth size="lg" defaultSelectedKey={initialTab}>
         {showLog && (
         <Tab key="log" title="更新日志">
           <div className="mt-3">

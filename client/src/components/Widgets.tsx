@@ -8,7 +8,7 @@ import FollowButton from './FollowButton';
 import { Badges } from './Identity';
 import { useAuth } from '../context/AuthContext';
 import { useSite } from '../context/SiteContext';
-import { footerLinksOf, pageChangelogRouteOpen } from '../lib/pageEntries';
+import { footerLinksOf } from '../lib/pageEntries';
 import api from '../api/client';
 import { fmtNum } from '../lib/format';
 
@@ -168,7 +168,6 @@ export function Footer() {
   const site = useSite();
   // 与 App PageGate 一致：关页不出现入口（含「问题反馈」）
   const links = footerLinksOf(site);
-  const changelogRouteOpen = pageChangelogRouteOpen(site);
   return (
     <div style={{ padding: '8px 14px', fontSize: 12, color: 'var(--ink-4)', lineHeight: 1.8 }}>
       <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
@@ -178,11 +177,13 @@ export function Footer() {
             <Link to={l.to} style={{ color: 'var(--ink-3)' }}>{l.label}</Link>
           </span>
         ))}
-        {links.length > 0 && <span>·</span>}
-        <span>隐私</span>
       </div>
-      <div style={{ marginTop: 6 }}>{site.footerText || `© 2026 ${site.name} · 轻社交 · 轻论坛 · 轻社区`} · {changelogRouteOpen ? <Link to="/changelog" className="num" style={{ color: 'var(--ink-3)' }}>{APP_VERSION}</Link> : <span className="num">{APP_VERSION}</span>}</div>
-      {/* 备案号由 Layout 全站底栏统一承载（移动端也可见），此处不再重复渲染，避免桌面双显 */}
+      <div style={{ marginTop: 6 }}>{site.footerText || `© 2026 ${site.name} · 轻社交 · 轻论坛 · 轻社区`} · <span className="num">{APP_VERSION}</span></div>
+      {site.icpBeian && (
+        <div style={{ marginTop: 2 }}>
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener" style={{ color: 'var(--ink-4)' }}>{site.icpBeian}</a>
+        </div>
+      )}
     </div>
   );
 }

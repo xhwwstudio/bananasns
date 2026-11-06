@@ -43,6 +43,7 @@ const EventDetail = lazy(() => import('./pages/EventDetail'));
 const Nav = lazy(() => import('./pages/Nav'));
 const Admin = lazy(() => import('./pages/Admin'));
 import About from './pages/About';
+import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
 import { ConfirmHost } from './components/confirm';
 import { ReportHost } from './components/report';
@@ -125,6 +126,7 @@ function AppRoutes() {
       <Route path="/about" element={
         <PageGate on={site.pageAboutOn}><About /></PageGate>
       } />
+      <Route path="/privacy" element={<Privacy />} />
       {!canBrowse ? (
         <Route path="*" element={<AuthLanding />} />
       ) : (

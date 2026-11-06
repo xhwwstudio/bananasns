@@ -18,7 +18,7 @@ export default function MobileDrawer({ open, onClose }: { open: boolean; onClose
   const { user, setAuthOpen } = useAuth();
   const { openCompose } = useCompose();
   const { theme, toggle, skin, setSkin, skins, style, setStyle, styles } = useTheme();
-  const { modules, customNavLinks, navLabels, logo, name, logoOnly, logoHeight } = useSite();
+  const { modules, customNavLinks, navLabels, logo, name, logoOnly, logoHeight, icpBeian } = useSite();
   const loc = useLocation();
 
   // close when the route changes (e.g. back button / programmatic nav)
@@ -117,6 +117,11 @@ export default function MobileDrawer({ open, onClose }: { open: boolean; onClose
             ))}
           </div>
         </div>
+        {icpBeian && (
+          <div className="faint" style={{ fontSize: 11.5, textAlign: 'center', padding: '10px 4px 2px' }}>
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>{icpBeian}</a>
+          </div>
+        )}
       </aside>
     </div>
   );

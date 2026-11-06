@@ -25,6 +25,17 @@ export class User {
   @Column({ type: 'varchar', length: 128, nullable: true })
   email: string | null;
 
+  // 手机号仅用于注册合规验证；publicUser 不返回，个人资料页也不展示。
+  @Index('IDX_users_phone', { unique: true })
+  @Column({ type: 'varchar', length: 20, nullable: true, select: false })
+  phone: string | null;
+
+  @Column({ name: 'phone_verified', type: 'smallint', default: 0 })
+  phone_verified: number;
+
+  @Column({ name: 'email_verified', type: 'smallint', default: 0 })
+  email_verified: number;
+
   @Column({ type: 'text', nullable: true })
   avatar: string | null;
 

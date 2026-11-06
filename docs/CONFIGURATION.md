@@ -43,6 +43,17 @@ Set them via a real secrets mechanism — a `.env` file with restricted permissi
 > 它不会进容器，也不会报错，只是静默不生效。所以自己加变量时要连 compose 一起改（上表里的变量都已透传）。
 > 用 `docker compose config` 可以看到最终真正注入的值。
 
+## Registration verification (admin)
+
+Both switches live in **管理后台 → 安全 → 注册验证**; credentials are stored in `site_config`, masked in the admin API, and never exposed by `/api/site`.
+
+| Setting | Description |
+|---|---|
+| `register_phone_verify` | Require a verified mainland-China mobile at registration. Uses Tencent Cloud SMS (`SendSms`, TC3-HMAC-SHA256). Configure `sms_secret_id`, `sms_secret_key`, `sms_sdk_app_id`, `sms_sign_name`, `sms_template_id`, `sms_region` (default `ap-guangzhou`). Template parameters: `{1}` = code, `{2}` = valid minutes. The phone is stored for compliance/account recovery and is **never returned by `publicUser` or shown on profiles**. |
+| `register_email_verify` | Require a verified email at registration. Uses SMTP via `nodemailer`: `smtp_host`, `smtp_port`, `smtp_secure` (1 = implicit SSL, usually port 465), `smtp_user`, `smtp_pass`, `smtp_from`. |
+
+Codes are stored in Redis only as HMAC hashes (SMS 5 min, email 10 min, max 5 attempts), with a 60-second resend cooldown, 5 sends/hour per target, and 10 sends/day per IP. If the required SMS/SMTP settings are incomplete, sending returns `503` rather than creating an unverified account.
+
 ## Admin account
 
 A fresh install starts with no users and no built-in admin / default password. Two ways to get the first admin:
