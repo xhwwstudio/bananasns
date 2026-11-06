@@ -90,7 +90,7 @@ const NUM_KEYS: Record<string, [number, number]> = {
   badge_writer_threshold: [1, 1000000], badge_voter_threshold: [1, 1000000], badge_checkin7_threshold: [1, 3650],
   badge_social_threshold: [1, 100000000], badge_popular_threshold: [1, 100000000],
   // LOGO 高度 px（默认 33）
-  site_logo_height: [24, 64],
+  site_logo_height: [24, 72],
 };
 // 字符串型（站点外观自定义 W + 支付网关凭据）：key → 最大长度，超长截断
 const STR_KEYS: Record<string, number> = {

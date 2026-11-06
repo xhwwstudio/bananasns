@@ -27,6 +27,11 @@ const FB_STATUS: Record<string, { label: string; color: string }> = {
 
 const RELEASES = [
   {
+    ver: 'v0.1.10', date: '2026-11-06 13:31:21', items: [
+      ['fix', '修复 Logo 高度后台保存上限仍为 64px、与前端 72px 不一致的问题；现在后台可保存到 72px。'],
+    ],
+  },
+  {
     ver: 'v0.1.9', date: '2026-11-06 13:28:01', items: [
       ['improve', 'Logo 上传时自动裁掉透明留白（PNG/WebP），避免图片本身带大片透明边导致导航栏里看起来很小；本次也把线上现有 Logo 重新裁边并更新（显示高度保持 72px）。'],
     ],
