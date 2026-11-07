@@ -7,6 +7,7 @@ export interface SocialQrItem {
   name: string;
   qr: string;
   url: string;
+  search: string;
 }
 
 export interface SocialQrConfig {
@@ -40,7 +41,7 @@ export function emptySocialQr(): SocialQrConfig {
     groupTitle: '扫码进聊天群',
     groupText: '扫码加入官方聊天群，获取最新动态与交流',
     groupQr: '',
-    items: SOCIAL_QR_ITEMS.map((x) => ({ ...x, qr: '', url: '' })),
+    items: SOCIAL_QR_ITEMS.map((x) => ({ ...x, qr: '', url: '', search: '' })),
   };
 }
 
@@ -69,6 +70,7 @@ export function parseSocialQr(raw: unknown): SocialQrConfig {
         name: text(it?.name, 20) || x.name,
         qr: safeUrl(it?.qr),
         url: safeUrl(it?.url),
+        search: text(it?.search, 40),
       };
     }),
   };

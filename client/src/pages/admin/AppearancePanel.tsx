@@ -232,7 +232,7 @@ export default function AppearancePanel() {
         </div>
         <div className="sqr-admin-items">
           {SOCIAL_QR_ITEMS.map((x) => {
-            const item = social.items.find((i) => i.key === x.key) || { key: x.key, name: x.name, qr: '', url: '' };
+            const item = social.items.find((i) => i.key === x.key) || { key: x.key, name: x.name, qr: '', url: '', search: '' };
             return (
               <div className="sqr-admin-item" key={x.key}>
                 <div className="sqr-admin-item-head">
@@ -249,6 +249,9 @@ export default function AppearancePanel() {
                 <Input className="banana-inp" maxLength={1000} value={item.url} onChange={(e: any) => {
                   updateSocial({ items: social.items.map((i) => (i.key === x.key ? { ...i, url: e.target.value } : i)) });
                 }} placeholder="主页链接（可选）" style={{ marginTop: 8 }} />
+                <Input className="banana-inp" maxLength={40} value={item.search} onChange={(e: any) => {
+                  updateSocial({ items: social.items.map((i) => (i.key === x.key ? { ...i, search: e.target.value } : i)) });
+                }} placeholder="搜索词/账号名（可选）" style={{ marginTop: 8 }} />
               </div>
             );
           })}

@@ -5,10 +5,10 @@ import { SOCIAL_QR_ITEMS } from '../lib/socialQr';
 
 /**
  * 右栏社交媒体模块：上方固定聊天群二维码，下方一排平台入口。
- * 桌面悬停、移动端点击显示二维码浮层；二维码和链接全部来自后台外观设置。
+ * 桌面悬停、移动端点击显示二维码浮层（二维码 + 平台名 + 搜索词/主页入口）。
  */
 export default function SocialQrWidget() {
-  const { socialQr } = useSite();
+  const { socialQr, name: siteName } = useSite();
   const [active, setActive] = useState<string | null>(null);
   const items = socialQr.items.filter((i) => i.qr || i.url);
   if (!socialQr.groupQr && !items.length) return null;
@@ -53,13 +53,28 @@ export default function SocialQrWidget() {
 
       {activeItem && (
         <div className="sqr-pop" role="dialog" aria-label={`${activeItem.name}二维码`}>
-          <div className="sqr-pop-head">{activeItem.name}</div>
           {activeItem.qr
-            ? <img src={activeItem.qr} alt={`${activeItem.name}二维码`} />
-            : <div className="sqr-pop-empty">暂未上传二维码</div>}
-          {activeItem.url && (
-            <a href={activeItem.url} target="_blank" rel="noopener noreferrer">打开主页 →</a>
-          )}
+            ? <img className="sqr-pop-qr" src={activeItem.qr} alt={`${activeItem.name}二维码`} />
+            : <div className="sqr-pop-qr sqr-pop-empty">暂未上传<br />二维码</div>}
+          <div className="sqr-pop-info">
+            <div className="sqr-pop-name">
+              <span className={`sqr-mini ${activeItem.key}`}><Icon name={meta(activeItem.key)?.icon || 'link'} size={14} /></span>
+              {activeItem.name}
+            </div>
+            {activeItem.url ? (
+              <a className="sqr-search" href={activeItem.url} target="_blank" rel="noopener noreferrer">
+                {activeItem.search || `搜索“${siteName}”`}
+                <Icon name="search" size={14} />
+              </a>
+            ) : (
+              <div className="sqr-search">
+                {activeItem.search || `搜索“${siteName}”`}
+                <Icon name="search" size={14} />
+              </div>
+            )}
+            <div className="sqr-hint">扫码或点击搜索关注</div>
+          </div>
+          <span className="sqr-pop-arrow" />
         </div>
       )}
     </div>
