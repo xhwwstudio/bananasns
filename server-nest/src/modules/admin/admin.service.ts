@@ -22,6 +22,7 @@ import {
 import { HelpersService } from '../../common/helpers.service';
 import { SensitiveService } from '../../common/sensitive.service';
 import { MODULE_KEYS, LAYOUT_PAGES, LAYOUT_VALUES, SiteService } from '../site/site.service';
+import { parseSocialQr } from '../site/social-qr';
 import { STORAGE_SITE_KEYS } from '../storage/storage-config';
 import {
   AddModeratorDto,
@@ -49,6 +50,7 @@ const TOGGLE_KEYS = [
   'allow_guest', // 游客浏览：登录页显示「游客访问」按钮（默认关=强制登录）
   'show_landing', // 显示欢迎登录页：开=未登录先看登录页；关=访客直接以游客身份进入站点（默认开）
   'page_about_on', 'page_roadmap_on', 'page_changelog_on', // 关于/路线图/更新日志页开关（默认开）
+  'widget_social', // 右栏社交媒体二维码挂件
   's3_force_path_style', // S3 兼容 path-style（七牛等部分网关）
   ...MODULE_KEYS.map((k) => `module_${k}`), // 模块市场 (C)：各可选模块开关
 ];
@@ -102,6 +104,7 @@ const STR_KEYS: Record<string, number> = {
   nav_labels: 600, // 导航项改名（波D）：每行「/路径|新名称」，覆盖内置导航标签
   username_pattern: 200, username_hint: 100, // 用户名正则 + 提示文案；空=用内置默认
   landing_title: 80, landing_subtitle: 60, // 登录落地页主标题/副标题；空=用内置默认
+  social_qr: 20000, // 右栏社交媒体二维码/聊天群二维码 JSON
   // 注册验证：腾讯云短信 / SMTP 邮件凭据（密钥在 SECRET_KEYS 中掩码）
   sms_secret_id: 200, sms_secret_key: 200, sms_sdk_app_id: 64, sms_sign_name: 100,
   sms_template_id: 64, sms_region: 64,
@@ -248,6 +251,12 @@ export class AdminService {
         if (k === 'storage_driver') {
           const d = val.toLowerCase() === 's3' ? 's3' : 'local';
           await this.site.setConfig(k, d);
+          changed.push(k);
+          continue;
+        }
+        // 社交媒体二维码 JSON：只保留允许的图片/链接地址，坏 JSON 回退空配置
+        if (k === 'social_qr') {
+          await this.site.setConfig(k, JSON.stringify(parseSocialQr(val)));
           changed.push(k);
           continue;
         }

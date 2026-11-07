@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { checkSensitive, sensitiveMatcherSize, setSensitiveConfig } from '../src/common/sensitive';
-import { parseSensitiveWords } from '../src/common/sensitive-words';
+import { parseSensitiveWords, normalizeUploadFilename } from '../src/common/sensitive-words';
 
 describe('sensitive-stop-words 文件解析', () => {
   test('逗号分隔（色情类/政治类格式）', () => {
@@ -13,6 +13,22 @@ describe('sensitive-stop-words 文件解析', () => {
 
   test('中文逗号、顿号、分号混排 + 去重', () => {
     expect(parseSensitiveWords('禁词甲，禁词乙、禁词甲；禁词丙')).toEqual(['禁词甲', '禁词乙', '禁词丙']);
+  });
+});
+
+describe('normalizeUploadFilename 中文文件名乱码', () => {
+  test('busboy latin1 乱码还原为 UTF-8 中文', () => {
+    const mojibake = Buffer.from('色情词库.txt', 'utf8').toString('latin1');
+    expect(normalizeUploadFilename(mojibake)).toBe('色情词库.txt');
+  });
+
+  test('正常中文/ASCII 文件名不变', () => {
+    expect(normalizeUploadFilename('色情词库.txt')).toBe('色情词库.txt');
+    expect(normalizeUploadFilename('COVID-19.txt')).toBe('COVID-19.txt');
+  });
+
+  test('去掉路径与控制字符', () => {
+    expect(normalizeUploadFilename('C:\\tmp\\广告.txt')).toBe('广告.txt');
   });
 });
 

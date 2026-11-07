@@ -22,3 +22,20 @@ export function parseSensitiveWords(text: string): string[] {
   }
   return out;
 }
+
+/**
+ * 修复 multipart 中文文件名乱码。
+ * busboy 把 UTF-8 文件名按 latin1 解码后，JS 字符串里会出现 è¯ 这类“每个字节一个字符”的形态；
+ * 这种字符串的码点全部 <= 0xFF，可以按 latin1 取回原始字节再按 UTF-8 解码。
+ * 真正的 UTF-8 文件名含中文（码点 > 0xFF）或 Latin1 重音字符解码会失败，均保持原样。
+ */
+export function normalizeUploadFilename(name: string | null | undefined): string {
+  let s = String(name || '').split(/[\\/]/).pop() || '未命名.txt';
+  s = s.replace(/[\u0000-\u001f]/g, '').trim().slice(0, 255);
+  if (!s) return '未命名.txt';
+  if ([...s].every((ch) => (ch.codePointAt(0) ?? 0) <= 0xff)) {
+    const decoded = Buffer.from(s, 'latin1').toString('utf8');
+    if (decoded && !decoded.includes('\uFFFD')) s = decoded;
+  }
+  return s.slice(0, 255);
+}

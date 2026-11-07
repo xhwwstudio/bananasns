@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SiteConfig } from '../../database/entities';
+import { parseSocialQr } from './social-qr';
 
 // 模块市场 (C)：可开关的功能模块 key（与前端导航 module 一致）。Mirrors server/src/helpers.js MODULE_KEYS.
 export const MODULE_KEYS = [
@@ -74,6 +75,7 @@ export class SiteService {
       customCss: cfg.get('site_custom_css') || '',
       footerText: cfg.get('footer_text') || '',
       icpBeian: cfg.get('icp_beian') || '',
+      socialQr: parseSocialQr(cfg.get('social_qr')),
       rechargeTiers: cfg.get('recharge_tiers') || '',
       reportReasons: cfg.get('report_reasons') || '',
       registrationEnabled: (cfg.get('registration_enabled') ?? '1') !== '0',
@@ -155,6 +157,7 @@ export class SiteService {
         whotofollow: cfg.get('widget_whotofollow') !== '0',
         checkin: cfg.get('widget_checkin') !== '0',
         trending: cfg.get('widget_trending') !== '0',
+        social: cfg.get('widget_social') !== '0',
       },
       modules,
       layouts,

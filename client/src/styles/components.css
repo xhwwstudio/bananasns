@@ -87,10 +87,10 @@
 
 /* video + audio players */
 .media-video { margin: 12px auto 0; border-radius: var(--r-sm); overflow: hidden; max-width: 520px; background: #000; }
-.media-video-el { display: block; width: 100%; height: auto; }
-/* portrait clips: crop to a 4:5 frame (fills width, no big black bars) instead of pillar-boxing */
-.media-video.portrait { aspect-ratio: 4 / 5; max-height: 600px; }
-.media-video.portrait .media-video-el { width: 100%; height: 100%; object-fit: cover; }
+.media-video-el { display: block; width: 100%; height: auto; max-height: 70vh; object-fit: contain; background: #000; }
+/* 竖屏视频也完整显示，不再用 4:5 cover 裁切画面 */
+.media-video.portrait { aspect-ratio: auto; max-height: none; }
+.media-video.portrait .media-video-el { width: 100%; height: auto; max-height: 70vh; object-fit: contain; }
 .audio-player {
   margin-top: 12px; display: flex; gap: 12px; padding: 12px; max-width: 460px;
   background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-md);
@@ -846,3 +846,37 @@ a.banana-btn-app { display: inline-flex; }
 .site-notice.lvl-warning .sn-ico, .sn-badge-warning { background: var(--gold-soft); color: var(--gold-deep); }
 .site-notice.lvl-event .sn-ico, .sn-badge-event { background: var(--coral-soft); color: var(--coral); }
 @media (max-width: 560px) { .site-notice { gap: 9px; padding: 9px 10px; } .sn-cta { padding: 0 10px; } }
+
+/* ===== 右栏社交媒体二维码 ===== */
+.sqr-card { padding: 14px; position: relative; overflow: visible; }
+.sqr-title { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13.5px; margin-bottom: 10px; }
+.sqr-group { display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 12px; background: var(--surface-2); }
+.sqr-group img { width: 92px; height: 92px; object-fit: contain; border-radius: 8px; background: #fff; padding: 4px; flex: none; }
+.sqr-group-copy { min-width: 0; }
+.sqr-group-copy b { display: block; font-size: 13.5px; line-height: 1.4; }
+.sqr-group-copy p { margin: 3px 0 0; font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+.sqr-social { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 12px; }
+.sqr-item { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 6px 2px; border-radius: 10px; color: var(--ink-3); transition: background var(--dur-fast), color var(--dur-fast); }
+.sqr-item:hover, .sqr-item.active { background: var(--surface-2); color: var(--ink); }
+.sqr-icon { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; color: #fff; background: var(--brand); flex: none; }
+.sqr-icon.xiaohongshu { background: #ff2442; }
+.sqr-icon.douyin { background: #161823; }
+.sqr-icon.weibo { background: #e6162d; }
+.sqr-icon.channels { background: #07c160; }
+.sqr-label { font-size: 11.5px; white-space: nowrap; }
+.sqr-pop { position: absolute; z-index: 8; left: 50%; bottom: 12px; transform: translateX(-50%); width: 190px; padding: 10px; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-lg); }
+.sqr-pop-head { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+.sqr-pop img { width: 150px; height: 150px; object-fit: contain; margin: 0 auto; border-radius: 8px; background: #fff; padding: 4px; }
+.sqr-pop-empty { padding: 28px 0; font-size: 12px; color: var(--ink-4); }
+.sqr-pop a { display: block; margin-top: 6px; font-size: 12px; color: var(--brand); }
+
+/* 后台配置 */
+.sqr-admin-group { display: flex; gap: 12px; align-items: center; margin-top: 14px; padding: 12px; background: var(--surface-2); border-radius: 10px; }
+.sqr-admin-preview { width: 96px; height: 96px; flex: none; display: grid; place-items: center; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: var(--ink-4); overflow: hidden; }
+.sqr-admin-preview img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.sqr-admin-preview.sm { width: 64px; height: 64px; margin-top: 8px; }
+.sqr-admin-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+.sqr-admin-item { min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+.sqr-admin-item-head { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.sqr-admin-item .sqr-icon { width: 28px; height: 28px; border-radius: 9px; }
+@media (max-width: 900px) { .sqr-admin-items { grid-template-columns: repeat(2, 1fr); } }

@@ -6,6 +6,7 @@ import { useToast } from '../../context/ToastContext';
 import { SKINS, STYLES } from '../../context/ThemeContext';
 import api from '../../api/client';
 import { parseCustomThemes, validateThemePackage, type ThemePackage } from '../../lib/themePackage';
+import { parseSocialQr, SOCIAL_QR_ITEMS, type SocialQrConfig } from '../../lib/socialQr';
 import { Toggle } from './ui';
 
 // 站点外观自定义 (W)：站名 / 副标题 / Logo / 全站自定义 CSS。类 WP 的二开能力，升级不覆盖。
@@ -86,6 +87,24 @@ export default function AppearancePanel() {
     finally { setSaving(false); }
   };
   if (cfg === null) return <RowSkeleton rows={5} />;
+  const social = parseSocialQr(cfg.social_qr);
+  const updateSocial = (patch: Partial<SocialQrConfig>) =>
+    setK('social_qr', JSON.stringify({ ...social, ...patch }));
+  const uploadSocialQr = async (kind: 'group' | string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('files', file);
+    try {
+      const { data } = await api.post('/upload', fd);
+      const url = data.files?.[0]?.url;
+      if (!url) return;
+      if (kind === 'group') updateSocial({ groupQr: url });
+      else updateSocial({ items: social.items.map((i) => (i.key === kind ? { ...i, qr: url } : i)) });
+      toast.ok('二维码已上传，别忘了点「保存外观」');
+    } catch (err: any) { toast.err(err.message); }
+  };
   return (
     <div className="flex flex-col gap-4">
       <div className="ui-card" style={{ padding: 18 }}>
@@ -180,6 +199,60 @@ export default function AppearancePanel() {
             <label className="banana-btn-app banana-btn-app--sm" style={{ cursor: 'pointer', flexShrink: 0, display: 'inline-flex' }}>上传<input type="file" accept="image/*" hidden onChange={(e) => uploadBrand('default_avatar', e)} /></label>
           </div>
         </label>
+      </div>
+
+      <div className="ui-card" style={{ padding: 18 }}>
+        <div style={{ fontWeight: 700, fontSize: 14.5 }}>社交媒体二维码</div>
+        <div className="faint" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>
+          显示在首页右栏：上方是聊天群二维码，下方一排是小红书 / 抖音 / 微博 / 视频号入口，鼠标悬停或点击显示对应二维码。
+          这里上传的二维码会随「保存外观」一起生效；平台图标固定，二维码可随时替换。
+        </div>
+        <div className="sec-grid" style={{ marginTop: 14 }}>
+          <label className="sec-field">
+            <span className="sec-label">群名称</span>
+            <Input className="banana-inp" maxLength={40} value={social.groupTitle} onChange={(e: any) => updateSocial({ groupTitle: e.target.value })} placeholder="扫码进聊天群" />
+          </label>
+          <label className="sec-field">
+            <span className="sec-label">群说明</span>
+            <Input className="banana-inp" maxLength={80} value={social.groupText} onChange={(e: any) => updateSocial({ groupText: e.target.value })} placeholder="扫码加入官方聊天群" />
+          </label>
+        </div>
+        <div className="sqr-admin-group">
+          <div className="sqr-admin-preview">
+            {social.groupQr ? <img src={social.groupQr} alt="聊天群二维码" /> : <span><Icon name="users" size={24} /></span>}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 600 }}>聊天群二维码</div>
+            <div className="faint" style={{ fontSize: 12, marginTop: 3 }}>上传群二维码图片（建议正方形，清晰可扫）</div>
+            <label className="banana-btn-app banana-btn-app--sm" style={{ cursor: 'pointer', display: 'inline-flex', marginTop: 8 }}>
+              上传/更换群二维码
+              <input type="file" accept="image/*" hidden onChange={(e) => uploadSocialQr('group', e)} />
+            </label>
+          </div>
+        </div>
+        <div className="sqr-admin-items">
+          {SOCIAL_QR_ITEMS.map((x) => {
+            const item = social.items.find((i) => i.key === x.key) || { key: x.key, name: x.name, qr: '', url: '' };
+            return (
+              <div className="sqr-admin-item" key={x.key}>
+                <div className="sqr-admin-item-head">
+                  <span className={`sqr-icon ${x.key}`}><Icon name={x.icon} size={16} /></span>
+                  <b>{x.name}</b>
+                </div>
+                <div className="sqr-admin-preview sm">
+                  {item.qr ? <img src={item.qr} alt={`${x.name}二维码`} /> : <span><Icon name={x.icon} size={18} /></span>}
+                </div>
+                <label className="banana-btn-app banana-btn-app--sm" style={{ cursor: 'pointer', display: 'inline-flex', marginTop: 8 }}>
+                  更换二维码
+                  <input type="file" accept="image/*" hidden onChange={(e) => uploadSocialQr(x.key, e)} />
+                </label>
+                <Input className="banana-inp" maxLength={1000} value={item.url} onChange={(e: any) => {
+                  updateSocial({ items: social.items.map((i) => (i.key === x.key ? { ...i, url: e.target.value } : i)) });
+                }} placeholder="主页链接（可选）" style={{ marginTop: 8 }} />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="ui-card" style={{ padding: 18 }}>

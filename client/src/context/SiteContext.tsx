@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import api from '../api/client';
+import { emptySocialQr, type SocialQrConfig } from '../lib/socialQr';
 
 // 站点外观自定义 (W) —— 站名 / 副标题 / Logo / 全站自定义 CSS。
 // 公开接口 /api/site，未登录也能取，所以 Provider 放在最外层，登录页也能用自定义品牌。
@@ -14,6 +15,7 @@ export interface SiteConfig {
   customCss: string;
   footerText: string; // 页脚版权文案；空 = 用内置默认
   icpBeian: string;   // ICP 备案号；空 = 不显示
+  socialQr: SocialQrConfig; // 右栏社交媒体/聊天群二维码
   rechargeTiers: string; // 充值档位 CSV（分）；空 = 用内置默认
   reportReasons: string; // 举报理由（换行分隔）；空 = 用内置默认
   registrationEnabled: boolean; // 注册开关；默认 true
@@ -53,7 +55,7 @@ export interface SiteConfig {
 
 const DEFAULTS: SiteConfig = {
   name: 'BananaSNS', slogan: '轻社交社区', logo: '', logoOnly: false, logoHeight: 33,
-  favicon: '', customCss: '', footerText: '', icpBeian: '', rechargeTiers: '', reportReasons: '',
+  favicon: '', customCss: '', footerText: '', icpBeian: '', socialQr: emptySocialQr(), rechargeTiers: '', reportReasons: '',
   registrationEnabled: true, inviteRequired: false, phoneVerifyRequired: false, emailVerifyRequired: false, allowGuest: false, showLanding: true, guestFeedLimit: 8,
   aboutContent: '', roadmapContent: '', changelogContent: '',
   pageAboutOn: true, pageRoadmapOn: true, pageChangelogOn: true,

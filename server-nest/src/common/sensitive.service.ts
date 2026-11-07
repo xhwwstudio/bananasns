@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { SensitiveWordFile, SiteConfig } from '../database/entities';
 import { setSensitiveConfig } from './sensitive';
-import { parseSensitiveWords } from './sensitive-words';
+import { parseSensitiveWords, normalizeUploadFilename } from './sensitive-words';
 
 export interface UploadedWordFile {
   originalname: string;
@@ -79,7 +79,7 @@ export class SensitiveService implements OnModuleInit, OnModuleDestroy {
     const skipped: { filename: string; reason: string }[] = [];
     let added = 0;
     for (const f of inputs) {
-      const filename = (f.originalname || '未命名.txt').split(/[\\/]/).pop()!.slice(0, 255);
+      const filename = normalizeUploadFilename(f.originalname);
       try {
         if ((f.size ?? f.buffer.length) > MAX_FILE_BYTES)
           throw new Error('文件超过 5MB');
